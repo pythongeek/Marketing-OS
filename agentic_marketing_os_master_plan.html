@@ -1,0 +1,338 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.section{margin-bottom:2.5rem}
+.section-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:.75rem;padding-left:2px}
+.tier-label{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.5rem}
+.brain-card{background:var(--color-background-primary);border:1.5px solid;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;position:relative}
+.brain-card.core{border-color:#534AB7}
+.brain-card.layer-a{border-color:#0F6E56}
+.brain-card.layer-b{border-color:#185FA5}
+.brain-card.layer-c{border-color:#993C1D}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:.5rem}
+.card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.icon-purple{background:#EEEDFE;color:#534AB7}
+.icon-teal{background:#E1F5EE;color:#0F6E56}
+.icon-blue{background:#E6F1FB;color:#185FA5}
+.icon-coral{background:#FAECE7;color:#993C1D}
+.card-name{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.card-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:.6rem}
+.tag{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
+.tag-purple{background:#EEEDFE;color:#3C3489}
+.tag-teal{background:#E1F5EE;color:#085041}
+.tag-blue{background:#E6F1FB;color:#0C447C}
+.tag-coral{background:#FAECE7;color:#712B13}
+.tag-amber{background:#FAEEDA;color:#633806}
+.tag-green{background:#EAF3DE;color:#27500A}
+.tag-gray{background:#F1EFE8;color:#444441}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem}
+.agent-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem 1rem;cursor:pointer;transition:border-color .15s}
+.agent-card:hover{border-color:var(--color-border-primary)}
+.agent-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.agent-role{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+.channel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem}
+.channel-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.7rem .9rem}
+.channel-name{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:.2rem}
+.channel-note{font-size:11px;color:var(--color-text-tertiary);line-height:1.4}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0}
+.flow-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:.6rem}
+.flow-node{font-size:11px;padding:4px 10px;border-radius:4px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);font-weight:500}
+.flow-arrow{font-size:14px;color:var(--color-text-tertiary)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem}
+.kpi-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center}
+.kpi-label{font-size:11px;color:var(--color-text-tertiary);margin-bottom:.2rem}
+.kpi-val{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.kpi-unit{font-size:11px;color:var(--color-text-secondary)}
+.phase-row{display:flex;gap:0;margin-bottom:.5rem;border-radius:var(--border-radius-md);overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+.phase{flex:1;padding:.5rem .7rem;border-right:0.5px solid var(--color-border-tertiary)}
+.phase:last-child{border-right:none}
+.phase-num{font-size:10px;color:var(--color-text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+.phase-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.phase-time{font-size:10px;color:var(--color-text-secondary);margin-top:1px}
+.p1{background:#EEEDFE22}.p2{background:#E1F5EE22}.p3{background:#E6F1FB22}.p4{background:#FAEEDA22}
+.highlight-box{background:var(--color-background-secondary);border-left:3px solid #534AB7;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:.75rem 1rem;margin-bottom:.6rem}
+.hl-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:.2rem}
+.hl-body{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+</style>
+
+<div style="padding:1.5rem 0">
+
+<div class="section">
+  <div class="section-title">Master intelligence layer — the AI brain</div>
+  <div class="brain-card core">
+    <div class="card-head">
+      <div class="card-icon icon-purple"><i class="ti ti-brain" aria-hidden="true"></i></div>
+      <div>
+        <div class="card-name">Agentic Marketing OS — Chief Orchestrator Agent</div>
+        <div class="card-desc">Obsidian-RAG integrated brain. Knows your entire business, client roster, competitor landscape, and all live campaign data. Runs the daily ops loop, generates profit plans, allocates sub-agents, and monitors KPIs in real time.</div>
+      </div>
+    </div>
+    <div class="tag-row">
+      <span class="tag tag-purple">Obsidian RAG vault</span>
+      <span class="tag tag-purple">Business context memory</span>
+      <span class="tag tag-purple">Competitor intelligence DB</span>
+      <span class="tag tag-purple">Revenue pipeline tracker</span>
+      <span class="tag tag-purple">Daily ops loop</span>
+      <span class="tag tag-purple">Sub-agent dispatcher</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Tier 1 — Strategy &amp; Intelligence agents</div>
+  <div class="agent-grid">
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Competitor Intelligence Agent')">
+      <div class="agent-name"><i class="ti ti-spy" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#534AB7"></i>Competitor Intel Agent</div>
+      <div class="agent-role">Crawls rivals weekly. Tracks their content, backlinks, keyword gains, social, ad spend signals, and SERP movements. Auto-populates competitor map in Obsidian.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Revenue Channel Scout Agent')">
+      <div class="agent-name"><i class="ti ti-cash" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#534AB7"></i>Revenue Channel Scout</div>
+      <div class="agent-role">Identifies untapped revenue channels: affiliate, white-label, retainer, productized services, consulting upsells. Scores each by effort vs. ROI potential.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Analytics Expert Agent')">
+      <div class="agent-name"><i class="ti ti-chart-dots-3" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#534AB7"></i>Analytics Expert Agent</div>
+      <div class="agent-role">Owns GA4, Looker Studio, attribution. Generates weekly ROI reports, channel mix analysis, conversion funnel insights, and anomaly alerts automatically.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Topic Authority Agent')">
+      <div class="agent-name"><i class="ti ti-topology-star" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#534AB7"></i>Topic Authority Agent</div>
+      <div class="agent-role">Maps full topical coverage gaps using semantic clustering. Builds pillar-cluster architecture. Flags cannibalisation, missing E-E-A-T signals, and entity gaps.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Profit Plan Agent')">
+      <div class="agent-name"><i class="ti ti-target" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#534AB7"></i>Profit Plan Agent</div>
+      <div class="agent-role">Monthly P&amp;L projection agent. Models client acquisition cost, LTV, service margins, and recommends next-best actions to hit revenue targets.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Tier 2 — Content &amp; SEO production agents</div>
+  <div class="agent-grid">
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Content Strategist Agent')">
+      <div class="agent-name"><i class="ti ti-layout-board" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#0F6E56"></i>Content Strategist</div>
+      <div class="agent-role">Runs the editorial calendar. Assigns briefs, sets intent targets, manages the cluster hierarchy, and sequences content for max topical authority build-up.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Long-Form Writer Agent')">
+      <div class="agent-name"><i class="ti ti-article" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#0F6E56"></i>Long-form Writer Agent</div>
+      <div class="agent-role">Writes 2,000–5,000 word authority articles, pillar pages, and case studies. Trained on your brand voice. Uses research tools and cites real data.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Copywriting Agent')">
+      <div class="agent-name"><i class="ti ti-writing" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#0F6E56"></i>Copywriting Agent</div>
+      <div class="agent-role">Landing pages, CTAs, email sequences, ad copy, sales pages, cold outreach. Multi-framework specialist: PAS, AIDA, StoryBrand, direct response.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Programmatic SEO Agent')">
+      <div class="agent-name"><i class="ti ti-database" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#0F6E56"></i>Programmatic SEO Agent</div>
+      <div class="agent-role">Generates 100s–1000s of unique location+service, comparison, and tool pages from structured data templates. Owns the pSEO pipeline from data → CMS publish.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the AEO/GEO Specialist Agent')">
+      <div class="agent-name"><i class="ti ti-robot" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#0F6E56"></i>AEO / GEO Specialist</div>
+      <div class="agent-role">Optimises every page to be cited in ChatGPT, Perplexity, Google AI Overviews, Copilot. Deploys FAQ schema, entity markup, expert quotes, statistic injection.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the different Writer Persona Agents')">
+      <div class="agent-name"><i class="ti ti-users" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#0F6E56"></i>Writer Persona Agents (×5)</div>
+      <div class="agent-role">Data-journalist · Thought-leader · Conversational · Technical · Storyteller. Matched to content type and target audience for brand-consistent variety.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Tier 3 — On-page, off-page &amp; technical SEO agents</div>
+  <div class="agent-grid">
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the On-Page Optimisation Agent')">
+      <div class="agent-name"><i class="ti ti-file-code" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#185FA5"></i>On-Page Optimisation Agent</div>
+      <div class="agent-role">Audits and rewrites title tags, meta descriptions, H1–H3 structure, internal links, schema markup, image alt text, and content semantic density on every published page.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Off-Page / Link Building Agent')">
+      <div class="agent-name"><i class="ti ti-link" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#185FA5"></i>Off-Page / Link Agent</div>
+      <div class="agent-role">Prospecting, outreach sequences, HARO/digital PR, broken-link reclamation, competitor backlink gap analysis, and monthly link velocity reporting.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Google Search Console Agent')">
+      <div class="agent-name"><i class="ti ti-brand-google" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#185FA5"></i>Google Search Console Agent</div>
+      <div class="agent-role">Daily GSC monitoring. Detects CTR drops, index coverage errors, manual actions, Core Web Vitals regressions, and generates fix-priority action lists.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Bing Search Console Agent')">
+      <div class="agent-name"><i class="ti ti-brand-bing" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#185FA5"></i>Bing / Copilot SEO Agent</div>
+      <div class="agent-role">Manages Bing Webmaster Tools, optimises for Bing-specific ranking factors, and ensures Copilot AI visibility — an underserved, lower-competition channel.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Site Monitor Agent')">
+      <div class="agent-name"><i class="ti ti-heartbeat" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#185FA5"></i>Site Health Monitor</div>
+      <div class="agent-role">24/7 uptime, crawl budget, Core Web Vitals, broken links, redirect chains, hreflang errors, and log file analysis. Fires alerts and creates tickets automatically.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Technical SEO Audit Agent')">
+      <div class="agent-name"><i class="ti ti-settings-2" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#185FA5"></i>Technical SEO Agent</div>
+      <div class="agent-role">Crawls site architecture, JavaScript rendering, structured data validity, page speed, mobile usability, and log analysis. Monthly technical health report.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Tier 4 — Social, media &amp; ad agents</div>
+  <div class="agent-grid">
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Social Media Manager Agent')">
+      <div class="agent-name"><i class="ti ti-social" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#993C1D"></i>Social Media Manager</div>
+      <div class="agent-role">Manages posting calendars across LinkedIn, X, Instagram, Facebook, TikTok. Repurposes long-form content into 10+ social formats. Schedules, monitors engagement.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Video and Image Production Agent')">
+      <div class="agent-name"><i class="ti ti-video" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#993C1D"></i>Video / Image Agent</div>
+      <div class="agent-role">Generates video scripts, short-form video briefs, AI image prompts, infographic specs, and social visual content. Coordinates with production tools.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Ad Expert Agent')">
+      <div class="agent-name"><i class="ti ti-ad-2" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#993C1D"></i>Ad Expert Agent</div>
+      <div class="agent-role">Google Ads, Meta Ads, LinkedIn Ads, programmatic display. Builds campaigns, writes ad copy variants, monitors ROAS, pauses underperformers, scales winners.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Email Marketing Agent')">
+      <div class="agent-name"><i class="ti ti-mail" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#993C1D"></i>Email Marketing Agent</div>
+      <div class="agent-role">Drip sequences, newsletters, promotional campaigns, list segmentation, A/B test management, deliverability monitoring, and lifecycle automation.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Reputation & PR Agent')">
+      <div class="agent-name"><i class="ti ti-badge" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#993C1D"></i>Reputation / PR Agent</div>
+      <div class="agent-role">Monitors brand mentions, review platforms (Google, Trustpilot, G2), manages response, pitches thought leadership to media, and tracks sentiment scores.</div>
+    </div>
+    <div class="agent-card" onclick="sendPrompt('Tell me more about the Lead Generation Agent')">
+      <div class="agent-name"><i class="ti ti-funnel" aria-hidden="true" style="font-size:14px;margin-right:5px;color:#993C1D"></i>Lead Generation Agent</div>
+      <div class="agent-role">Owns the top-of-funnel: lead magnet creation, landing page optimisation, cold outreach sequencing, CRM sync, and MQL scoring dashboards.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <div class="section-title">10-channel marketing stack — what to dominate first</div>
+  <div class="channel-grid">
+    <div class="channel-card">
+      <div class="channel-name">Traditional SEO</div>
+      <div class="channel-note">Foundation layer. Technical + on-page + E-E-A-T signals. Still drives 60%+ of organic value.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">AEO</div>
+      <div class="channel-note">Schema, FAQ, featured snippets, answer-first content. Zero-click = citation win.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">GEO</div>
+      <div class="channel-note">Get cited by ChatGPT, Perplexity, Gemini, Copilot. Entity consistency + expert quotes + stats.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">Programmatic SEO</div>
+      <div class="channel-note">Service × city × niche pages. 1,000+ landing pages from structured data. Hyper-specific intent.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">Off-Page / Links</div>
+      <div class="channel-note">Digital PR, HARO, niche edits, DR60+ guest posts. 8–15 quality links per month target.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">Social Organic</div>
+      <div class="channel-note">LinkedIn thought leadership, short-form video, X threads. Content repurposing engine.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">Paid Ads</div>
+      <div class="channel-note">Google Performance Max, Meta retargeting, LinkedIn for B2B. Paid amplifies organic wins.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">Email Marketing</div>
+      <div class="channel-note">Newsletter, drip, re-engagement. Owned channel — immune to algorithm changes.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">Video / YouTube SEO</div>
+      <div class="channel-note">YouTube is the 2nd largest search engine. Tutorial and case study content drives agency authority.</div>
+    </div>
+    <div class="channel-card">
+      <div class="channel-name">Bing / Copilot SEO</div>
+      <div class="channel-note">Underserved, lower competition. Bing powers Copilot citations — massive B2B upside.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <div class="section-title">Revenue channels to activate</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem">
+    <div class="highlight-box">
+      <div class="hl-title">SEO retainer clients</div>
+      <div class="hl-body">$1,500–$10,000/mo recurring. Bread and butter. Use the OS to deliver at scale for 20+ clients simultaneously.</div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">Productised SEO sprints</div>
+      <div class="hl-body">Fixed-price, time-boxed deliverables: "100-page pSEO build", "AEO audit + fix", "12-month link plan". Scalable without custom scoping.</div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">White-label fulfillment</div>
+      <div class="hl-body">Other agencies front the client, you deliver. High-volume, lower-touch. Ideal once the OS runs autonomously.</div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">GEO / AEO consulting</div>
+      <div class="hl-body">Only ~20% of orgs have started AEO. Positioning as the go-to AEO agency is a 2026 first-mover opportunity.</div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">Programmatic SEO builds</div>
+      <div class="hl-body">$5K–$30K one-time project fee to build pSEO architecture. Recurring for monitoring + optimisation.</div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">AI marketing tools / SaaS</div>
+      <div class="hl-body">Package internal agents as a SaaS product. The OS you build for yourself becomes a product you sell.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <div class="section-title">Build phases — 90-day roadmap</div>
+  <div class="phase-row">
+    <div class="phase p1">
+      <div class="phase-num">Phase 1</div>
+      <div class="phase-name">Foundation</div>
+      <div class="phase-time">Weeks 1–3</div>
+    </div>
+    <div class="phase p2">
+      <div class="phase-num">Phase 2</div>
+      <div class="phase-name">Core agents live</div>
+      <div class="phase-time">Weeks 4–6</div>
+    </div>
+    <div class="phase p3">
+      <div class="phase-num">Phase 3</div>
+      <div class="phase-name">Full sub-agent fleet</div>
+      <div class="phase-time">Weeks 7–10</div>
+    </div>
+    <div class="phase p4">
+      <div class="phase-num">Phase 4</div>
+      <div class="phase-name">Autonomous ops loop</div>
+      <div class="phase-time">Weeks 11–13</div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:.4rem">Phase 1: Obsidian vault setup, RAG pipeline, business context ingestion, competitor DB seeding · Phase 2: Orchestrator + 5 priority sub-agents wired · Phase 3: All 20 agents operational, integrations complete · Phase 4: Daily ops loop fully automated, human reviews only</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Daily automated ops loop</div>
+  <div class="flow-row">
+    <div class="flow-node">Site health check</div><div class="flow-arrow">→</div>
+    <div class="flow-node">GSC / Bing alerts</div><div class="flow-arrow">→</div>
+    <div class="flow-node">Content brief generation</div><div class="flow-arrow">→</div>
+    <div class="flow-node">Writer agent assigned</div><div class="flow-arrow">→</div>
+    <div class="flow-node">On-page review</div><div class="flow-arrow">→</div>
+    <div class="flow-node">Social repurposing</div><div class="flow-arrow">→</div>
+    <div class="flow-node">Outreach queue</div><div class="flow-arrow">→</div>
+    <div class="flow-node">Analytics digest</div><div class="flow-arrow">→</div>
+    <div class="flow-node">Profit plan update</div>
+  </div>
+  <div style="font-size:11px;color:var(--color-text-tertiary)">Full loop runs autonomously. You receive a daily digest with decisions that require human approval flagged.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">North star KPIs to track from day 1</div>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">AI citations</div><div class="kpi-val">GPT · Perp · Gem</div></div>
+    <div class="kpi-card"><div class="kpi-label">Organic sessions</div><div class="kpi-val">MoM %</div><div class="kpi-unit">growth rate</div></div>
+    <div class="kpi-card"><div class="kpi-label">Backlink DR60+</div><div class="kpi-val">per mo</div><div class="kpi-unit">velocity</div></div>
+    <div class="kpi-card"><div class="kpi-label">Content published</div><div class="kpi-val">/ week</div><div class="kpi-unit">cadence</div></div>
+    <div class="kpi-card"><div class="kpi-label">pSEO pages live</div><div class="kpi-val">cumulative</div></div>
+    <div class="kpi-card"><div class="kpi-label">MRR</div><div class="kpi-val">$</div><div class="kpi-unit">recurring revenue</div></div>
+    <div class="kpi-card"><div class="kpi-label">Lead pipeline</div><div class="kpi-val">MQL / mo</div></div>
+    <div class="kpi-card"><div class="kpi-label">Client LTV</div><div class="kpi-val">vs CAC</div><div class="kpi-unit">ratio</div></div>
+  </div>
+</div>
+
+</div>

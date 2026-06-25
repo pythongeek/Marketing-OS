@@ -1,0 +1,41 @@
+# Sensitive data
+.env
+.env.local
+.env.production
+*.pem
+*.key
+*.p12
+
+# Obsidian
+.obsidian/workspace.json
+.obsidian/graph.json
+.obsidian/hotkeys.json
+.obsidian/appearance.json
+.obsidian/core-plugins.json
+.obsidian/app.json
+.obsidian/plugins/obsidian-git/data.json
+
+# Runtime artifacts
+node_modules/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large binaries
+*.pdf
+*.zip
+*.tar.gz
+*.mp4
+*.mov
+
+# Agent logs (optional — keep if you want history in repo, exclude if large)
+# AgenticMarketingPro-Vault/11-Ops/agent-logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.log

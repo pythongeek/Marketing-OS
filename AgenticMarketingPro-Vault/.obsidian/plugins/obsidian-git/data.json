@@ -1,0 +1,12 @@
+{
+  "commitMessage": "[agent]: auto-commit from vault",
+  "autoSaveInterval": 5,
+  "autoPullInterval": 5,
+  "autoPullOnBoot": true,
+  "disablePush": false,
+  "pullBeforePush": true,
+  "syncMethod": "merge",
+  "customMessageOnAutoBackup": true,
+  "showStatusBar": true,
+  "isFrequentPush": true
+}

@@ -1,0 +1,397 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.sec{margin-bottom:2.5rem}
+.sec-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:.75rem;padding-left:2px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.card.accent-purple{border-left:3px solid #534AB7;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card.accent-teal{border-left:3px solid #0F6E56;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card.accent-blue{border-left:3px solid #185FA5;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card.accent-amber{border-left:3px solid #854F0B;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card.accent-coral{border-left:3px solid #993C1D;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0}
+.card-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.35rem;display:flex;align-items:center;gap:7px}
+.card-title i{font-size:15px}
+.card-body{font-size:12px;color:var(--color-text-secondary);line-height:1.55}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.75rem}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.65rem}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:.6rem}
+.tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;margin:2px 2px 0 0;white-space:nowrap}
+.tp{background:#EEEDFE;color:#3C3489}
+.tt{background:#E1F5EE;color:#085041}
+.tb{background:#E6F1FB;color:#0C447C}
+.ta{background:#FAEEDA;color:#633806}
+.tc{background:#FAECE7;color:#712B13}
+.tg{background:#F1EFE8;color:#444441}
+.tgreen{background:#EAF3DE;color:#27500A}
+.folder-tree{font-size:12px;color:var(--color-text-secondary);font-family:var(--font-mono);line-height:1.8;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem}
+.folder-tree .dir{color:var(--color-text-primary);font-weight:500}
+.folder-tree .file{color:var(--color-text-tertiary)}
+.stack-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+.tool-pill{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);font-weight:500}
+.flow-line{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px;color:var(--color-text-secondary);margin:.3rem 0}
+.flow-pill{padding:3px 9px;border-radius:4px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);font-weight:500;color:var(--color-text-primary);white-space:nowrap}
+.flow-arrow{color:var(--color-text-tertiary);font-size:13px}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0}
+.note{font-size:11px;color:var(--color-text-tertiary);line-height:1.5;margin-top:.5rem}
+.phase-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:3px;font-weight:500;margin-right:6px}
+.ph1{background:#EEEDFE;color:#3C3489}
+.ph2{background:#E1F5EE;color:#085041}
+.ph3{background:#E6F1FB;color:#0C447C}
+.ph4{background:#FAEEDA;color:#633806}
+.mini-header{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin:.6rem 0 .3rem;text-transform:uppercase;letter-spacing:.06em}
+</style>
+
+<div style="padding:1.5rem 0">
+
+<div class="sec">
+  <div class="sec-label">Obsidian vault structure — the RAG brain's filing system</div>
+  <div class="grid2">
+    <div class="folder-tree">
+<span class="dir">📁 AgenticMarketingPro-Vault/</span>
+<br>├── <span class="dir">00-Agency-Core/</span>
+<br>│   ├── <span class="file">business-context.md</span>
+<br>│   ├── <span class="file">services-and-pricing.md</span>
+<br>│   ├── <span class="file">icp-and-personas.md</span>
+<br>│   ├── <span class="file">brand-voice-guide.md</span>
+<br>│   └── <span class="file">revenue-targets.md</span>
+<br>├── <span class="dir">01-Clients/</span>
+<br>│   └── <span class="dir">[client-name]/</span>
+<br>│       ├── <span class="file">onboarding.md</span>
+<br>│       ├── <span class="file">kpis-and-goals.md</span>
+<br>│       ├── <span class="file">campaign-log.md</span>
+<br>│       └── <span class="file">monthly-reports/</span>
+<br>├── <span class="dir">02-Competitors/</span>
+<br>│   ├── <span class="file">competitor-map.md</span>
+<br>│   ├── <span class="dir">[competitor-name]/</span>
+<br>│   │   ├── <span class="file">keyword-gaps.md</span>
+<br>│   │   ├── <span class="file">backlink-profile.md</span>
+<br>│   │   └── <span class="file">content-audit.md</span>
+<br>├── <span class="dir">03-SEO-Intelligence/</span>
+<br>│   ├── <span class="file">keyword-universe.md</span>
+<br>│   ├── <span class="file">topic-clusters.md</span>
+<br>│   ├── <span class="file">serp-snapshots/</span>
+<br>│   ├── <span class="file">gsc-weekly-log.md</span>
+<br>│   └── <span class="file">technical-audit-log.md</span>
+<br>├── <span class="dir">04-Content-Production/</span>
+<br>│   ├── <span class="file">content-calendar.md</span>
+<br>│   ├── <span class="file">briefs/</span>
+<br>│   ├── <span class="file">drafts/</span>
+<br>│   ├── <span class="file">published-index.md</span>
+<br>│   └── <span class="file">writer-persona-styles/</span>
+<br>├── <span class="dir">05-Programmatic-SEO/</span>
+<br>│   ├── <span class="file">page-templates/</span>
+<br>│   ├── <span class="file">data-sources.md</span>
+<br>│   └── <span class="file">publish-log.md</span>
+<br>├── <span class="dir">06-AEO-GEO/</span>
+<br>│   ├── <span class="file">ai-citation-tracker.md</span>
+<br>│   ├── <span class="file">entity-registry.md</span>
+<br>│   └── <span class="file">schema-library/</span>
+<br>├── <span class="dir">07-Off-Page/</span>
+<br>│   ├── <span class="file">link-prospects.md</span>
+<br>│   ├── <span class="file">outreach-log.md</span>
+<br>│   └── <span class="file">dr-tracker.md</span>
+<br>├── <span class="dir">08-Paid-Ads/</span>
+<br>│   ├── <span class="file">campaign-log.md</span>
+<br>│   └── <span class="file">ad-copy-library.md</span>
+<br>├── <span class="dir">09-Social/</span>
+<br>│   ├── <span class="file">content-calendar.md</span>
+<br>│   └── <span class="file">repurpose-queue.md</span>
+<br>├── <span class="dir">10-Analytics/</span>
+<br>│   ├── <span class="file">weekly-digest.md</span>
+<br>│   ├── <span class="file">anomaly-log.md</span>
+<br>│   └── <span class="file">channel-attribution.md</span>
+<br>└── <span class="dir">11-Ops/</span>
+<br>    ├── <span class="file">daily-ops-log.md</span>
+<br>    ├── <span class="file">agent-task-queue.md</span>
+<br>    └── <span class="file">profit-plan.md</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.65rem">
+      <div class="card accent-purple">
+        <div class="card-title"><i class="ti ti-database" aria-hidden="true" style="color:#534AB7"></i>RAG pipeline design</div>
+        <div class="card-body">Every `.md` file in the vault is chunked, embedded, and indexed into a vector DB. The Orchestrator Agent retrieves relevant context before every task — so it always knows your clients, goals, and current state.</div>
+      </div>
+      <div class="card accent-teal">
+        <div class="card-title"><i class="ti ti-refresh" aria-hidden="true" style="color:#0F6E56"></i>Live sync strategy</div>
+        <div class="card-body">Agents write back to the vault after every task. GSC Agent updates `gsc-weekly-log.md` automatically. Competitor Agent overwrites `competitor-map.md`. The vault is always the single source of truth.</div>
+      </div>
+      <div class="card accent-blue">
+        <div class="card-title"><i class="ti ti-tag" aria-hidden="true" style="color:#185FA5"></i>Obsidian tagging system</div>
+        <div class="card-body">Every note tagged by: `#client/[name]`, `#priority/high`, `#agent/[name]`, `#status/done`. Dataview plugin turns tags into live dashboards inside Obsidian itself — no extra tooling needed.</div>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-title"><i class="ti ti-git-branch" aria-hidden="true" style="color:#854F0B"></i>Version control</div>
+        <div class="card-body">Vault lives in a private Git repo. Every agent write triggers a commit with `[agent-name]: [task summary]` as the commit message. Full audit trail of every decision the OS makes.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="sec">
+  <div class="sec-label">Full tech stack — every layer, every tool</div>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-brain" aria-hidden="true" style="color:#534AB7"></i>LLM backbone</div>
+      <div class="stack-row">
+        <span class="tool-pill">Claude Sonnet 4.6 — primary</span>
+        <span class="tool-pill">Claude Opus 4.6 — strategy</span>
+        <span class="tool-pill">Claude Haiku 4.5 — high-volume tasks</span>
+      </div>
+      <div class="note">Haiku for programmatic SEO page generation (cost). Opus for quarterly strategy planning. Sonnet for everything else daily.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-vector" aria-hidden="true" style="color:#0F6E56"></i>Vector DB / RAG</div>
+      <div class="stack-row">
+        <span class="tool-pill">Chroma DB (local, free)</span>
+        <span class="tool-pill">Pinecone (cloud, scale)</span>
+        <span class="tool-pill">LlamaIndex — chunking + retrieval</span>
+        <span class="tool-pill">text-embedding-3-small</span>
+      </div>
+      <div class="note">Start with Chroma locally. Migrate to Pinecone once you have 10+ clients and the vault grows beyond 5,000 notes.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-settings-automation" aria-hidden="true" style="color:#185FA5"></i>Agent orchestration</div>
+      <div class="stack-row">
+        <span class="tool-pill">n8n (self-hosted)</span>
+        <span class="tool-pill">LangChain / LangGraph</span>
+        <span class="tool-pill">Make.com (fallback)</span>
+      </div>
+      <div class="note">n8n is the nerve system — it runs the daily ops loop, triggers agents on schedule, and routes outputs back to the vault. LangGraph handles multi-step agent logic.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-search" aria-hidden="true" style="color:#854F0B"></i>SEO data APIs</div>
+      <div class="stack-row">
+        <span class="tool-pill">Ahrefs API</span>
+        <span class="tool-pill">Semrush API</span>
+        <span class="tool-pill">Google Search Console API</span>
+        <span class="tool-pill">Bing Webmaster API</span>
+        <span class="tool-pill">DataForSEO</span>
+        <span class="tool-pill">SerpAPI</span>
+      </div>
+      <div class="note">DataForSEO is the budget-friendly backbone for SERP data. Ahrefs/Semrush for backlinks + keyword research. GSC/Bing APIs for owned site data.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar" aria-hidden="true" style="color:#993C1D"></i>Analytics stack</div>
+      <div class="stack-row">
+        <span class="tool-pill">GA4 API</span>
+        <span class="tool-pill">Looker Studio</span>
+        <span class="tool-pill">BigQuery (optional)</span>
+        <span class="tool-pill">PostHog (product analytics)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-pencil" aria-hidden="true" style="color:#534AB7"></i>Content production</div>
+      <div class="stack-row">
+        <span class="tool-pill">Anthropic API (writing)</span>
+        <span class="tool-pill">Surfer SEO (NLP scoring)</span>
+        <span class="tool-pill">Clearscope (content grading)</span>
+        <span class="tool-pill">Perplexity API (research)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-database-import" aria-hidden="true" style="color:#0F6E56"></i>Programmatic SEO stack</div>
+      <div class="stack-row">
+        <span class="tool-pill">Airtable / Google Sheets (data)</span>
+        <span class="tool-pill">Next.js (dynamic routes)</span>
+        <span class="tool-pill">Webflow + Whalesync</span>
+        <span class="tool-pill">WordPress + WP All Import</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-ad-2" aria-hidden="true" style="color:#185FA5"></i>Paid ads APIs</div>
+      <div class="stack-row">
+        <span class="tool-pill">Google Ads API</span>
+        <span class="tool-pill">Meta Marketing API</span>
+        <span class="tool-pill">LinkedIn Campaign Manager API</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-social" aria-hidden="true" style="color:#854F0B"></i>Social media stack</div>
+      <div class="stack-row">
+        <span class="tool-pill">Buffer API</span>
+        <span class="tool-pill">Ayrshare API</span>
+        <span class="tool-pill">Taplio (LinkedIn)</span>
+        <span class="tool-pill">Canva API (visuals)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-mail" aria-hidden="true" style="color:#993C1D"></i>Outreach + CRM</div>
+      <div class="stack-row">
+        <span class="tool-pill">Instantly.ai (cold email)</span>
+        <span class="tool-pill">Hunter.io (prospecting)</span>
+        <span class="tool-pill">HubSpot CRM (free tier)</span>
+        <span class="tool-pill">Notion (client ops)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-eye" aria-hidden="true" style="color:#534AB7"></i>Site monitoring</div>
+      <div class="stack-row">
+        <span class="tool-pill">Screaming Frog (crawl)</span>
+        <span class="tool-pill">Uptime Robot (uptime)</span>
+        <span class="tool-pill">PageSpeed Insights API</span>
+        <span class="tool-pill">Cloudflare (CDN + logs)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-robot" aria-hidden="true" style="color:#0F6E56"></i>AI citation tracking</div>
+      <div class="stack-row">
+        <span class="tool-pill">Profound.co</span>
+        <span class="tool-pill">Otterly.ai</span>
+        <span class="tool-pill">Brandwatch (mentions)</span>
+        <span class="tool-pill">Manual GPT/Perp spot checks</span>
+      </div>
+      <div class="note">This is your GEO KPI layer — track how often agenticmarketingpro.com and your clients get cited by AI engines.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="sec">
+  <div class="sec-label">RAG pipeline — how context flows into every agent call</div>
+  <div style="display:flex;flex-direction:column;gap:.5rem">
+    <div class="flow-line">
+      <span class="flow-pill">Obsidian vault .md files</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">LlamaIndex chunker (512 tokens, 50 overlap)</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">text-embedding-3-small</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Chroma / Pinecone index</span>
+    </div>
+    <div class="flow-line">
+      <span class="flow-pill">n8n trigger fires (schedule / event)</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Task intent identified</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Top-k retrieval (k=8–15 chunks)</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Context injected into agent system prompt</span>
+    </div>
+    <div class="flow-line">
+      <span class="flow-pill">Claude API call (with context + task)</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Agent output (content / data / action)</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Write-back to Obsidian</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Re-embed updated note</span>
+    </div>
+    <div class="flow-line">
+      <span class="flow-pill">External API (GSC / Ahrefs / GA4)</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Data normalised to .md</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Vault update</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">RAG index refreshed nightly</span>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="sec">
+  <div class="sec-label">Week-by-week build sequence — Phase 1 to Phase 4</div>
+  <div style="display:flex;flex-direction:column;gap:.5rem">
+
+    <div class="card" style="padding:.75rem 1rem">
+      <div style="margin-bottom:.4rem"><span class="phase-badge ph1">Phase 1 — Weeks 1–3</span><span style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Foundation & brain setup</span></div>
+      <div class="card-body">
+        W1: Set up Obsidian vault with full folder structure. Install Git sync. Create all 11 core context documents (business, services, ICP, competitors, brand voice).<br>
+        W2: Stand up Chroma DB locally. Run LlamaIndex ingestion pipeline. Embed the full vault. Test retrieval quality with sample queries.<br>
+        W3: Set up n8n (Docker, self-hosted). Build the first trigger: daily GSC data pull → normalise to .md → vault write → re-embed. Validate the loop end-to-end.
+      </div>
+    </div>
+
+    <div class="card" style="padding:.75rem 1rem">
+      <div style="margin-bottom:.4rem"><span class="phase-badge ph2">Phase 2 — Weeks 4–6</span><span style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Core agents live</span></div>
+      <div class="card-body">
+        W4: Build Orchestrator Agent. System prompt ingests full business context via RAG. Add Competitor Intel Agent (weekly Ahrefs crawl → competitor-map.md).<br>
+        W5: Wire Analytics Agent (GA4 + GSC weekly digest → weekly-digest.md). Add Topic Authority Agent (Ahrefs keyword data → topic-clusters.md).<br>
+        W6: Build Content Strategist + Long-form Writer Agent pipeline. First end-to-end test: brief generation → draft → Obsidian → human review → publish.
+      </div>
+    </div>
+
+    <div class="card" style="padding:.75rem 1rem">
+      <div style="margin-bottom:.4rem"><span class="phase-badge ph3">Phase 3 — Weeks 7–10</span><span style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Full sub-agent fleet</span></div>
+      <div class="card-body">
+        W7: On-Page Agent (reads published-index.md, audits, writes fix queue). Off-Page Agent (prospecting pipeline via Hunter.io → Instantly.ai).<br>
+        W8: Programmatic SEO Agent (Airtable data → Next.js template → batch publish). AEO/GEO Agent (schema deployment, FAQ injection, entity consistency checks).<br>
+        W9: Social Media Agent (Ayrshare API, repurpose queue), Ad Expert Agent (Google Ads + Meta API monitoring), Email Agent (HubSpot sequences).<br>
+        W10: Site Health Monitor (Uptime Robot + PageSpeed API alerts), Bing/Copilot Agent, all 5 Writer Persona Agents tested and style-calibrated.
+      </div>
+    </div>
+
+    <div class="card" style="padding:.75rem 1rem">
+      <div style="margin-bottom:.4rem"><span class="phase-badge ph4">Phase 4 — Weeks 11–13</span><span style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Autonomous daily ops loop</span></div>
+      <div class="card-body">
+        W11: Wire the full daily ops loop in n8n (9-step sequence from previous session). Add human-approval gates for high-risk actions (publishing, ad spend changes).<br>
+        W12: Profit Plan Agent online. Revenue Channel Scout running weekly. Daily digest Slack/email delivery operational. Anomaly alerts firing correctly.<br>
+        W13: Stress test at 3× normal volume. Tune retrieval (adjust k, chunk size, re-ranker). Document all agent system prompts in vault under 11-Ops/. Hand off to autonomous mode.
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="sec">
+  <div class="sec-label">Agent system prompt architecture — the most critical design decision</div>
+  <div class="grid2">
+    <div class="card accent-purple">
+      <div class="card-title"><i class="ti ti-code" aria-hidden="true" style="color:#534AB7"></i>Every agent prompt has 5 fixed layers</div>
+      <div class="card-body">
+        <strong style="color:var(--color-text-primary);font-weight:500">1. Role definition</strong> — who the agent is, what it owns, what it never does.<br><br>
+        <strong style="color:var(--color-text-primary);font-weight:500">2. RAG context block</strong> — injected at runtime: relevant vault chunks pulled by LlamaIndex retrieval.<br><br>
+        <strong style="color:var(--color-text-primary);font-weight:500">3. Toolset declaration</strong> — which APIs this agent can call, which vault folders it can write to.<br><br>
+        <strong style="color:var(--color-text-primary);font-weight:500">4. Output format spec</strong> — exact markdown structure the agent must return (for vault write-back).<br><br>
+        <strong style="color:var(--color-text-primary);font-weight:500">5. Escalation rule</strong> — when to flag for human review vs. proceed autonomously.
+      </div>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-title"><i class="ti ti-lock" aria-hidden="true" style="color:#0F6E56"></i>Human approval gates — what always needs a human</div>
+      <div class="card-body">
+        — Any ad spend change &gt; $100/day<br>
+        — Publishing content to client sites<br>
+        — Sending any outreach email<br>
+        — Changing site technical structure (redirects, canonicals)<br>
+        — Any action affecting a live Google Ads campaign<br>
+        — New programmatic SEO batch &gt; 50 pages<br><br>
+        Everything else: the OS runs fully autonomously and logs to `daily-ops-log.md`.
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="sec">
+  <div class="sec-label">Monthly cost estimate — running the full OS</div>
+  <div class="grid4">
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center">
+      <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:.2rem">LLM API (Claude)</div>
+      <div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">$80–200</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">at 10 clients</div>
+    </div>
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center">
+      <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:.2rem">SEO APIs (Ahrefs etc.)</div>
+      <div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">$150–400</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">tier-dependent</div>
+    </div>
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center">
+      <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:.2rem">n8n + infra</div>
+      <div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">$20–50</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">self-hosted VPS</div>
+    </div>
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center">
+      <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:.2rem">Social + outreach tools</div>
+      <div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">$100–200</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">Buffer, Instantly etc.</div>
+    </div>
+  </div>
+  <div class="note" style="margin-top:.8rem">Total OS running cost: ~$350–$850/mo. Vs. a single full-time SEO hire at $3,000–$5,000/mo. At 3+ clients, the OS pays for itself many times over.</div>
+</div>
+
+</div>

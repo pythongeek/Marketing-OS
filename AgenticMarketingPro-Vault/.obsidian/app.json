@@ -1,0 +1,11 @@
+{
+  "theme": "obsidian",
+  "newFileLocation": "current",
+  "useMarkdownLinks": false,
+  "newLinkFormat": "shortest",
+  "attachmentFolderPath": "_attachments",
+  "alwaysUpdateLinks": true,
+  "promptDelete": false,
+  "showLineNumber": true,
+  "spellcheck": true
+}
