@@ -54,6 +54,10 @@ skills/                      ← Kimi Work runtime skills (30 agent capabilities
 
 agentic_marketing_os_master_plan.html         ← Visual agent architecture dashboard
 obsidian_rag_techstack_architecture.html    ← RAG pipeline & tech stack docs
+infrastructure/                              ← Python API wrappers, RAG, scripts
+  api_client/                                ← GSC, GA4, Ahrefs, Semrush, Bing
+  rag/                                       ← ChromaDB + LlamaIndex pipeline
+  scripts/                                   ← ingest, health_check, cost_tracker
 ```
 
 ## How It Works
@@ -64,6 +68,21 @@ obsidian_rag_techstack_architecture.html    ← RAG pipeline & tech stack docs
 |-------|----------|---------|
 | **Skills** (`skills/`) | Runtime capabilities — How agents execute | Procedural memory for 30+ specialist roles |
 | **Vault** (`AgenticMarketingPro-Vault/`) | Persistent data — What agents know and produce | Client data, competitor maps, content, KPIs, logs |
+| **Infrastructure** (`infrastructure/`) | Python scripts — What connects agents to APIs | API clients, RAG pipeline, health checks, cost tracking |
+
+### Data Flow
+
+```
+Vault (.md files)  ←──→  RAG Pipeline (ChromaDB)  ←──→  Agents (Skills)
+                              ↑
+                    API Clients (GSC, GA4, Ahrefs, etc.)
+```
+
+1. **Agents read** from vault via RAG (semantic search + metadata filters)
+2. **Agents call** APIs through infrastructure wrappers (with retry, rate limiting, auth)
+3. **Agents write** outputs back to vault with YAML frontmatter
+4. **Cost tracker** logs every API call and enforces daily/monthly budgets
+5. **Health checker** verifies all integrations daily
 
 ### Daily Ops Loop (Atlas Orchestrator)
 
@@ -107,24 +126,51 @@ All outputs are written to the vault with YAML frontmatter. All actions are logg
 ### 1. Open the Vault in Obsidian
 1. Install [Obsidian](https://obsidian.md/)
 2. Open `AgenticMarketingPro-Vault/` as a vault
-3. Install plugins: Dataview, Templater, Obsidian Git, Smart Connections
+3. Recommended plugins: Dataview, Templater, Obsidian Git, Smart Connections
 
-### 2. Install Skills (for Kimi Work)
-Skills are managed in `~/.kimi/daimon/skills/` on your Kimi Work runtime. Copy the `skills/` folder contents there to make them active.
+### 2. Install Python Infrastructure
+```bash
+# Install all dependencies
+python setup.py --install
 
-### 3. Configure Secrets
-- Store API credentials in 1Password or HashiCorp Vault
-- Reference them by environment variable name in `AgenticMarketingPro-Vault/11-Ops/integrations/`
-- Never commit credentials to this repo
+# Verify environment
+python setup.py --test
+```
 
-### 4. Stand Up the RAG Pipeline
-1. Install Chroma DB: `pip install chromadb`
-2. Install LlamaIndex: `pip install llama-index`
-3. Run ingestion script (TBD) to index all vault `.md` files
-4. Verify with sample query
+### 3. Configure API Keys
+```bash
+cp .env.example .env
+# Edit .env with your actual API keys
+```
 
-### 5. Run the Daily Ops Loop
+Store credentials in 1Password or a password manager. Never commit `.env` to Git.
+
+### 4. Install Skills into Kimi Work
+Skills are managed in `~/.kimi/daimon/skills/` on your Kimi Work runtime. Copy the `skills/` folder contents there:
+```bash
+cp -r skills/* ~/.kimi/daimon/skills/
+```
+
+### 5. Stand Up the RAG Pipeline
+```bash
+# Ingest all vault markdown into ChromaDB
+python infrastructure/scripts/ingest_vault.py --force
+
+# Verify
+python -c "from infrastructure.rag.pipeline import VaultRAG; rag = VaultRAG(); print(rag.stats())"
+```
+
+### 6. Run Health Check
+```bash
+python infrastructure/scripts/health_check.py --verbose
+```
+
+This tests connectivity for all configured APIs across 7 categories (LLM, SEO, Google, Ads, Social, Monitoring, Vector DB).
+
+### 7. Run the Daily Ops Loop
 Trigger via Kimi Work Cron or manually: "Run the daily ops loop for [client]"
+
+Agents will read from the vault via RAG, call APIs through the infrastructure wrappers, and write outputs back to the vault with YAML frontmatter.
 
 ## Business Model
 
