@@ -1,24 +1,21 @@
 ---
 type: index
-last_updated: 2026-01-20
-tags: [index]
+last_updated: 2026-06-20
+tags: [index, navigation, dashboard]
 ---
 
 # 📑 Vault Index
 
-> Quick navigation to every major section of the vault.
+> Quick navigation to every major section of the vault. Updated automatically after each agent run.
 
-## Agency core
-- [[00-Agency-Core/business-context]]
-- [[00-Agency-Core/services-and-pricing]]
-- [[00-Agency-Core/icp-and-personas]]
-- [[00-Agency-Core/brand-voice-guide]]
-- [[00-Agency-Core/revenue-targets]]
-- [[00-Agency-Core/positioning-statements]]
-- [[00-Agency-Core/operational-principles]]
-- [[00-Agency-Core/_dashboards/command-center|🎯 Command Center Dashboard]]
+## Visual Dashboards
+- [[00-Agency-Core/_dashboards/brain-map|🧠 Brain Map — Interactive entity graph]]
+- [[00-Agency-Core/_dashboards/dashboard|📊 Master Dashboard — Charts + metrics]]
+- [[00-Agency-Core/_dashboards/command-center|🎯 Command Center — Daily ops overview]]
 
 ## Client work
+- [[01-Clients/_template-client/client-profile|📋 Client Profile Template]]
+- [[01-Clients/_template-client/website-manifest|🌐 Website Manifest Template]]
 - [[01-Clients/_template-client/onboarding|Client Onboarding Template]]
 - [[01-Clients/_template-client/kpis-and-goals|KPIs Template]]
 - [[01-Clients/_template-client/strategy-90-day|90-Day Strategy Template]]
