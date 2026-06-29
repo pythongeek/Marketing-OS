@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤝 Influencer Campaign Setup</title>
+    <style>
+    :root { --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a40; --text: #e0e0e0; --muted: #888; --accent: #4A90D9; --accent-hover: #357ABD; --danger: #E74C3C; --success: #50C878; --warning: #F39C12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+    .header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .field { margin-bottom: 24px; }
+    .field.hidden { display: none; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .required { color: var(--danger); }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 14px; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    input:invalid, select:invalid, textarea:invalid { border-color: var(--danger); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input, .radio-item input { width: auto; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .status { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none; }
+    .status.success { background: rgba(80,200,120,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .status.error { background: rgba(231,76,60,0.1); border: 1px solid var(--danger); color: var(--danger); display: block; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .agent-id { font-family: monospace; background: var(--card); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤝 Influencer Campaign Setup</h1>
+            <p>Design an influencer marketing campaign: goals, creator criteria, compensation, and content brief.</p>
+        </div>
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
+<div class="field" id="field-campaign_name">
+  <label for="campaign_name">Campaign Name <span class="required">*</span></label>
+  <input type="text" name="campaign_name" id="campaign_name" required placeholder="e.g., Q3 Micro-Influencer Awareness Push" value="">
+</div>
+<div class="field" id="field-campaign_goal">
+  <label for="campaign_goal">Campaign Goal <span class="required">*</span></label>
+  <select name="campaign_goal" id="campaign_goal" required>
+    <option value="">-- Select --</option>
+    <option value="Brand Awareness">Brand Awareness</option>
+    <option value="Product Launch">Product Launch</option>
+    <option value="Content Generation (UGC)">Content Generation (UGC)</option>
+    <option value="Traffic / Clicks">Traffic / Clicks</option>
+    <option value="Conversions / Sales">Conversions / Sales</option>
+    <option value="App Installs">App Installs</option>
+    <option value="Community Building">Community Building</option>
+    <option value="Event Promotion">Event Promotion</option>
+  </select>
+</div>
+<div class="field" id="field-product_description">
+  <label for="product_description">Product / Service to Promote <span class="required">*</span></label>
+  <textarea name="product_description" id="product_description" required placeholder="What is the creator promoting? Key features, benefits, and unique selling points..." rows="3"></textarea>
+</div>
+<div class="field" id="field-target_audience">
+  <label for="target_audience">Target Audience <span class="required">*</span></label>
+  <textarea name="target_audience" id="target_audience" required placeholder="Who should the creator's audience be? Demographics, interests, behaviors..." rows="3"></textarea>
+</div>
+<div class="field" id="field-creator_criteria">
+  <label for="creator_criteria">Creator Criteria <span class="required">*</span></label>
+  <div class="checkbox-group">
+    <label class="checkbox-item"><input type="checkbox" name="creator_criteria" value="Follower count (micro: 10K-100K, macro: 100K-1M, mega: 1M+)"> Follower count (micro: 10K-100K, macro: 100K-1M, mega: 1M+)</label>
+    <label class="checkbox-item"><input type="checkbox" name="creator_criteria" value="Engagement rate (>3%)"> Engagement rate (>3%)</label>
+    <label class="checkbox-item"><input type="checkbox" name="creator_criteria" value="Niche relevance"> Niche relevance</label>
+    <label class="checkbox-item"><input type="checkbox" name="creator_criteria" value="Location / Language"> Location / Language</label>
+    <label class="checkbox-item"><input type="checkbox" name="creator_criteria" value="Content quality (professional production)"> Content quality (professional production)</label>
+    <label class="checkbox-item"><input type="checkbox" name="creator_criteria" value="Authenticity / no fake followers"> Authenticity / no fake followers</label>
+    <label class="checkbox-item"><input type="checkbox" name="creator_criteria" value="Past brand collaborations"> Past brand collaborations</label>
+    <label class="checkbox-item"><input type="checkbox" name="creator_criteria" value="Audience demographic match"> Audience demographic match</label>
+  </div>
+</div>
+<div class="field" id="field-follower_range">
+  <label for="follower_range">Preferred Follower Range</label>
+  <select name="follower_range" id="follower_range">
+    <option value="Nano (1K–10K)">Nano (1K–10K)</option>
+    <option value="Micro (10K–100K)" selected>Micro (10K–100K)</option>
+    <option value="Mid-tier (100K–500K)">Mid-tier (100K–500K)</option>
+    <option value="Macro (500K–1M)">Macro (500K–1M)</option>
+    <option value="Mega (1M+)">Mega (1M+)</option>
+    <option value="Any size (relevance > reach)">Any size (relevance > reach)</option>
+  </select>
+</div>
+<div class="field" id="field-content_format">
+  <label for="content_format">Content Format <span class="required">*</span></label>
+  <div class="checkbox-group">
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="Instagram Feed Post"> Instagram Feed Post</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="Instagram Story / Reel"> Instagram Story / Reel</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="TikTok Video"> TikTok Video</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="YouTube Video (integrated)"> YouTube Video (integrated)</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="YouTube Short"> YouTube Short</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="Twitter/X Thread"> Twitter/X Thread</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="LinkedIn Post"> LinkedIn Post</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="Blog Post / Review"> Blog Post / Review</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="Podcast Mention"> Podcast Mention</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="Newsletter Feature"> Newsletter Feature</label>
+    <label class="checkbox-item"><input type="checkbox" name="content_format" value="Live Stream"> Live Stream</label>
+  </div>
+</div>
+<div class="field" id="field-compensation_model">
+  <label for="compensation_model">Compensation Model <span class="required">*</span></label>
+  <select name="compensation_model" id="compensation_model" required>
+    <option value="">-- Select --</option>
+    <option value="Fixed fee per post">Fixed fee per post</option>
+    <option value="Performance-based (CPA / sales)">Performance-based (CPA / sales)</option>
+    <option value="Product seeding (free product only)">Product seeding (free product only)</option>
+    <option value="Affiliate commission">Affiliate commission</option>
+    <option value="Equity / Revenue share">Equity / Revenue share</option>
+    <option value="Hybrid (fixed + performance)">Hybrid (fixed + performance)</option>
+  </select>
+</div>
+<div class="field" id="field-budget_per_creator">
+  <label for="budget_per_creator">Budget Per Creator (USD)</label>
+  <input type="number" name="budget_per_creator" id="budget_per_creator" placeholder="500" min="0" value="">
+</div>
+<div class="field" id="field-total_budget">
+  <label for="total_budget">Total Campaign Budget (USD)</label>
+  <input type="number" name="total_budget" id="total_budget" placeholder="5000" min="0" value="">
+</div>
+<div class="field" id="field-creator_count">
+  <label for="creator_count">Number of Creators</label>
+  <input type="number" name="creator_count" id="creator_count" placeholder="10" min="1" value="10">
+</div>
+<div class="field" id="field-key_messages">
+  <label for="key_messages">Key Messages / Talking Points</label>
+  <textarea name="key_messages" id="key_messages" placeholder="What must the creator mention? What should they avoid?" rows="3"></textarea>
+</div>
+<div class="field" id="field-hashtags">
+  <label for="hashtags">Required Hashtags / Tags</label>
+  <input type="text" name="hashtags" id="hashtags" placeholder="e.g., #AcmePartner #SaaSForTeams @acme_official" value="">
+</div>
+<div class="field" id="field-usage_rights">
+  <label for="usage_rights">Content Usage Rights</label>
+  <select name="usage_rights" id="usage_rights">
+    <option value="Creator keeps rights (no reuse)">Creator keeps rights (no reuse)</option>
+    <option value="Brand can reuse in organic social" selected>Brand can reuse in organic social</option>
+    <option value="Brand can reuse in paid ads">Brand can reuse in paid ads</option>
+    <option value="Brand can reuse everywhere (full rights)">Brand can reuse everywhere (full rights)</option>
+  </select>
+</div>
+<div class="field" id="field-campaign_dates">
+  <label for="campaign_dates">Campaign Dates</label>
+  <input type="text" name="campaign_dates" id="campaign_dates" placeholder="e.g., Start: 2026-07-01, End: 2026-08-15" value="">
+</div>
+<div class="field" id="field-notes">
+  <label for="notes">Notes</label>
+  <textarea name="notes" id="notes" placeholder="Any specific creator wishlist, competitor collaborations to avoid, or compliance requirements..." rows="2"></textarea>
+</div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Design Campaign</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+        <div class="footer">
+            <p>Form ID: <span class="agent-id">influencer-campaign</span></p>
+            <p>Generated by AgenticMarketingPro Form Engine</p>
+        </div>
+    </div>
+    <script>
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "campaign_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "campaign_goal", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "product_description", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "target_audience", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "creator_criteria", "type": "checkbox", "required": true, "depends_on": null, "depends_value": null}, {"name": "follower_range", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "content_format", "type": "checkbox", "required": true, "depends_on": null, "depends_value": null}, {"name": "compensation_model", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "budget_per_creator", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "total_budget", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "creator_count", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "key_messages", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "hashtags", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "usage_rights", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "campaign_dates", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const form = document.getElementById('agent-form');
+        const status = document.getElementById('status');
+
+        // Load from localStorage
+        function loadForm() {
+            const saved = localStorage.getItem('form_' + form.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const el = form.querySelector(`[name="${key}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = data[key];
+                            } else {
+                                el.value = data[key];
+                            }
+                        }
+                    });
+                    updateConditionalFields();
+                } catch (e) {}
+            }
+        }
+
+        // Save to localStorage on change
+        form.addEventListener('input', function() {
+            const data = {};
+            fields.forEach(f => {
+                const el = form.querySelector(`[name="${f.name}"]`);
+                if (el) {
+                    data[f.name] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('form_' + form.id, JSON.stringify(data));
+        });
+
+        // Conditional fields
+        function updateConditionalFields() {
+            fields.forEach(f => {
+                if (f.depends_on) {
+                    const parent = form.querySelector(`[name="${f.depends_on}"]`);
+                    const fieldDiv = document.getElementById('field-' + f.name);
+                    if (parent && fieldDiv) {
+                        const parentValue = parent.type === 'checkbox' ? parent.checked : parent.value;
+                        const shouldShow = !f.depends_value || parentValue === f.depends_value;
+                        fieldDiv.classList.toggle('hidden', !shouldShow);
+                    }
+                }
+            });
+        }
+
+        form.addEventListener('change', updateConditionalFields);
+
+        // Submit handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Add metadata
+            result._meta = {
+                form_title: "🤝 Influencer Campaign Setup",
+                submitted_at: new Date().toISOString(),
+                form_id: "influencer-campaign"
+            };
+
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'influencer-campaign-response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
+        });
+
+        function clearForm() {
+            form.reset();
+            localStorage.removeItem('form_' + form.id);
+            updateConditionalFields();
+            status.className = "status";
+        }
+
+        // Initialize
+        loadForm();
+        updateConditionalFields();
+    </script>
+</body>
+</html>

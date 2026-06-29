@@ -7,6 +7,40 @@ description: "Build, validate, and refine the 5-layer agent system prompts used 
 
 Builds the 5-layer agent configs that power every specialist agent in the OS.
 
+
+## Interactive Mode (Form-First)
+
+When this skill needs data that doesn't exist in the vault, it generates an interactive HTML form instead of failing silently.
+
+### How It Works
+
+1. **Check vault** for required data (client context, configs, prior outputs)
+2. **If data is missing** → generate the appropriate form via `FormEngine`
+3. **Present the form** to the user and wait for the JSON response
+4. **Process the response** → create vault artifacts, update configs, or run the analysis
+
+### Form Generation
+
+```bash
+python infrastructure/ui/form_engine.py --agent-config
+# Fill the form in your browser, save the JSON response
+# Then tell the agent: "I filled the form"
+```
+
+### After Form Submission
+
+```bash
+# The agent reads the response and proceeds with the workflow
+# Response file: forms/agent-config-response.json
+```
+
+### Security
+
+- **Sensitive data** (API keys, passwords) goes to `.env` only — NEVER to the vault
+- **Application passwords** (WordPress) are used instead of login passwords
+- All password fields are masked in the HTML form
+- Form responses are local to your machine
+
 ## When to Use
 
 - Creating a new agent from scratch

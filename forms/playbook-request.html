@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Playbook Creation Request</title>
+    <style>
+    :root { --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a40; --text: #e0e0e0; --muted: #888; --accent: #4A90D9; --accent-hover: #357ABD; --danger: #E74C3C; --success: #50C878; --warning: #F39C12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+    .header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .field { margin-bottom: 24px; }
+    .field.hidden { display: none; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .required { color: var(--danger); }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 14px; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    input:invalid, select:invalid, textarea:invalid { border-color: var(--danger); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input, .radio-item input { width: auto; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .status { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none; }
+    .status.success { background: rgba(80,200,120,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .status.error { background: rgba(231,76,60,0.1); border: 1px solid var(--danger); color: var(--danger); display: block; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .agent-id { font-family: monospace; background: var(--card); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Playbook Creation Request</h1>
+            <p>Request a new SOP, playbook, or process documentation for the agency.</p>
+        </div>
+        <form id="agent-form">
+            <div class="field" id="field-playbook_name">
+  <label for="playbook_name">Playbook Name <span class="required">*</span></label>
+  <input type="text" name="playbook_name" id="playbook_name" required placeholder="e.g., Client Offboarding SOP" value="">
+</div>
+<div class="field" id="field-playbook_type">
+  <label for="playbook_type">Playbook Type <span class="required">*</span></label>
+  <select name="playbook_type" id="playbook_type" required>
+    <option value="">-- Select --</option>
+    <option value="Standard Operating Procedure (SOP)">Standard Operating Procedure (SOP)</option>
+    <option value="Process flow">Process flow</option>
+    <option value="Decision tree / Triage rules">Decision tree / Triage rules</option>
+    <option value="Checklist">Checklist</option>
+    <option value="Template">Template</option>
+    <option value="Reference guide">Reference guide</option>
+    <option value="Training material">Training material</option>
+    <option value="Policy / Compliance document">Policy / Compliance document</option>
+  </select>
+</div>
+<div class="field" id="field-purpose">
+  <label for="purpose">Purpose <span class="required">*</span></label>
+  <textarea name="purpose" id="purpose" required placeholder="What problem does this playbook solve? When should it be used?" rows="3"></textarea>
+</div>
+<div class="field" id="field-audience">
+  <label for="audience">Target Audience <span class="required">*</span></label>
+  <select name="audience" id="audience" required>
+    <option value="All agents" selected>All agents</option>
+    <option value="Specific agent (name below)">Specific agent (name below)</option>
+    <option value="Human team members">Human team members</option>
+    <option value="Client-facing">Client-facing</option>
+    <option value="Internal only">Internal only</option>
+  </select>
+</div>
+<div class="field" data-depends-on="audience" data-depends-value="Specific agent (name below)" id="field-specific_agent">
+  <label for="specific_agent">Specific Agent (if applicable)</label>
+  <input type="text" name="specific_agent" id="specific_agent" placeholder="e.g., content-strategist" value="">
+</div>
+<div class="field" id="field-scope">
+  <label for="scope">Scope / Boundaries</label>
+  <textarea name="scope" id="scope" placeholder="What does this playbook cover? What does it NOT cover?" rows="2"></textarea>
+</div>
+<div class="field" id="field-inputs">
+  <label for="inputs">Required Inputs</label>
+  <textarea name="inputs" id="inputs" placeholder="What data, tools, or context are needed to use this playbook?" rows="2"></textarea>
+</div>
+<div class="field" id="field-outputs">
+  <label for="outputs">Expected Outputs</label>
+  <textarea name="outputs" id="outputs" placeholder="What does this playbook produce?" rows="2"></textarea>
+</div>
+<div class="field" id="field-steps_estimate">
+  <label for="steps_estimate">Estimated Number of Steps</label>
+  <input type="number" name="steps_estimate" id="steps_estimate" placeholder="10" min="1" value="">
+</div>
+<div class="field" id="field-related_playbooks">
+  <label for="related_playbooks">Related Playbooks</label>
+  <input type="text" name="related_playbooks" id="related_playbooks" placeholder="Names of existing playbooks this relates to or replaces..." value="">
+</div>
+<div class="field" id="field-priority">
+  <label for="priority">Priority</label>
+  <select name="priority" id="priority">
+    <option value="P0 (Urgent — blocking operations)">P0 (Urgent — blocking operations)</option>
+    <option value="P1 (High — needed within 1 week)">P1 (High — needed within 1 week)</option>
+    <option value="P2 (Medium — needed within 1 month)" selected>P2 (Medium — needed within 1 month)</option>
+    <option value="P3 (Low — backlog)">P3 (Low — backlog)</option>
+  </select>
+</div>
+<div class="field" id="field-notes">
+  <label for="notes">Notes</label>
+  <textarea name="notes" id="notes" placeholder="Any examples, templates, or reference materials..." rows="2"></textarea>
+</div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Request Playbook</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+        <div class="footer">
+            <p>Form ID: <span class="agent-id">playbook-request</span></p>
+            <p>Generated by AgenticMarketingPro Form Engine</p>
+        </div>
+    </div>
+    <script>
+        const fields = [{"name": "playbook_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "playbook_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "purpose", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "audience", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "specific_agent", "type": "text", "required": false, "depends_on": "audience", "depends_value": "Specific agent (name below)"}, {"name": "scope", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "inputs", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "outputs", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "steps_estimate", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "related_playbooks", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "priority", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const form = document.getElementById('agent-form');
+        const status = document.getElementById('status');
+
+        // Load from localStorage
+        function loadForm() {
+            const saved = localStorage.getItem('form_' + form.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const el = form.querySelector(`[name="${key}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = data[key];
+                            } else {
+                                el.value = data[key];
+                            }
+                        }
+                    });
+                    updateConditionalFields();
+                } catch (e) {}
+            }
+        }
+
+        // Save to localStorage on change
+        form.addEventListener('input', function() {
+            const data = {};
+            fields.forEach(f => {
+                const el = form.querySelector(`[name="${f.name}"]`);
+                if (el) {
+                    data[f.name] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('form_' + form.id, JSON.stringify(data));
+        });
+
+        // Conditional fields
+        function updateConditionalFields() {
+            fields.forEach(f => {
+                if (f.depends_on) {
+                    const parent = form.querySelector(`[name="${f.depends_on}"]`);
+                    const fieldDiv = document.getElementById('field-' + f.name);
+                    if (parent && fieldDiv) {
+                        const parentValue = parent.type === 'checkbox' ? parent.checked : parent.value;
+                        const shouldShow = !f.depends_value || parentValue === f.depends_value;
+                        fieldDiv.classList.toggle('hidden', !shouldShow);
+                    }
+                }
+            });
+        }
+
+        form.addEventListener('change', updateConditionalFields);
+
+        // Submit handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Add metadata
+            result._meta = {
+                form_title: "📚 Playbook Creation Request",
+                submitted_at: new Date().toISOString(),
+                form_id: "playbook-request"
+            };
+
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'playbook-request-response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
+        });
+
+        function clearForm() {
+            form.reset();
+            localStorage.removeItem('form_' + form.id);
+            updateConditionalFields();
+            status.className = "status";
+        }
+
+        // Initialize
+        loadForm();
+        updateConditionalFields();
+    </script>
+</body>
+</html>

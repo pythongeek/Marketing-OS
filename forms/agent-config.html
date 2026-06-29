@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Agent Config — New Agent or Update</title>
+    <style>
+    :root { --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a40; --text: #e0e0e0; --muted: #888; --accent: #4A90D9; --accent-hover: #357ABD; --danger: #E74C3C; --success: #50C878; --warning: #F39C12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+    .header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .field { margin-bottom: 24px; }
+    .field.hidden { display: none; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .required { color: var(--danger); }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 14px; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    input:invalid, select:invalid, textarea:invalid { border-color: var(--danger); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input, .radio-item input { width: auto; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .status { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none; }
+    .status.success { background: rgba(80,200,120,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .status.error { background: rgba(231,76,60,0.1); border: 1px solid var(--danger); color: var(--danger); display: block; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .agent-id { font-family: monospace; background: var(--card); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Agent Config — New Agent or Update</h1>
+            <p>Create or update an agent configuration with the 5-layer template.</p>
+        </div>
+        <form id="agent-form">
+            <div class="field" id="field-agent_name">
+  <label for="agent_name">Agent Name (kebab-case) <span class="required">*</span></label>
+  <input type="text" name="agent_name" id="agent_name" required placeholder="e.g., new-specialist-agent" value="">
+</div>
+<div class="field" id="field-action">
+  <label for="action">Action <span class="required">*</span></label>
+  <select name="action" id="action" required>
+    <option value="">-- Select --</option>
+    <option value="Create new agent">Create new agent</option>
+    <option value="Update existing agent">Update existing agent</option>
+  </select>
+</div>
+<div class="field" id="field-role_definition">
+  <label for="role_definition">1. Role Definition <span class="required">*</span></label>
+  <textarea name="role_definition" id="role_definition" required placeholder="What is this agent's role? What does it do? What does it NOT do?" rows="3"></textarea>
+</div>
+<div class="field" id="field-rag_context">
+  <label for="rag_context">2. RAG Context Block <span class="required">*</span></label>
+  <textarea name="rag_context" id="rag_context" required placeholder="What vault files does this agent read? What context does it need?" rows="3"></textarea>
+</div>
+<div class="field" id="field-toolset">
+  <label for="toolset">3. Toolset Declaration <span class="required">*</span></label>
+  <textarea name="toolset" id="toolset" required placeholder="What tools, APIs, and integrations does this agent use?" rows="3"></textarea>
+</div>
+<div class="field" id="field-output_format">
+  <label for="output_format">4. Output Format Spec <span class="required">*</span></label>
+  <textarea name="output_format" id="output_format" required placeholder="What does this agent produce? File format, structure, frontmatter requirements..." rows="3"></textarea>
+</div>
+<div class="field" id="field-escalation_rules">
+  <label for="escalation_rules">5. Escalation Rules <span class="required">*</span></label>
+  <textarea name="escalation_rules" id="escalation_rules" required placeholder="When does this agent escalate? To whom? What are the retry rules?" rows="3"></textarea>
+</div>
+<div class="field" id="field-related_agents">
+  <label for="related_agents">Related Agents</label>
+  <input type="text" name="related_agents" id="related_agents" placeholder="e.g., atlas-orchestrator, content-strategist, qa-pipeline" value="">
+</div>
+<div class="field" id="field-cost_budget">
+  <label for="cost_budget">Daily Cost Budget (USD)</label>
+  <input type="number" name="cost_budget" id="cost_budget" placeholder="5" min="0" value="5">
+</div>
+<div class="field" id="field-timeout_seconds">
+  <label for="timeout_seconds">Default Timeout (seconds)</label>
+  <input type="number" name="timeout_seconds" id="timeout_seconds" placeholder="1800" min="300" value="1800">
+</div>
+<div class="field" id="field-notes">
+  <label for="notes">Notes</label>
+  <textarea name="notes" id="notes" placeholder="Any additional configuration, personality traits, or special instructions..." rows="2"></textarea>
+</div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Save Agent Config</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+        <div class="footer">
+            <p>Form ID: <span class="agent-id">agent-config</span></p>
+            <p>Generated by AgenticMarketingPro Form Engine</p>
+        </div>
+    </div>
+    <script>
+        const fields = [{"name": "agent_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "action", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "role_definition", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "rag_context", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "toolset", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "output_format", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "escalation_rules", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "related_agents", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "cost_budget", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "timeout_seconds", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const form = document.getElementById('agent-form');
+        const status = document.getElementById('status');
+
+        // Load from localStorage
+        function loadForm() {
+            const saved = localStorage.getItem('form_' + form.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const el = form.querySelector(`[name="${key}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = data[key];
+                            } else {
+                                el.value = data[key];
+                            }
+                        }
+                    });
+                    updateConditionalFields();
+                } catch (e) {}
+            }
+        }
+
+        // Save to localStorage on change
+        form.addEventListener('input', function() {
+            const data = {};
+            fields.forEach(f => {
+                const el = form.querySelector(`[name="${f.name}"]`);
+                if (el) {
+                    data[f.name] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('form_' + form.id, JSON.stringify(data));
+        });
+
+        // Conditional fields
+        function updateConditionalFields() {
+            fields.forEach(f => {
+                if (f.depends_on) {
+                    const parent = form.querySelector(`[name="${f.depends_on}"]`);
+                    const fieldDiv = document.getElementById('field-' + f.name);
+                    if (parent && fieldDiv) {
+                        const parentValue = parent.type === 'checkbox' ? parent.checked : parent.value;
+                        const shouldShow = !f.depends_value || parentValue === f.depends_value;
+                        fieldDiv.classList.toggle('hidden', !shouldShow);
+                    }
+                }
+            });
+        }
+
+        form.addEventListener('change', updateConditionalFields);
+
+        // Submit handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Add metadata
+            result._meta = {
+                form_title: "🤖 Agent Config — New Agent or Update",
+                submitted_at: new Date().toISOString(),
+                form_id: "agent-config"
+            };
+
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'agent-config-response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
+        });
+
+        function clearForm() {
+            form.reset();
+            localStorage.removeItem('form_' + form.id);
+            updateConditionalFields();
+            status.className = "status";
+        }
+
+        // Initialize
+        loadForm();
+        updateConditionalFields();
+    </script>
+</body>
+</html>

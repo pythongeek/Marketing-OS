@@ -125,9 +125,7 @@ status = tracker.check_budget()  # Returns daily/monthly status + throttle/pause
 
 Budgets are enforced via `LLM_DAILY_BUDGET_USD` and `LLM_MONTHLY_BUDGET_USD` env vars.
 
-## Visual Tools
-
-### Brain Map (`scripts/generate_brain_map.py`)
+## Visual Tools (`scripts/generate_brain_map.py`)
 Interactive D3.js force-directed graph showing all vault entities:
 - **Clients** (blue) as central nodes
 - **Websites** (green) owned by clients

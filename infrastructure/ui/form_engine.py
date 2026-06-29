@@ -481,9 +481,13 @@ def main():
     if args.all or args.wordpress:
         paths.append(engine.create_wordpress_config_form())
     if args.all or args.content_brief:
-        paths.append(engine.create_content_brief_form())
 
-    if not paths:
+        # Generate all preset forms (competitor, ad, social, local, etc.)
+        from ui.form_presets import FormPresets
+        presets = FormPresets(engine)
+        preset_paths = presets.generate_all()
+        paths.extend(preset_paths)
+
         paths.append(engine.create_client_onboarding_form())
         paths.append(engine.create_api_credentials_form())
         paths.append(engine.create_wordpress_config_form())

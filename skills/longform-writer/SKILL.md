@@ -19,6 +19,40 @@ Writes authority content. Briefs in, drafts out. Never publishes without QA.
 8. **Hand off to QA:** Update brief status to `in-review`.
 9. **Log run:** `11-Ops/agent-logs/longform-writer/YYYY-MM-DD-run-id.md`
 
+
+## Interactive Mode (Form-First)
+
+When this skill needs data that doesn't exist in the vault, it generates an interactive HTML form instead of failing silently.
+
+### How It Works
+
+1. **Check vault** for required data (client context, configs, prior outputs)
+2. **If data is missing** → generate the appropriate form via `FormEngine`
+3. **Present the form** to the user and wait for the JSON response
+4. **Process the response** → create vault artifacts, update configs, or run the analysis
+
+### Form Generation
+
+```bash
+python infrastructure/ui/form_engine.py --content-brief
+# Fill the form in your browser, save the JSON response
+# Then tell the agent: "I filled the form"
+```
+
+### After Form Submission
+
+```bash
+# The agent reads the response and proceeds with the workflow
+# Response file: forms/content-brief-response.json
+```
+
+### Security
+
+- **Sensitive data** (API keys, passwords) goes to `.env` only — NEVER to the vault
+- **Application passwords** (WordPress) are used instead of login passwords
+- All password fields are masked in the HTML form
+- Form responses are local to your machine
+
 ## The 5 Voice Principles (Mandatory)
 
 Every paragraph must pass these. Auto-reject if violated:

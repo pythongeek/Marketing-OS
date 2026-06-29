@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 On-Page Optimization Request</title>
+    <style>
+    :root { --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a40; --text: #e0e0e0; --muted: #888; --accent: #4A90D9; --accent-hover: #357ABD; --danger: #E74C3C; --success: #50C878; --warning: #F39C12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+    .header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .field { margin-bottom: 24px; }
+    .field.hidden { display: none; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .required { color: var(--danger); }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 14px; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    input:invalid, select:invalid, textarea:invalid { border-color: var(--danger); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input, .radio-item input { width: auto; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .status { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none; }
+    .status.success { background: rgba(80,200,120,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .status.error { background: rgba(231,76,60,0.1); border: 1px solid var(--danger); color: var(--danger); display: block; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .agent-id { font-family: monospace; background: var(--card); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 On-Page Optimization Request</h1>
+            <p>Request an on-page SEO audit or optimization for specific pages.</p>
+        </div>
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
+<div class="field" id="field-pages_to_optimize">
+  <label for="pages_to_optimize">Pages to Optimize <span class="required">*</span></label>
+  <textarea name="pages_to_optimize" id="pages_to_optimize" required placeholder="One URL per line. e.g.,
+https://example.com/pricing
+https://example.com/blog/top-post" rows="4"></textarea>
+</div>
+<div class="field" id="field-optimization_scope">
+  <label for="optimization_scope">Optimization Scope <span class="required">*</span></label>
+  <div class="checkbox-group">
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="Title tags & meta descriptions"> Title tags & meta descriptions</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="H1–H3 header structure"> H1–H3 header structure</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="Internal linking"> Internal linking</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="Schema markup (JSON-LD)"> Schema markup (JSON-LD)</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="Image alt text & optimization"> Image alt text & optimization</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="URL structure / redirects"> URL structure / redirects</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="Cannibalization audit"> Cannibalization audit</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="Content freshness update"> Content freshness update</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="Mobile usability"> Mobile usability</label>
+    <label class="checkbox-item"><input type="checkbox" name="optimization_scope" value="Page speed fixes"> Page speed fixes</label>
+  </div>
+</div>
+<div class="field" id="field-priority_pages">
+  <label for="priority_pages">Priority Pages (if not all)</label>
+  <input type="text" name="priority_pages" id="priority_pages" placeholder="Comma-separated URLs that need immediate attention" value="">
+</div>
+<div class="field" id="field-target_keywords">
+  <label for="target_keywords">Target Keywords to Map</label>
+  <textarea name="target_keywords" id="target_keywords" placeholder="Keyword → URL mapping, one per line. e.g.,
+best CRM software → /pricing
+CRM for small business → /features" rows="4"></textarea>
+</div>
+<div class="field" id="field-schema_types_needed">
+  <label for="schema_types_needed">Schema Types Needed</label>
+  <div class="checkbox-group">
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="Organization"> Organization</label>
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="Product"> Product</label>
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="FAQ"> FAQ</label>
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="HowTo"> HowTo</label>
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="BreadcrumbList"> BreadcrumbList</label>
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="Review / Rating"> Review / Rating</label>
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="Article"> Article</label>
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="LocalBusiness"> LocalBusiness</label>
+    <label class="checkbox-item"><input type="checkbox" name="schema_types_needed" value="Service"> Service</label>
+  </div>
+</div>
+<div class="field" id="field-cms">
+  <label for="cms">CMS (for implementation notes)</label>
+  <select name="cms" id="cms">
+    <option value="">-- Select --</option>
+    <option value="WordPress">WordPress</option>
+    <option value="Webflow">Webflow</option>
+    <option value="HubSpot">HubSpot</option>
+    <option value="Shopify">Shopify</option>
+    <option value="Framer">Framer</option>
+    <option value="Custom / Other">Custom / Other</option>
+  </select>
+</div>
+<div class="field" id="field-seo_plugin">
+  <label for="seo_plugin">SEO Plugin</label>
+  <select name="seo_plugin" id="seo_plugin">
+    <option value="None">None</option>
+    <option value="Yoast SEO">Yoast SEO</option>
+    <option value="Rank Math" selected>Rank Math</option>
+    <option value="All in One SEO">All in One SEO</option>
+    <option value="SEOPress">SEOPress</option>
+  </select>
+</div>
+<div class="field" id="field-competitor_urls_for_comparison">
+  <label for="competitor_urls_for_comparison">Competitor URLs for Comparison</label>
+  <textarea name="competitor_urls_for_comparison" id="competitor_urls_for_comparison" placeholder="Top-ranking pages to compare against (one per line)" rows="2"></textarea>
+</div>
+<div class="field" id="field-deadline">
+  <label for="deadline">Deadline for Optimizations</label>
+  <input type="date" name="deadline" id="deadline" value="">
+</div>
+<div class="field" id="field-notes">
+  <label for="notes">Notes</label>
+  <textarea name="notes" id="notes" placeholder="Any specific constraints, brand requirements, or technical limitations..." rows="2"></textarea>
+</div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Request Optimization</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+        <div class="footer">
+            <p>Form ID: <span class="agent-id">on-page-request</span></p>
+            <p>Generated by AgenticMarketingPro Form Engine</p>
+        </div>
+    </div>
+    <script>
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "pages_to_optimize", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "optimization_scope", "type": "checkbox", "required": true, "depends_on": null, "depends_value": null}, {"name": "priority_pages", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "target_keywords", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "schema_types_needed", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "cms", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "seo_plugin", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "competitor_urls_for_comparison", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "deadline", "type": "date", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const form = document.getElementById('agent-form');
+        const status = document.getElementById('status');
+
+        // Load from localStorage
+        function loadForm() {
+            const saved = localStorage.getItem('form_' + form.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const el = form.querySelector(`[name="${key}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = data[key];
+                            } else {
+                                el.value = data[key];
+                            }
+                        }
+                    });
+                    updateConditionalFields();
+                } catch (e) {}
+            }
+        }
+
+        // Save to localStorage on change
+        form.addEventListener('input', function() {
+            const data = {};
+            fields.forEach(f => {
+                const el = form.querySelector(`[name="${f.name}"]`);
+                if (el) {
+                    data[f.name] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('form_' + form.id, JSON.stringify(data));
+        });
+
+        // Conditional fields
+        function updateConditionalFields() {
+            fields.forEach(f => {
+                if (f.depends_on) {
+                    const parent = form.querySelector(`[name="${f.depends_on}"]`);
+                    const fieldDiv = document.getElementById('field-' + f.name);
+                    if (parent && fieldDiv) {
+                        const parentValue = parent.type === 'checkbox' ? parent.checked : parent.value;
+                        const shouldShow = !f.depends_value || parentValue === f.depends_value;
+                        fieldDiv.classList.toggle('hidden', !shouldShow);
+                    }
+                }
+            });
+        }
+
+        form.addEventListener('change', updateConditionalFields);
+
+        // Submit handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Add metadata
+            result._meta = {
+                form_title: "🔧 On-Page Optimization Request",
+                submitted_at: new Date().toISOString(),
+                form_id: "on-page-request"
+            };
+
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'on-page-request-response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
+        });
+
+        function clearForm() {
+            form.reset();
+            localStorage.removeItem('form_' + form.id);
+            updateConditionalFields();
+            status.className = "status";
+        }
+
+        // Initialize
+        loadForm();
+        updateConditionalFields();
+    </script>
+</body>
+</html>
