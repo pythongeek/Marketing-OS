@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 WordPress Integration Setup</title>
+    <style>
+    :root { --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a40; --text: #e0e0e0; --muted: #888; --accent: #4A90D9; --accent-hover: #357ABD; --danger: #E74C3C; --success: #50C878; --warning: #F39C12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+    .header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .field { margin-bottom: 24px; }
+    .field.hidden { display: none; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .required { color: var(--danger); }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 14px; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    input:invalid, select:invalid, textarea:invalid { border-color: var(--danger); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input, .radio-item input { width: auto; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .status { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none; }
+    .status.success { background: rgba(80,200,120,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .status.error { background: rgba(231,76,60,0.1); border: 1px solid var(--danger); color: var(--danger); display: block; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .agent-id { font-family: monospace; background: var(--card); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 WordPress Integration Setup</h1>
+            <p>Configure WordPress REST API access for auto-publishing content from the vault.</p>
+        </div>
+        <form id="agent-form">
+            <div class="field" id="field-wp_site_url">
+  <label for="wp_site_url">WordPress Site URL <span class="required">*</span></label>
+  <input type="url" name="wp_site_url" id="wp_site_url" required placeholder="https://example.com" value="">
+<div class="help">Base URL — /wp-json/ will be appended automatically</div></div>
+<div class="field" id="field-wp_username">
+  <label for="wp_username">WordPress Username <span class="required">*</span></label>
+  <input type="text" name="wp_username" id="wp_username" required placeholder="admin or service account" value="">
+</div>
+<div class="field" id="field-wp_app_password">
+  <label for="wp_app_password">Application Password <span class="required">*</span></label>
+  <input type="password" name="wp_app_password" id="wp_app_password" required placeholder="xxxx xxxx xxxx xxxx xxxx xxxx" value="">
+<div class="help">NOT your login password. Generate at: WP Admin → Users → Profile → Application Passwords → Add New</div></div>
+<div class="field" id="field-wp_post_type">
+  <label for="wp_post_type">Default Post Type</label>
+  <select name="wp_post_type" id="wp_post_type">
+    <option value="post" selected>post</option>
+    <option value="page">page</option>
+    <option value="custom">custom</option>
+  </select>
+</div>
+<div class="field" data-depends-on="wp_post_type" data-depends-value="custom" id="field-wp_post_type_custom">
+  <label for="wp_post_type_custom">Custom Post Type Slug</label>
+  <input type="text" name="wp_post_type_custom" id="wp_post_type_custom" placeholder="e.g., case_study" value="">
+</div>
+<div class="field" id="field-wp_author_id">
+  <label for="wp_author_id">Default Author ID</label>
+  <input type="number" name="wp_author_id" id="wp_author_id" placeholder="1" value="1">
+<div class="help">WordPress user ID to publish as</div></div>
+<div class="field" id="field-wp_category_ids">
+  <label for="wp_category_ids">Default Category IDs</label>
+  <input type="text" name="wp_category_ids" id="wp_category_ids" placeholder="1, 3, 5" value="">
+<div class="help">Comma-separated category IDs to assign</div></div>
+<div class="field" id="field-wp_tag_template">
+  <label for="wp_tag_template">Tag Template</label>
+  <input type="text" name="wp_tag_template" id="wp_tag_template" placeholder="{{client}}-{{topic}}" value="">
+<div class="help">How auto-generated tags are named. Use {{client}} and {{topic}} placeholders.</div></div>
+<div class="field" id="field-wp_featured_image">
+  <label for="wp_featured_image">Featured Image Strategy</label>
+  <select name="wp_featured_image" id="wp_featured_image">
+    <option value="None" selected>None</option>
+    <option value="Upload from URL">Upload from URL</option>
+    <option value="Generate AI image">Generate AI image</option>
+    <option value="Use first image in content">Use first image in content</option>
+  </select>
+</div>
+<div class="field" id="field-wp_seo_plugin">
+  <label for="wp_seo_plugin">SEO Plugin</label>
+  <select name="wp_seo_plugin" id="wp_seo_plugin">
+    <option value="None">None</option>
+    <option value="Yoast SEO">Yoast SEO</option>
+    <option value="Rank Math" selected>Rank Math</option>
+    <option value="All in One SEO">All in One SEO</option>
+  </select>
+<div class="help">Determines how meta title/description are sent</div></div>
+<div class="field" id="field-wp_test_publish">
+  <label for="wp_test_publish">Test Connection</label>
+  <div class="checkbox-group">
+    <label class="checkbox-item"><input type="checkbox" name="wp_test_publish" value="Publish a test draft post after saving"> Publish a test draft post after saving</label>
+  </div>
+</div>
+<div class="field" id="field-wp_notes">
+  <label for="wp_notes">Notes / Special Requirements</label>
+  <textarea name="wp_notes" id="wp_notes" placeholder="Custom fields, taxonomies, or publishing constraints..." rows="3"></textarea>
+</div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Test & Save Connection</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+        <div class="footer">
+            <p>Form ID: <span class="agent-id">wordpress-config</span></p>
+            <p>Generated by AgenticMarketingPro Form Engine</p>
+        </div>
+    </div>
+    <script>
+        const fields = [{"name": "wp_site_url", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "wp_username", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "wp_app_password", "type": "password", "required": true, "depends_on": null, "depends_value": null}, {"name": "wp_post_type", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "wp_post_type_custom", "type": "text", "required": false, "depends_on": "wp_post_type", "depends_value": "custom"}, {"name": "wp_author_id", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "wp_category_ids", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "wp_tag_template", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "wp_featured_image", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "wp_seo_plugin", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "wp_test_publish", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "wp_notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const form = document.getElementById('agent-form');
+        const status = document.getElementById('status');
+
+        // Load from localStorage
+        function loadForm() {
+            const saved = localStorage.getItem('form_' + form.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const el = form.querySelector(`[name="${key}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = data[key];
+                            } else {
+                                el.value = data[key];
+                            }
+                        }
+                    });
+                    updateConditionalFields();
+                } catch (e) {}
+            }
+        }
+
+        // Save to localStorage on change
+        form.addEventListener('input', function() {
+            const data = {};
+            fields.forEach(f => {
+                const el = form.querySelector(`[name="${f.name}"]`);
+                if (el) {
+                    data[f.name] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('form_' + form.id, JSON.stringify(data));
+        });
+
+        // Conditional fields
+        function updateConditionalFields() {
+            fields.forEach(f => {
+                if (f.depends_on) {
+                    const parent = form.querySelector(`[name="${f.depends_on}"]`);
+                    const fieldDiv = document.getElementById('field-' + f.name);
+                    if (parent && fieldDiv) {
+                        const parentValue = parent.type === 'checkbox' ? parent.checked : parent.value;
+                        const shouldShow = !f.depends_value || parentValue === f.depends_value;
+                        fieldDiv.classList.toggle('hidden', !shouldShow);
+                    }
+                }
+            });
+        }
+
+        form.addEventListener('change', updateConditionalFields);
+
+        // Submit handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Add metadata
+            result._meta = {
+                form_title: "🌐 WordPress Integration Setup",
+                submitted_at: new Date().toISOString(),
+                form_id: "wordpress-config"
+            };
+
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'wordpress-config-response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
+        });
+
+        function clearForm() {
+            form.reset();
+            localStorage.removeItem('form_' + form.id);
+            updateConditionalFields();
+            status.className = "status";
+        }
+
+        // Initialize
+        loadForm();
+        updateConditionalFields();
+    </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Content Brief Generator</title>
+    <style>
+    :root { --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a40; --text: #e0e0e0; --muted: #888; --accent: #4A90D9; --accent-hover: #357ABD; --danger: #E74C3C; --success: #50C878; --warning: #F39C12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+    .header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .field { margin-bottom: 24px; }
+    .field.hidden { display: none; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .required { color: var(--danger); }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 14px; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    input:invalid, select:invalid, textarea:invalid { border-color: var(--danger); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input, .radio-item input { width: auto; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .status { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none; }
+    .status.success { background: rgba(80,200,120,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .status.error { background: rgba(231,76,60,0.1); border: 1px solid var(--danger); color: var(--danger); display: block; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .agent-id { font-family: monospace; background: var(--card); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Content Brief Generator</h1>
+            <p>Fill in the details for the content piece. The content strategist agent will use this to generate a full brief.</p>
+        </div>
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
+<div class="field" id="field-title">
+  <label for="title">Working Title <span class="required">*</span></label>
+  <input type="text" name="title" id="title" required placeholder="e.g., The Complete Guide to AI-Powered SEO" value="">
+</div>
+<div class="field" id="field-target_keyword">
+  <label for="target_keyword">Primary Target Keyword <span class="required">*</span></label>
+  <input type="text" name="target_keyword" id="target_keyword" required placeholder="e.g., ai seo tools" value="">
+</div>
+<div class="field" id="field-secondary_keywords">
+  <label for="secondary_keywords">Secondary Keywords</label>
+  <input type="text" name="secondary_keywords" id="secondary_keywords" placeholder="Comma-separated" value="">
+</div>
+<div class="field" id="field-content_type">
+  <label for="content_type">Content Type <span class="required">*</span></label>
+  <select name="content_type" id="content_type" required>
+    <option value="">-- Select --</option>
+    <option value="Pillar Guide (2,000–5,000 words)">Pillar Guide (2,000–5,000 words)</option>
+    <option value="Listicle">Listicle</option>
+    <option value="Comparison Post">Comparison Post</option>
+    <option value="Case Study">Case Study</option>
+    <option value="How-To Tutorial">How-To Tutorial</option>
+    <option value="Thought Leadership">Thought Leadership</option>
+    <option value="Product Page">Product Page</option>
+    <option value="Landing Page">Landing Page</option>
+  </select>
+</div>
+<div class="field" id="field-writer_persona">
+  <label for="writer_persona">Writer Persona <span class="required">*</span></label>
+  <select name="writer_persona" id="writer_persona" required>
+    <option value="">-- Select --</option>
+    <option value="Analyst (data-heavy)">Analyst (data-heavy)</option>
+    <option value="Educator (step-by-step)">Educator (step-by-step)</option>
+    <option value="Provocateur (contrarian)">Provocateur (contrarian)</option>
+    <option value="Storyteller (narrative)">Storyteller (narrative)</option>
+    <option value="Operator (practical / tactical)">Operator (practical / tactical)</option>
+  </select>
+</div>
+<div class="field" id="field-target_audience">
+  <label for="target_audience">Target Audience <span class="required">*</span></label>
+  <textarea name="target_audience" id="target_audience" required placeholder="Who is this for? What do they already know? What keeps them up at night?" rows="3"></textarea>
+</div>
+<div class="field" id="field-pain_point">
+  <label for="pain_point">Pain Point This Solves <span class="required">*</span></label>
+  <textarea name="pain_point" id="pain_point" required placeholder="What specific problem does this content address?" rows="2"></textarea>
+</div>
+<div class="field" id="field-desired_outcome">
+  <label for="desired_outcome">Desired Reader Outcome <span class="required">*</span></label>
+  <textarea name="desired_outcome" id="desired_outcome" required placeholder="What should the reader be able to do after reading?" rows="2"></textarea>
+</div>
+<div class="field" id="field-competing_urls">
+  <label for="competing_urls">Top 3 Competing URLs</label>
+  <textarea name="competing_urls" id="competing_urls" placeholder="Paste URLs of current top-ranking pages for this keyword" rows="3"></textarea>
+</div>
+<div class="field" id="field-unique_angle">
+  <label for="unique_angle">Unique Angle / Differentiator</label>
+  <textarea name="unique_angle" id="unique_angle" placeholder="What will make this better than what's already ranking?" rows="2"></textarea>
+</div>
+<div class="field" id="field-cta">
+  <label for="cta">Primary CTA</label>
+  <input type="text" name="cta" id="cta" placeholder="e.g., Book a demo, Download the template, Subscribe to newsletter" value="">
+</div>
+<div class="field" id="field-word_count_target">
+  <label for="word_count_target">Target Word Count</label>
+  <input type="number" name="word_count_target" id="word_count_target" placeholder="2500" min="800" max="8000" value="2500">
+</div>
+<div class="field" id="field-due_date">
+  <label for="due_date">Target Due Date</label>
+  <input type="date" name="due_date" id="due_date" value="">
+</div>
+<div class="field" id="field-priority">
+  <label for="priority">Priority</label>
+  <select name="priority" id="priority">
+    <option value="P0 (Launch blocker)">P0 (Launch blocker)</option>
+    <option value="P1 (High — this week)" selected>P1 (High — this week)</option>
+    <option value="P2 (Medium — next 2 weeks)">P2 (Medium — next 2 weeks)</option>
+    <option value="P3 (Low — backlog)">P3 (Low — backlog)</option>
+  </select>
+</div>
+<div class="field" id="field-special_requirements">
+  <label for="special_requirements">Special Requirements</label>
+  <textarea name="special_requirements" id="special_requirements" placeholder="Brand voice notes, mandatory mentions, legal disclaimers, etc." rows="3"></textarea>
+</div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Generate Brief</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+        <div class="footer">
+            <p>Form ID: <span class="agent-id">content-brief</span></p>
+            <p>Generated by AgenticMarketingPro Form Engine</p>
+        </div>
+    </div>
+    <script>
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "title", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "target_keyword", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "secondary_keywords", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "content_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "writer_persona", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "target_audience", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "pain_point", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "desired_outcome", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "competing_urls", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "unique_angle", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "cta", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "word_count_target", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "due_date", "type": "date", "required": false, "depends_on": null, "depends_value": null}, {"name": "priority", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "special_requirements", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const form = document.getElementById('agent-form');
+        const status = document.getElementById('status');
+
+        // Load from localStorage
+        function loadForm() {
+            const saved = localStorage.getItem('form_' + form.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const el = form.querySelector(`[name="${key}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = data[key];
+                            } else {
+                                el.value = data[key];
+                            }
+                        }
+                    });
+                    updateConditionalFields();
+                } catch (e) {}
+            }
+        }
+
+        // Save to localStorage on change
+        form.addEventListener('input', function() {
+            const data = {};
+            fields.forEach(f => {
+                const el = form.querySelector(`[name="${f.name}"]`);
+                if (el) {
+                    data[f.name] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('form_' + form.id, JSON.stringify(data));
+        });
+
+        // Conditional fields
+        function updateConditionalFields() {
+            fields.forEach(f => {
+                if (f.depends_on) {
+                    const parent = form.querySelector(`[name="${f.depends_on}"]`);
+                    const fieldDiv = document.getElementById('field-' + f.name);
+                    if (parent && fieldDiv) {
+                        const parentValue = parent.type === 'checkbox' ? parent.checked : parent.value;
+                        const shouldShow = !f.depends_value || parentValue === f.depends_value;
+                        fieldDiv.classList.toggle('hidden', !shouldShow);
+                    }
+                }
+            });
+        }
+
+        form.addEventListener('change', updateConditionalFields);
+
+        // Submit handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Add metadata
+            result._meta = {
+                form_title: "📝 Content Brief Generator",
+                submitted_at: new Date().toISOString(),
+                form_id: "content-brief"
+            };
+
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'content-brief-response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
+        });
+
+        function clearForm() {
+            form.reset();
+            localStorage.removeItem('form_' + form.id);
+            updateConditionalFields();
+            status.className = "status";
+        }
+
+        // Initialize
+        loadForm();
+        updateConditionalFields();
+    </script>
+</body>
+</html>
