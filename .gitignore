@@ -35,6 +35,13 @@ Thumbs.db
 # Agent logs (optional — keep if you want history in repo, exclude if large)
 # AgenticMarketingPro-Vault/11-Ops/agent-logs/
 
+# Generated dashboards (auto-generated, exclude from repo)
+AgenticMarketingPro-Vault/00-Agency-Core/_dashboards/*.png
+AgenticMarketingPro-Vault/00-Agency-Core/_dashboards/*.html
+
+# ChromaDB vector store
+chroma_db/
+
 # Temporary files
 *.tmp
 *.temp

@@ -40,7 +40,9 @@ infrastructure/
 └── scripts/
     ├── ingest_vault.py         # Markdown → chunks → embeddings → ChromaDB
     ├── health_check.py         # Full integration connectivity test
-    └── cost_tracker.py         # Per-call cost logging + budget enforcement
+    ├── cost_tracker.py         # Per-call cost logging + budget enforcement
+    ├── generate_brain_map.py   # D3.js force-directed graph of vault entities
+    └── generate_dashboard.py   # HTML dashboard with PNG charts + brain map
 ```
 
 ## Environment Variables
@@ -112,6 +114,36 @@ status = tracker.check_budget()  # Returns daily/monthly status + throttle/pause
 ```
 
 Budgets are enforced via `LLM_DAILY_BUDGET_USD` and `LLM_MONTHLY_BUDGET_USD` env vars.
+
+## Visual Tools
+
+### Brain Map (`scripts/generate_brain_map.py`)
+Interactive D3.js force-directed graph showing all vault entities:
+- **Clients** (blue) as central nodes
+- **Websites** (green) owned by clients
+- **Keywords** (yellow) targeted by clients
+- **Competitors** (red) mapped to clients
+- **Agents** (purple) connected to their outputs
+- **Content** (orange) linked to keywords and clients
+
+```bash
+python infrastructure/scripts/generate_brain_map.py --client acme
+# Generates: 00-Agency-Core/_dashboards/brain-map.html
+```
+
+### Dashboard (`scripts/generate_dashboard.py`)
+HTML dashboard with PNG charts:
+- Daily agent cost utilization (vs. $5/day cap)
+- API integration health check frequency
+- Key metrics cards (vault nodes, active agents, clients, content pieces)
+- Embedded brain map iframe
+
+```bash
+python infrastructure/scripts/generate_dashboard.py --client acme
+# Generates: 00-Agency-Core/_dashboards/dashboard.html + cost-chart.png + agent-performance.png
+```
+
+Auto-generated after each daily ops loop (Step 10).
 
 ## Scheduled Jobs
 
