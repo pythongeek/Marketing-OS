@@ -1,11 +1,70 @@
 ---
 name: onboarding-agent
-description: "Drive new-client intake from signed contract through kickoff, full audit, 90-day strategy draft, and first published deliverable for the AgenticMarketingPro operating system. Use when onboarding a new client, conducting the 47-item technical audit, building the 90-day strategy, setting up client vault folders, or coordinating the first 30 days of client work. Hands off to Atlas on day 31."
+description: "Drive new-client intake from signed contract through kickoff, full audit, 90-day strategy draft, and first published deliverable for the AgenticMarketingPro operating system. Use when onboarding a new client, conducting the 47-item technical audit, building the 90-day strategy, setting up client vault folders, or coordinating the first 30 days of client work. This skill is INTERACTIVE — it generates HTML forms to collect client data before creating any artifacts. Hands off to Atlas on day 31."
 ---
 
-# Onboarding Agent
+# Onboarding Agent — Interactive Client Intake
 
-Drives new-client intake from signed contract to first deliverable. Coordinates agents during first 30 days. Hands off to Atlas on day 31.
+Drives new-client intake from signed contract to first deliverable. **This is an interactive skill — it asks via HTML forms before acting.**
+
+## Interactive Mode (Form-First)
+
+When asked to onboard a new client, the agent does NOT create files immediately. Instead:
+
+1. **Check if client data exists** in the vault (`01-Clients/[client]/client-profile.md`)
+2. **If missing → generate the onboarding form:**
+   ```bash
+   python infrastructure/ui/form_engine.py --client-onboarding
+   # Generates: forms/client-onboarding.html
+   ```
+3. **Present the form to the user:** "Please fill the client onboarding form at `forms/client-onboarding.html` and save the response JSON."
+4. **Wait for user confirmation** that the form is filled
+5. **Process the form response:**
+   ```bash
+   python infrastructure/ui/processors.py client forms/client-onboarding-response.json
+   ```
+6. **This creates:**
+   - `01-Clients/[client-slug]/client-profile.md`
+   - `01-Clients/[client-slug]/website-manifest.md`
+   - `01-Clients/[client-slug]/kpis-and-goals.md`
+   - `01-Clients/[client-slug]/strategy-90-day.md`
+   - All subfolders (campaigns, competitors, agent-logs, monthly-reports)
+
+### Form Fields Collected
+
+| Field | Why It Matters |
+|---|---|
+| Client name | Folder name, all file references |
+| Website | Primary domain for all API integrations |
+| Industry | Determines content strategy, competitor set, personas |
+| Service tier | Agent allocation, velocity targets, pricing |
+| Target geo | Content localization, local SEO, paid targeting |
+| Business goals | North star metrics for all agent work |
+| Competitors | Competitor-intel agent seed data |
+| CMS / Platform | Determines technical audit approach, schema, pSEO feasibility |
+| WordPress integration | Enables auto-publishing from vault to WP |
+| API access (GSC, GA4, Ahrefs, etc.) | Determines which agents can run and what data they get |
+| Contact info | For HITL gate notifications, client reports |
+
+### After Form Processing
+
+Once the form is processed, the agent proceeds with the standard onboarding timeline (Days 1–30 below), but now has all the client context it needs.
+
+## If Client Already Exists (Vault Has Data)
+
+If the client folder already exists, skip the form and proceed directly to the audit and strategy phases.
+
+## Quick Start (Non-Interactive)
+
+For advanced users who want to skip the form:
+
+```bash
+# 1. Copy template and edit manually
+cp -r AgenticMarketingPro-Vault/01-Clients/_template-client \
+      AgenticMarketingPro-Vault/01-Clients/my-client
+# 2. Edit client-profile.md and website-manifest.md
+# 3. Then tell the agent: "Run onboarding for my-client"
+```
 
 ## Quick Start
 

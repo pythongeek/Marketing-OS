@@ -168,6 +168,82 @@ tags: [category/value, category/value]
 
 See `references/frontmatter-standards.md` for the full type registry and tag dictionary.
 
+## Interactive Form-First Workflow (NEW)
+
+Atlas is not a black box that assumes everything is configured. **When any agent needs data that doesn't exist in the vault, Atlas generates an interactive HTML form** and asks the user to fill it before proceeding.
+
+### How It Works
+
+```
+Agent needs data → Check vault → Not found → Generate HTML form
+     ↑                                                              ↓
+Process response ← User fills & saves JSON ← Present form to user ←┘
+```
+
+### Form Generation Pattern
+
+Every skill in the system can generate forms via the Form Engine:
+
+```bash
+# Client onboarding (onboarding-agent)
+python infrastructure/ui/form_engine.py --client-onboarding
+# → forms/client-onboarding.html
+
+# API credentials (martech-integration-agent)
+python infrastructure/ui/form_engine.py --api-credentials
+# → forms/api-credentials.html
+
+# WordPress config (wp-publishing-core)
+python infrastructure/ui/form_engine.py --wordpress
+# → forms/wordpress-config.html
+
+# Content brief (content-strategist)
+python infrastructure/ui/form_engine.py --content-brief
+# → forms/content-brief.html
+```
+
+### Processing Form Responses
+
+After the user fills a form and saves the JSON response:
+
+```bash
+# Create client vault folder from onboarding response
+python infrastructure/ui/processors.py client forms/client-onboarding-response.json
+
+# Write API credentials to .env
+python infrastructure/ui/processors.py api forms/api-credentials-response.json
+
+# Test WordPress connection and save config
+python infrastructure/ui/processors.py wordpress forms/wordpress-config-response.json
+```
+
+### Form Features
+
+- **Dark theme** matching the dashboard aesthetic
+- **Conditional fields** (e.g., WordPress fields only show if "Enable WordPress" is checked)
+- **Auto-save to localStorage** (never lose your progress)
+- **Validation** (required fields, email format, URL format, password strength)
+- **JSON export** (one-click download of the response)
+- **Mobile-responsive** (works on phone, tablet, desktop)
+
+### When Atlas Generates a Form
+
+| Scenario | Form Generated | Action After Fill |
+|---|---|---|
+| New client onboarding | `client-onboarding.html` | Creates vault folder, profile, manifest, KPIs, strategy |
+| API credentials missing | `api-credentials.html` | Writes `.env` with all secrets |
+| WordPress not configured | `wordpress-config.html` | Tests connection, writes `.env` with WP config |
+| Content brief needed | `content-brief.html` | Generates full content brief with RAG context |
+| Competitor data missing | `competitor-intake.html` | Seeds competitor-intel agent with targets |
+| New ad campaign | `ad-campaign-setup.html` | Configures ad accounts, budgets, audiences |
+
+### Form Security
+
+- **Credentials NEVER go to the vault.** API keys, passwords, tokens go to `.env` only.
+- **Application passwords** (not login passwords) are used for WordPress.
+- **All password fields are masked** (type="password") in the HTML form.
+- **Form responses are local** — they never leave the user's machine unless explicitly shared.
+
 ## Daily Digest Generation
 
 At the end of the loop, produce a daily digest with:

@@ -34,9 +34,13 @@ infrastructure/
 │   ├── ga4.py                  # Google Analytics 4
 │   ├── ahrefs.py               # Ahrefs API v3
 │   ├── semrush.py              # Semrush API v3
-│   └── bing.py                 # Bing Webmaster Tools
+│   ├── bing.py                 # Bing Webmaster Tools
+│   └── wordpress.py            # WordPress REST API (posts, media, SEO meta)
 ├── rag/
 │   └── pipeline.py             # ChromaDB + LlamaIndex RAG pipeline
+├── ui/
+│   ├── form_engine.py          # Schema-driven HTML form generator
+│   └── processors.py           # Form response → vault action processors
 └── scripts/
     ├── ingest_vault.py         # Markdown → chunks → embeddings → ChromaDB
     ├── health_check.py         # Full integration connectivity test
@@ -72,6 +76,12 @@ opportunities = gsc.get_ctr_opportunities(days=7)
 # Ahrefs: weekly report
 ahrefs = AhrefsClient()
 report = ahrefs.weekly_report("example.com")
+
+# WordPress: publish content from vault
+from infrastructure.api_client.wordpress import WordPressClient
+wp = WordPressClient("https://example.com", "username", "app_password")
+wp.test_connection()
+post = wp.create_post(title="My Article", content="<p>Hello world</p>", status="draft")
 ```
 
 All clients return structured dicts ready for vault write-back.
@@ -144,6 +154,64 @@ python infrastructure/scripts/generate_dashboard.py --client acme
 ```
 
 Auto-generated after each daily ops loop (Step 10).
+
+## Interactive Form Engine (`ui/form_engine.py`)
+
+Every skill can generate interactive HTML forms to collect data from the user before acting. Forms are dark-themed, mobile-responsive, and support conditional fields, validation, and auto-save.
+
+### Generate Forms
+
+```bash
+# All pre-built forms
+python infrastructure/ui/form_engine.py --all
+
+# Individual forms
+python infrastructure/ui/form_engine.py --client-onboarding    # Onboard a new client
+python infrastructure/ui/form_engine.py --api-credentials     # Collect API keys
+python infrastructure/ui/form_engine.py --wordpress            # WordPress integration
+python infrastructure/ui/form_engine.py --content-brief      # Generate content brief
+```
+
+### Form Features
+
+- **Conditional fields:** Show WordPress fields only if "Enable WordPress" is checked
+- **Auto-save to localStorage:** Never lose progress if browser closes
+- **Validation:** Required fields, email format, URL format, password masking
+- **JSON export:** One-click download of the response for the agent
+- **Dark theme:** Matches the dashboard aesthetic
+
+### Process Form Responses
+
+```bash
+# Create client vault folder from onboarding response
+python infrastructure/ui/processors.py client forms/client-onboarding-response.json
+
+# Write API credentials to .env
+python infrastructure/ui/processors.py api forms/api-credentials-response.json
+
+# Test WordPress connection and save config
+python infrastructure/ui/processors.py wordpress forms/wordpress-config-response.json
+```
+
+### Custom Forms
+
+Build your own form programmatically:
+
+```python
+from infrastructure.ui.form_engine import FormEngine, FormField, FormDefinition
+
+engine = FormEngine()
+form = FormDefinition(
+    title="My Custom Form",
+    fields=[
+        FormField("name", "text", required=True, label="Name"),
+        FormField("email", "email", required=True, label="Email"),
+        FormField("type", "select", label="Type", options=["A", "B"]),
+        FormField("detail", "text", label="Detail", depends_on="type", depends_value="A"),
+    ],
+)
+path = engine.create_form(form, output_path="forms/my-form.html")
+```
 
 ## Scheduled Jobs
 

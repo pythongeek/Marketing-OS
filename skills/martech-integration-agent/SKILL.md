@@ -1,11 +1,80 @@
 ---
 name: martech-integration-agent
-description: "Monitor, maintain, and troubleshoot all marketing technology integrations and API connections for the AgenticMarketingPro operating system. Use when checking API health, diagnosing integration failures, managing credentials and rate limits, onboarding new tools, retiring deprecated integrations, or building custom API scripts for marketing tool connections. Covers the 50+ integration configs in the vault."
+description: "Monitor, maintain, and troubleshoot all marketing technology integrations and API connections for the AgenticMarketingPro operating system. Use when checking API health, diagnosing integration failures, managing credentials and rate limits, onboarding new tools, or collecting API credentials via interactive HTML forms. This skill is INTERACTIVE — it generates forms to collect credentials and API configurations before connecting any tool."
 ---
 
-# MarTech Integration Agent
+# MarTech Integration Agent — Interactive Credential & API Management
 
-Monitors API health, manages credentials, troubleshoots integrations, and maintains the marketing tech stack.
+Monitors API health, manages credentials, troubleshoots integrations, and maintains the marketing tech stack. **This is an interactive skill — it asks via HTML forms before connecting any API.**
+
+## Interactive Mode (Form-First)
+
+When asked to set up or configure integrations, the agent does NOT assume `.env` is already configured. Instead:
+
+1. **Check current integration status:** Run `infrastructure/scripts/health_check.py --verbose`
+2. **Identify which APIs are missing credentials:** Review the "not_configured" entries
+3. **Generate the API credentials form:**
+   ```bash
+   python infrastructure/ui/form_engine.py --api-credentials
+   # Generates: forms/api-credentials.html
+   ```
+4. **Present the form to the user:** "Please fill the API credentials form at `forms/api-credentials.html` and save the response JSON."
+5. **Wait for user confirmation** that the form is filled
+6. **Process the form response:**
+   ```bash
+   python infrastructure/ui/processors.py api forms/api-credentials-response.json
+   ```
+7. **This writes:** `.env` file with all configured credentials (secrets never touch the vault)
+8. **Re-run health check** to verify all configured APIs are now healthy
+
+### Form Fields Collected
+
+| Field | Integration | Purpose |
+|---|---|---|
+| OpenAI API Key | LLM / Embeddings | RAG pipeline + all LLM calls |
+| Kimi API Key | LLM fallback | Alternative to OpenAI |
+| Minimax API Key | LLM fallback | Alternative to OpenAI |
+| Ahrefs API Key | SEO data | Backlinks, keywords, site overview |
+| Semrush API Key | SEO data | Domain overview, SERP features |
+| SERPAPI Key | SERP scraping | Real-time search results |
+| DataForSEO Login/Password | SEO data | Alternative data source |
+| Google Client Secrets | GSC / GA4 | OAuth2 for Google APIs |
+| GA4 Property ID | Analytics | Traffic, funnels, conversions |
+| Bing API Key | Bing WMT | Search analytics, index status |
+| Google Ads Developer Token | Paid ads | Campaign management |
+| Google Ads Refresh Token | Paid ads | OAuth2 for Google Ads |
+| Meta Access Token | Paid ads | Facebook/Instagram ads |
+| LinkedIn Ads Token | Paid ads | LinkedIn campaign management |
+| HubSpot API Key | CRM | Lead tracking, email automation |
+| Slack Webhook URL | Notifications | HITL gate alerts, daily digests |
+| Buffer Token | Social | Post scheduling |
+| Cloudflare Token | Monitoring | Site health, cache purging |
+| PageSpeed API Key | Monitoring | Core Web Vitals data |
+
+### WordPress Integration Form
+
+When a client uses WordPress, the agent also generates the WordPress config form:
+
+```bash
+python infrastructure/ui/form_engine.py --wordpress
+# Generates: forms/wordpress-config.html
+```
+
+After the user fills and saves the response:
+
+```bash
+python infrastructure/ui/processors.py wordpress forms/wordpress-config-response.json
+```
+
+This tests the connection and, if successful, writes the WordPress credentials to `.env`.
+
+## Non-Interactive Mode (Health Check Only)
+
+If integrations are already configured, run the standard health check protocol:
+
+```bash
+python infrastructure/scripts/health_check.py --verbose
+```
 
 ## Quick Start
 
