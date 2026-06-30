@@ -122,7 +122,7 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
         result = generate_with_minimax(
             system_prompt=system_prompt,
             user_prompt=user_prompt,
-            temperature=payload.get("temperature", 0.7),
+            temperature=payload.get("temperature", 1.0),
             max_tokens=payload.get("max_tokens", 4096),
             model=Config.DEFAULT_LLM_MODEL,
         )

@@ -27,6 +27,7 @@ logger = logging.getLogger("amp.cost")
 # Cost per 1K tokens (USD) — update as models/pricing change
 MODEL_COSTS = {
     # Minimax M3 (Primary)
+    "MiniMax-M3": {"input": 0.0015, "output": 0.0015},
     "MiniMax-Text-01": {"input": 0.0015, "output": 0.0015},
     "minimax-m3": {"input": 0.0015, "output": 0.0015},
     # OpenAI (Fallback)
@@ -241,8 +242,8 @@ if __name__ == "__main__":
     tracker = CostTracker()
     
     # Log a few example calls with Minimax M3
-    tracker.log_call("content-strategist", "minimax", "MiniMax-Text-01", tokens_in=2000, tokens_out=800)
-    tracker.log_call("on-page-optimizer", "minimax", "MiniMax-Text-01", tokens_in=1500, tokens_out=500)
+    tracker.log_call("content-strategist", "minimax", "MiniMax-M3", tokens_in=2000, tokens_out=800)
+    tracker.log_call("on-page-optimizer", "minimax", "MiniMax-M3", tokens_in=1500, tokens_out=500)
     tracker.log_call("analytics-expert", "openai", "text-embedding-3-small", tokens_in=1000, tokens_out=0, call_type="embedding")
     
     print("Daily spending:", tracker.get_spending(days=1))

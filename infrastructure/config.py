@@ -26,9 +26,9 @@ class Config:
     """Central configuration. All keys are optional — scripts degrade gracefully."""
 
     # ── LLM / Embeddings ────────────────────────────────────────────
-    # Primary LLM: Minimax M3 (MiniMax-Text-01)
+    # Primary LLM: Minimax M3 (MiniMax-M3)
     MINIMAX_API_KEY: Optional[str] = os.getenv("MINIMAX_API_KEY")
-    DEFAULT_LLM_MODEL: str = os.getenv("DEFAULT_LLM_MODEL", "MiniMax-Text-01")
+    DEFAULT_LLM_MODEL: str = os.getenv("DEFAULT_LLM_MODEL", "MiniMax-M3")
     DEFAULT_LLM_PROVIDER: str = os.getenv("DEFAULT_LLM_PROVIDER", "minimax")
     
     # Fallback LLMs (optional)

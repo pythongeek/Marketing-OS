@@ -1,222 +1,261 @@
 """
 AgenticMarketingPro — Minimax API Client
 ========================================
-OpenAI-compatible API client for Minimax M3 (MiniMax-Text-01) model.
-Supports chat completions, streaming, and cost tracking.
+Anthropic-compatible API client for Minimax M3 (MiniMax-M3) model.
+Uses the Anthropic Messages API format via Minimax's Anthropic compatibility layer.
 
 Usage:
     from api_client.minimax import MinimaxClient
     client = MinimaxClient()
     response = client.chat(
-        model="MiniMax-Text-01",
-        messages=[{"role": "user", "content": "Hello"}],
-        temperature=0.7,
+        model="MiniMax-M3",
+        system="You are a marketing expert.",
+        messages=[{"role": "user", "content": "Write a blog post about SEO."}],
+        max_tokens=2000,
     )
+    print(response.content)
+
+Setup:
+    pip install anthropic
+    MINIMAX_API_KEY=sk-...  (in .env)
+
+Docs: https://platform.minimax.io/docs/api-reference/text-anthropic-api
 """
 
 import json
 import logging
 from typing import List, Dict, Optional, Iterator, Any
-import httpx
+from dataclasses import dataclass
 
 from config import Config
 
 logger = logging.getLogger("amp.minimax")
 
 
-class MinimaxClient:
-    """Minimax API client (OpenAI-compatible)."""
+@dataclass
+class ChatResponse:
+    """Unified chat response from Minimax M3."""
+    content: str
+    reasoning: Optional[str] = None
+    tokens_in: int = 0
+    tokens_out: int = 0
+    model: str = ""
+    finish_reason: Optional[str] = None
 
-    BASE_URL = "https://api.minimaxi.chat/v1"
-    DEFAULT_MODEL = "MiniMax-Text-01"
+
+class MinimaxClient:
+    """Minimax API client via Anthropic SDK compatibility layer."""
+
+    BASE_URL = "https://api.minimax.io/anthropic"
+    DEFAULT_MODEL = "MiniMax-M3"
     TIMEOUT = 120.0
 
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+        model: Optional[str] = None,
+    ):
         self.api_key = api_key or Config.MINIMAX_API_KEY
         self.base_url = (base_url or self.BASE_URL).rstrip("/")
-        self.model = Config.DEFAULT_LLM_MODEL if hasattr(Config, "DEFAULT_LLM_MODEL") else self.DEFAULT_MODEL
+        self.model = model or Config.DEFAULT_LLM_MODEL if hasattr(Config, "DEFAULT_LLM_MODEL") else self.DEFAULT_MODEL
 
         if not self.api_key:
             raise ValueError("Minimax API key not configured. Set MINIMAX_API_KEY in .env")
 
-        self._client = httpx.Client(
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            },
-            timeout=self.TIMEOUT,
-        )
+        # Initialize Anthropic SDK with Minimax base URL
+        try:
+            from anthropic import Anthropic
+            self._client = Anthropic(
+                api_key=self.api_key,
+                base_url=self.base_url,
+                timeout=self.TIMEOUT,
+            )
+            logger.info(f"Minimax client initialized (model: {self.model})")
+        except ImportError:
+            logger.error("anthropic SDK not installed. Run: pip install anthropic")
+            raise
 
     def chat(
         self,
         messages: List[Dict[str, str]],
+        system: Optional[str] = None,
         model: Optional[str] = None,
-        temperature: float = 0.7,
+        temperature: float = 1.0,
         max_tokens: Optional[int] = 4096,
         top_p: float = 0.95,
+        thinking: Optional[Dict[str, str]] = None,
         stream: bool = False,
-        tools: Optional[List[Dict]] = None,
-        tool_choice: Optional[str] = None,
-    ) -> Dict[str, Any]:
+    ) -> ChatResponse:
         """
-        Send a chat completion request.
+        Send a chat completion request using Anthropic Messages API format.
 
         Args:
-            messages: List of {"role": "system"|"user"|"assistant", "content": "..."}
-            model: Model name (default: MiniMax-Text-01)
-            temperature: Sampling temperature (0-1)
+            messages: List of {"role": "user"|"assistant", "content": "..."}
+            system: System prompt
+            model: Model name (default: MiniMax-M3)
+            temperature: Sampling temperature [0, 2], recommended: 1.0
             max_tokens: Maximum tokens to generate
-            top_p: Nucleus sampling parameter
-            stream: Whether to stream the response
-            tools: Optional function calling tools
-            tool_choice: Optional tool choice strategy
+            top_p: Nucleus sampling [0, 1]
+            thinking: {"type": "adaptive"} to enable reasoning for M3
+            stream: Whether to stream response
 
         Returns:
-            API response dict with "choices", "usage", etc.
+            ChatResponse with content, tokens, reasoning
         """
-        payload = {
+        # Convert messages to Anthropic format (content blocks)
+        anthropic_messages = []
+        for msg in messages:
+            content = msg.get("content", "")
+            anthropic_messages.append({
+                "role": msg["role"],
+                "content": [{"type": "text", "text": content}],
+            })
+
+        params = {
             "model": model or self.model,
-            "messages": messages,
+            "messages": anthropic_messages,
+            "max_tokens": max_tokens or 4096,
             "temperature": temperature,
             "top_p": top_p,
-            "stream": stream,
         }
-        if max_tokens:
-            payload["max_tokens"] = max_tokens
-        if tools:
-            payload["tools"] = tools
-        if tool_choice:
-            payload["tool_choice"] = tool_choice
+
+        if system:
+            params["system"] = system
+
+        if thinking:
+            params["thinking"] = thinking
 
         try:
-            response = self._client.post(
-                f"{self.base_url}/chat/completions",
-                json=payload,
-            )
-            response.raise_for_status()
-            return response.json()
-        except httpx.HTTPStatusError as e:
-            logger.error(f"Minimax API error: {e.response.status_code} - {e.response.text}")
-            raise MinimaxAPIError(f"HTTP {e.response.status_code}: {e.response.text}")
-        except httpx.RequestError as e:
-            logger.error(f"Minimax request failed: {e}")
-            raise MinimaxAPIError(f"Request failed: {e}")
+            if stream:
+                return self._stream_chat(params)
+            else:
+                return self._sync_chat(params)
+        except Exception as e:
+            logger.error(f"Minimax chat error: {e}")
+            raise MinimaxAPIError(str(e))
+
+    def _sync_chat(self, params: Dict) -> ChatResponse:
+        """Synchronous chat request."""
+        response = self._client.messages.create(**params)
+
+        # Extract text content
+        text_content = ""
+        reasoning = ""
+        for block in response.content:
+            if block.type == "text":
+                text_content += block.text
+            elif block.type == "thinking":
+                reasoning += block.thinking
+
+        return ChatResponse(
+            content=text_content,
+            reasoning=reasoning if reasoning else None,
+            tokens_in=response.usage.input_tokens if hasattr(response, "usage") else 0,
+            tokens_out=response.usage.output_tokens if hasattr(response, "usage") else 0,
+            model=response.model,
+            finish_reason=response.stop_reason if hasattr(response, "stop_reason") else None,
+        )
+
+    def _stream_chat(self, params: Dict) -> ChatResponse:
+        """Stream chat and collect full response."""
+        text_buffer = ""
+        reasoning_buffer = ""
+
+        with self._client.messages.create(**params, stream=True) as stream:
+            for chunk in stream:
+                if chunk.type == "content_block_delta":
+                    if hasattr(chunk.delta, "text") and chunk.delta.text:
+                        text_buffer += chunk.delta.text
+                    elif hasattr(chunk.delta, "thinking") and chunk.delta.thinking:
+                        reasoning_buffer += chunk.delta.thinking
+
+        return ChatResponse(
+            content=text_buffer,
+            reasoning=reasoning_buffer if reasoning_buffer else None,
+            tokens_in=0,  # Usage not available in stream mode
+            tokens_out=0,
+            model=params["model"],
+        )
 
     def chat_simple(
         self,
         system_prompt: str,
         user_prompt: str,
         model: Optional[str] = None,
-        temperature: float = 0.7,
+        temperature: float = 1.0,
         max_tokens: Optional[int] = 4096,
+        thinking: bool = False,
     ) -> str:
         """
-        Simple chat with system + user message. Returns just the assistant content.
+        Simple chat with system + user message. Returns just the assistant text.
         """
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ]
+        messages = [{"role": "user", "content": user_prompt}]
+        thinking_cfg = {"type": "adaptive"} if thinking else None
+
         response = self.chat(
             messages=messages,
+            system=system_prompt,
             model=model,
             temperature=temperature,
             max_tokens=max_tokens,
+            thinking=thinking_cfg,
         )
-        try:
-            return response["choices"][0]["message"]["content"]
-        except (KeyError, IndexError) as e:
-            logger.error(f"Unexpected response format: {response}")
-            raise MinimaxAPIError(f"Invalid response format: {e}")
+        return response.content
 
-    def stream_chat(
+    def chat_with_reasoning(
         self,
-        messages: List[Dict[str, str]],
+        system_prompt: str,
+        user_prompt: str,
         model: Optional[str] = None,
-        temperature: float = 0.7,
+        temperature: float = 1.0,
         max_tokens: Optional[int] = 4096,
-    ) -> Iterator[str]:
+    ) -> ChatResponse:
         """
-        Stream chat response as text chunks.
+        Chat with reasoning enabled. Returns full response with reasoning.
         """
-        payload = {
-            "model": model or self.model,
-            "messages": messages,
-            "temperature": temperature,
-            "stream": True,
-        }
-        if max_tokens:
-            payload["max_tokens"] = max_tokens
+        messages = [{"role": "user", "content": user_prompt}]
 
-        try:
-            with self._client.stream(
-                "POST",
-                f"{self.base_url}/chat/completions",
-                json=payload,
-            ) as response:
-                response.raise_for_status()
-                for line in response.iter_lines():
-                    if line.startswith("data: "):
-                        data = line[6:]
-                        if data == "[DONE]":
-                            break
-                        try:
-                            chunk = json.loads(data)
-                            delta = chunk["choices"][0]["delta"]
-                            if "content" in delta:
-                                yield delta["content"]
-                        except (json.JSONDecodeError, KeyError, IndexError):
-                            continue
-        except httpx.HTTPStatusError as e:
-            logger.error(f"Minimax streaming error: {e.response.status_code}")
-            raise MinimaxAPIError(f"HTTP {e.response.status_code}: {e.response.text}")
-        except httpx.RequestError as e:
-            logger.error(f"Minimax stream request failed: {e}")
-            raise MinimaxAPIError(f"Request failed: {e}")
+        return self.chat(
+            messages=messages,
+            system=system_prompt,
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            thinking={"type": "adaptive"},
+        )
 
     def count_tokens(self, text: str) -> int:
         """
-        Rough token count (Chinese chars ~1 token, English words ~1.3 tokens).
-        Minimax doesn't provide a tokenizer, so we estimate.
+        Rough token count. For exact count, use Minimax's token count endpoint.
         """
         import re
-        # Chinese characters
         chinese_chars = len(re.findall(r'[\u4e00-\u9fff]', text))
-        # English words and other characters
         rest = len(re.sub(r'[\u4e00-\u9fff]', '', text))
         english_words = len(text.split()) if rest > 0 else 0
-        # Rough estimate: Chinese chars + English words * 1.3
         return chinese_chars + int(english_words * 1.3)
 
     def health_check(self) -> Dict[str, Any]:
         """Check Minimax API connectivity."""
         try:
-            start = __import__("time").time()
-            response = self._client.post(
-                f"{self.base_url}/chat/completions",
-                json={
-                    "model": self.model,
-                    "messages": [{"role": "user", "content": "Hi"}],
-                    "max_tokens": 1,
-                },
+            import time
+            start = time.time()
+
+            response = self._client.messages.create(
+                model=self.model,
+                max_tokens=1,
+                messages=[{"role": "user", "content": [{"type": "text", "text": "Hi"}]}],
                 timeout=15.0,
             )
-            latency = round((__import__("time").time() - start) * 1000, 2)
-            if response.status_code == 200:
-                return {
-                    "name": "minimax",
-                    "status": "healthy",
-                    "latency_ms": latency,
-                    "model": self.model,
-                    "timestamp": __import__("datetime").datetime.utcnow().isoformat() + "Z",
-                }
-            else:
-                return {
-                    "name": "minimax",
-                    "status": "error",
-                    "error": f"HTTP {response.status_code}: {response.text}",
-                    "timestamp": __import__("datetime").datetime.utcnow().isoformat() + "Z",
-                }
+            latency = round((time.time() - start) * 1000, 2)
+
+            return {
+                "name": "minimax",
+                "status": "healthy",
+                "latency_ms": latency,
+                "model": self.model,
+                "timestamp": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+            }
         except Exception as e:
             return {
                 "name": "minimax",
@@ -226,8 +265,9 @@ class MinimaxClient:
             }
 
     def close(self):
-        """Close the HTTP client."""
-        self._client.close()
+        """Close the Anthropic client."""
+        # Anthropic client doesn't need explicit close
+        pass
 
 
 class MinimaxAPIError(Exception):
@@ -240,29 +280,40 @@ class MinimaxAPIError(Exception):
 def generate_with_minimax(
     system_prompt: str,
     user_prompt: str,
-    temperature: float = 0.7,
+    temperature: float = 1.0,
     max_tokens: int = 4096,
-    model: str = "MiniMax-Text-01",
+    model: str = "MiniMax-M3",
+    thinking: bool = False,
 ) -> Dict[str, Any]:
     """
-    One-shot generation with Minimax. Returns dict with content, tokens, cost.
+    One-shot generation with Minimax M3. Returns dict with content, tokens, cost.
     """
     client = MinimaxClient()
     try:
-        response = client.chat_simple(
-            system_prompt=system_prompt,
-            user_prompt=user_prompt,
-            model=model,
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
+        if thinking:
+            response = client.chat_with_reasoning(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                model=model,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+        else:
+            response = client.chat(
+                messages=[{"role": "user", "content": user_prompt}],
+                system=system_prompt,
+                model=model,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
 
-        # Estimate tokens
-        tokens_in = client.count_tokens(system_prompt + user_prompt)
-        tokens_out = client.count_tokens(response)
+        # Estimate tokens if not available
+        tokens_in = response.tokens_in or client.count_tokens(system_prompt + user_prompt)
+        tokens_out = response.tokens_out or client.count_tokens(response.content)
 
         return {
-            "content": response,
+            "content": response.content,
+            "reasoning": response.reasoning,
             "tokens_in": tokens_in,
             "tokens_out": tokens_out,
             "model": model,
