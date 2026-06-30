@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 Reporting Agent — Report Configuration</title>
+    <style>
+    :root { --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a40; --text: #e0e0e0; --muted: #888; --accent: #4A90D9; --accent-hover: #357ABD; --danger: #E74C3C; --success: #50C878; --warning: #F39C12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+    .header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .field { margin-bottom: 24px; }
+    .field.hidden { display: none; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .required { color: var(--danger); }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 14px; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    input:invalid, select:invalid, textarea:invalid { border-color: var(--danger); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input, .radio-item input { width: auto; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .status { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none; }
+    .status.success { background: rgba(80,200,120,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .status.error { background: rgba(231,76,60,0.1); border: 1px solid var(--danger); color: var(--danger); display: block; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .agent-id { font-family: monospace; background: var(--card); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📄 Reporting Agent — Report Configuration</h1>
+            <p>Configure a custom report: scope, metrics, frequency, and delivery method.</p>
+        </div>
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
+<div class="field" id="field-report_name">
+  <label for="report_name">Report Name <span class="required">*</span></label>
+  <input type="text" name="report_name" id="report_name" required placeholder="e.g., Monthly Performance Report" value="">
+</div>
+<div class="field" id="field-report_type">
+  <label for="report_type">Report Type <span class="required">*</span></label>
+  <select name="report_type" id="report_type" required>
+    <option value="">-- Select --</option>
+    <option value="Executive Summary">Executive Summary</option>
+    <option value="Detailed Performance">Detailed Performance</option>
+    <option value="Channel Breakdown">Channel Breakdown</option>
+    <option value="Competitive Analysis">Competitive Analysis</option>
+    <option value="Content Performance">Content Performance</option>
+    <option value="Technical SEO Health">Technical SEO Health</option>
+    <option value="Paid Media Performance">Paid Media Performance</option>
+    <option value="Social Media Performance">Social Media Performance</option>
+    <option value="Custom Report">Custom Report</option>
+  </select>
+</div>
+<div class="field" id="field-frequency">
+  <label for="frequency">Frequency <span class="required">*</span></label>
+  <select name="frequency" id="frequency" required>
+    <option value="Daily">Daily</option>
+    <option value="Weekly">Weekly</option>
+    <option value="Bi-weekly">Bi-weekly</option>
+    <option value="Monthly" selected>Monthly</option>
+    <option value="Quarterly">Quarterly</option>
+    <option value="Ad-hoc">Ad-hoc</option>
+  </select>
+</div>
+<div class="field" id="field-data_sources">
+  <label for="data_sources">Data Sources <span class="required">*</span></label>
+  <div class="checkbox-group">
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Google Analytics 4"> Google Analytics 4</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Google Search Console"> Google Search Console</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Bing Webmaster Tools"> Bing Webmaster Tools</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Ahrefs"> Ahrefs</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Semrush"> Semrush</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Google Ads"> Google Ads</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Meta Ads"> Meta Ads</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="LinkedIn Ads"> LinkedIn Ads</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="HubSpot"> HubSpot</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Social platforms (native)"> Social platforms (native)</label>
+    <label class="checkbox-item"><input type="checkbox" name="data_sources" value="Custom data (vault)"> Custom data (vault)</label>
+  </div>
+</div>
+<div class="field" id="field-metrics">
+  <label for="metrics">Key Metrics <span class="required">*</span></label>
+  <textarea name="metrics" id="metrics" required placeholder="What numbers should this report include? e.g.,
+- Organic sessions, keyword rankings, CTR
+- Conversion rate, revenue, ROAS
+- Social engagement, follower growth" rows="4"></textarea>
+</div>
+<div class="field" id="field-comparison">
+  <label for="comparison">Comparison Period</label>
+  <select name="comparison" id="comparison">
+    <option value="Previous period" selected>Previous period</option>
+    <option value="Year-over-year">Year-over-year</option>
+    <option value="Benchmark / Target">Benchmark / Target</option>
+    <option value="No comparison">No comparison</option>
+  </select>
+</div>
+<div class="field" id="field-format">
+  <label for="format">Output Format</label>
+  <select name="format" id="format">
+    <option value="Markdown (vault)" selected>Markdown (vault)</option>
+    <option value="HTML dashboard">HTML dashboard</option>
+    <option value="PDF">PDF</option>
+    <option value="Email summary">Email summary</option>
+    <option value="Notion page">Notion page</option>
+    <option value="Google Slides">Google Slides</option>
+  </select>
+</div>
+<div class="field" id="field-delivery">
+  <label for="delivery">Delivery Method</label>
+  <select name="delivery" id="delivery">
+    <option value="Save to vault only" selected>Save to vault only</option>
+    <option value="Email to client">Email to client</option>
+    <option value="Email to internal team">Email to internal team</option>
+    <option value="Slack notification">Slack notification</option>
+    <option value="All of the above">All of the above</option>
+  </select>
+</div>
+<div class="field" id="field-audience">
+  <label for="audience">Target Audience</label>
+  <select name="audience" id="audience">
+    <option value="Internal team">Internal team</option>
+    <option value="Client (marketing manager)" selected>Client (marketing manager)</option>
+    <option value="Client (executive / C-suite)">Client (executive / C-suite)</option>
+    <option value="External stakeholder">External stakeholder</option>
+  </select>
+</div>
+<div class="field" id="field-notes">
+  <label for="notes">Notes</label>
+  <textarea name="notes" id="notes" placeholder="Any special requirements, custom visualizations, or narrative style preferences..." rows="2"></textarea>
+</div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Configure Report</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+        <div class="footer">
+            <p>Form ID: <span class="agent-id">report-config</span></p>
+            <p>Generated by AgenticMarketingPro Form Engine</p>
+        </div>
+    </div>
+    <script>
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "report_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "report_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "frequency", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "data_sources", "type": "checkbox", "required": true, "depends_on": null, "depends_value": null}, {"name": "metrics", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "comparison", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "format", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "delivery", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "audience", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const form = document.getElementById('agent-form');
+        const status = document.getElementById('status');
+
+        // Load from localStorage
+        function loadForm() {
+            const saved = localStorage.getItem('form_' + form.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const el = form.querySelector(`[name="${key}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = data[key];
+                            } else {
+                                el.value = data[key];
+                            }
+                        }
+                    });
+                    updateConditionalFields();
+                } catch (e) {}
+            }
+        }
+
+        // Save to localStorage on change
+        form.addEventListener('input', function() {
+            const data = {};
+            fields.forEach(f => {
+                const el = form.querySelector(`[name="${f.name}"]`);
+                if (el) {
+                    data[f.name] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('form_' + form.id, JSON.stringify(data));
+        });
+
+        // Conditional fields
+        function updateConditionalFields() {
+            fields.forEach(f => {
+                if (f.depends_on) {
+                    const parent = form.querySelector(`[name="${f.depends_on}"]`);
+                    const fieldDiv = document.getElementById('field-' + f.name);
+                    if (parent && fieldDiv) {
+                        const parentValue = parent.type === 'checkbox' ? parent.checked : parent.value;
+                        const shouldShow = !f.depends_value || parentValue === f.depends_value;
+                        fieldDiv.classList.toggle('hidden', !shouldShow);
+                    }
+                }
+            });
+        }
+
+        form.addEventListener('change', updateConditionalFields);
+
+        // Submit handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Add metadata
+            result._meta = {
+                form_title: "📄 Reporting Agent — Report Configuration",
+                submitted_at: new Date().toISOString(),
+                form_id: "report-config"
+            };
+
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'report-config-response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
+        });
+
+        function clearForm() {
+            form.reset();
+            localStorage.removeItem('form_' + form.id);
+            updateConditionalFields();
+            status.className = "status";
+        }
+
+        // Initialize
+        loadForm();
+        updateConditionalFields();
+    </script>
+</body>
+</html>

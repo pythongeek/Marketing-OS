@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📧 Email Sequence Builder</title>
+    <style>
+    :root { --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a40; --text: #e0e0e0; --muted: #888; --accent: #4A90D9; --accent-hover: #357ABD; --danger: #E74C3C; --success: #50C878; --warning: #F39C12; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 32px; }
+    .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+    .header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .field { margin-bottom: 24px; }
+    .field.hidden { display: none; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .required { color: var(--danger); }
+    .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 14px; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    input:invalid, select:invalid, textarea:invalid { border-color: var(--danger); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input, .radio-item input { width: auto; }
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .status { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-top: 16px; display: none; }
+    .status.success { background: rgba(80,200,120,0.1); border: 1px solid var(--success); color: var(--success); display: block; }
+    .status.error { background: rgba(231,76,60,0.1); border: 1px solid var(--danger); color: var(--danger); display: block; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .agent-id { font-family: monospace; background: var(--card); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📧 Email Sequence Builder</h1>
+            <p>Design an email lifecycle sequence: welcome, nurture, re-engagement, or promotional.</p>
+        </div>
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
+<div class="field" id="field-sequence_name">
+  <label for="sequence_name">Sequence Name <span class="required">*</span></label>
+  <input type="text" name="sequence_name" id="sequence_name" required placeholder="e.g., 7-Day Welcome Nurture" value="">
+</div>
+<div class="field" id="field-sequence_type">
+  <label for="sequence_type">Sequence Type <span class="required">*</span></label>
+  <select name="sequence_type" id="sequence_type" required>
+    <option value="">-- Select --</option>
+    <option value="Welcome / Onboarding">Welcome / Onboarding</option>
+    <option value="Lead Nurture (top of funnel)">Lead Nurture (top of funnel)</option>
+    <option value="Product Trial Nurture">Product Trial Nurture</option>
+    <option value="Post-Purchase / Onboarding">Post-Purchase / Onboarding</option>
+    <option value="Re-engagement / Win-back">Re-engagement / Win-back</option>
+    <option value="Abandoned Cart">Abandoned Cart</option>
+    <option value="Promotional / Launch">Promotional / Launch</option>
+    <option value="Event / Webinar Follow-up">Event / Webinar Follow-up</option>
+    <option value="Referral / Advocate">Referral / Advocate</option>
+    <option value="Customer Success / Renewal">Customer Success / Renewal</option>
+  </select>
+</div>
+<div class="field" id="field-email_count">
+  <label for="email_count">Number of Emails <span class="required">*</span></label>
+  <input type="number" name="email_count" id="email_count" required placeholder="5" min="1" max="20" value="5">
+</div>
+<div class="field" id="field-send_schedule">
+  <label for="send_schedule">Send Schedule <span class="required">*</span></label>
+  <textarea name="send_schedule" id="send_schedule" required placeholder="Day 1: immediate
+Day 2: +1 day
+Day 3: +2 days
+etc." rows="4"></textarea>
+</div>
+<div class="field" id="field-trigger">
+  <label for="trigger">Trigger <span class="required">*</span></label>
+  <select name="trigger" id="trigger" required>
+    <option value="">-- Select --</option>
+    <option value="User signs up">User signs up</option>
+    <option value="User downloads lead magnet">User downloads lead magnet</option>
+    <option value="User starts free trial">User starts free trial</option>
+    <option value="User makes purchase">User makes purchase</option>
+    <option value="User abandons cart">User abandons cart</option>
+    <option value="User becomes inactive (7 days)">User becomes inactive (7 days)</option>
+    <option value="User becomes inactive (30 days)">User becomes inactive (30 days)</option>
+    <option value="Manual / One-time broadcast">Manual / One-time broadcast</option>
+    <option value="Date-based (e.g., birthday, renewal)">Date-based (e.g., birthday, renewal)</option>
+  </select>
+</div>
+<div class="field" id="field-audience_segment">
+  <label for="audience_segment">Audience Segment <span class="required">*</span></label>
+  <input type="text" name="audience_segment" id="audience_segment" required placeholder="e.g., All new signups, Trial users who haven't converted, Lapsed customers..." value="">
+</div>
+<div class="field" id="field-personalization_fields">
+  <label for="personalization_fields">Personalization Fields</label>
+  <div class="checkbox-group">
+    <label class="checkbox-item"><input type="checkbox" name="personalization_fields" value="First name"> First name</label>
+    <label class="checkbox-item"><input type="checkbox" name="personalization_fields" value="Company name"> Company name</label>
+    <label class="checkbox-item"><input type="checkbox" name="personalization_fields" value="Industry"> Industry</label>
+    <label class="checkbox-item"><input type="checkbox" name="personalization_fields" value="Last activity"> Last activity</label>
+    <label class="checkbox-item"><input type="checkbox" name="personalization_fields" value="Product usage"> Product usage</label>
+    <label class="checkbox-item"><input type="checkbox" name="personalization_fields" value="Purchase history"> Purchase history</label>
+    <label class="checkbox-item"><input type="checkbox" name="personalization_fields" value="Location / timezone"> Location / timezone</label>
+  </div>
+</div>
+<div class="field" id="field-tone">
+  <label for="tone">Email Tone</label>
+  <select name="tone" id="tone">
+    <option value="Professional / Educational" selected>Professional / Educational</option>
+    <option value="Conversational / Friendly">Conversational / Friendly</option>
+    <option value="Bold / Direct">Bold / Direct</option>
+    <option value="Warm / Supportive">Warm / Supportive</option>
+    <option value="Urgent / Scarcity">Urgent / Scarcity</option>
+    <option value="Humorous / Light">Humorous / Light</option>
+  </select>
+</div>
+<div class="field" id="field-cta_per_email">
+  <label for="cta_per_email">Primary CTA per Email</label>
+  <input type="text" name="cta_per_email" id="cta_per_email" placeholder="e.g., Day 1: Read guide, Day 2: Watch demo, Day 3: Start trial..." value="">
+</div>
+<div class="field" id="field-subject_line_style">
+  <label for="subject_line_style">Subject Line Style</label>
+  <select name="subject_line_style" id="subject_line_style">
+    <option value="Curiosity-driven">Curiosity-driven</option>
+    <option value="Benefit-driven">Benefit-driven</option>
+    <option value="Question-based">Question-based</option>
+    <option value="How-to">How-to</option>
+    <option value="Listicle">Listicle</option>
+    <option value="Personalized">Personalized</option>
+    <option value="Urgency / FOMO">Urgency / FOMO</option>
+    <option value="A/B test (multiple options)" selected>A/B test (multiple options)</option>
+  </select>
+</div>
+<div class="field" id="field-spam_check">
+  <label for="spam_check">Spam Compliance</label>
+  <div class="checkbox-group">
+    <label class="checkbox-item"><input type="checkbox" name="spam_check" value="Run spam score check on every email"> Run spam score check on every email</label>
+    <label class="checkbox-item"><input type="checkbox" name="spam_check" value="Include unsubscribe link in every email"> Include unsubscribe link in every email</label>
+    <label class="checkbox-item"><input type="checkbox" name="spam_check" value="Check against brand voice guide"> Check against brand voice guide</label>
+  </div>
+</div>
+<div class="field" id="field-email_platform">
+  <label for="email_platform">Email Platform</label>
+  <select name="email_platform" id="email_platform">
+    <option value="HubSpot" selected>HubSpot</option>
+    <option value="Klaviyo">Klaviyo</option>
+    <option value="Mailchimp">Mailchimp</option>
+    <option value="ActiveCampaign">ActiveCampaign</option>
+    <option value="ConvertKit">ConvertKit</option>
+    <option value="MailerLite">MailerLite</option>
+    <option value="Customer.io">Customer.io</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+<div class="field" data-depends-on="email_platform" data-depends-value="Other" id="field-email_platform_other">
+  <label for="email_platform_other">Other Platform</label>
+  <input type="text" name="email_platform_other" id="email_platform_other" placeholder="Platform name" value="">
+</div>
+<div class="field" id="field-existing_sequence">
+  <label for="existing_sequence">Existing Sequence to Improve (URL)</label>
+  <input type="url" name="existing_sequence" id="existing_sequence" placeholder="Link to current email sequence or template" value="">
+</div>
+<div class="field" id="field-notes">
+  <label for="notes">Notes</label>
+  <textarea name="notes" id="notes" placeholder="Any brand-specific email requirements, compliance notes, or past performance data..." rows="2"></textarea>
+</div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Build Sequence</button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+        <div class="footer">
+            <p>Form ID: <span class="agent-id">email-sequence</span></p>
+            <p>Generated by AgenticMarketingPro Form Engine</p>
+        </div>
+    </div>
+    <script>
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "sequence_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "sequence_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "email_count", "type": "number", "required": true, "depends_on": null, "depends_value": null}, {"name": "send_schedule", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "trigger", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "audience_segment", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "personalization_fields", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "cta_per_email", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "subject_line_style", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "spam_check", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "email_platform", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "email_platform_other", "type": "text", "required": false, "depends_on": "email_platform", "depends_value": "Other"}, {"name": "existing_sequence", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const form = document.getElementById('agent-form');
+        const status = document.getElementById('status');
+
+        // Load from localStorage
+        function loadForm() {
+            const saved = localStorage.getItem('form_' + form.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const el = form.querySelector(`[name="${key}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = data[key];
+                            } else {
+                                el.value = data[key];
+                            }
+                        }
+                    });
+                    updateConditionalFields();
+                } catch (e) {}
+            }
+        }
+
+        // Save to localStorage on change
+        form.addEventListener('input', function() {
+            const data = {};
+            fields.forEach(f => {
+                const el = form.querySelector(`[name="${f.name}"]`);
+                if (el) {
+                    data[f.name] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('form_' + form.id, JSON.stringify(data));
+        });
+
+        // Conditional fields
+        function updateConditionalFields() {
+            fields.forEach(f => {
+                if (f.depends_on) {
+                    const parent = form.querySelector(`[name="${f.depends_on}"]`);
+                    const fieldDiv = document.getElementById('field-' + f.name);
+                    if (parent && fieldDiv) {
+                        const parentValue = parent.type === 'checkbox' ? parent.checked : parent.value;
+                        const shouldShow = !f.depends_value || parentValue === f.depends_value;
+                        fieldDiv.classList.toggle('hidden', !shouldShow);
+                    }
+                }
+            });
+        }
+
+        form.addEventListener('change', updateConditionalFields);
+
+        // Submit handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Add metadata
+            result._meta = {
+                form_title: "📧 Email Sequence Builder",
+                submitted_at: new Date().toISOString(),
+                form_id: "email-sequence"
+            };
+
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'email-sequence-response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
+        });
+
+        function clearForm() {
+            form.reset();
+            localStorage.removeItem('form_' + form.id);
+            updateConditionalFields();
+            status.className = "status";
+        }
+
+        // Initialize
+        loadForm();
+        updateConditionalFields();
+    </script>
+</body>
+</html>
