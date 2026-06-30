@@ -26,11 +26,15 @@ class Config:
     """Central configuration. All keys are optional — scripts degrade gracefully."""
 
     # ── LLM / Embeddings ────────────────────────────────────────────
+    # Primary LLM: Minimax M3 (MiniMax-Text-01)
+    MINIMAX_API_KEY: Optional[str] = os.getenv("MINIMAX_API_KEY")
+    DEFAULT_LLM_MODEL: str = os.getenv("DEFAULT_LLM_MODEL", "MiniMax-Text-01")
+    DEFAULT_LLM_PROVIDER: str = os.getenv("DEFAULT_LLM_PROVIDER", "minimax")
+    
+    # Fallback LLMs (optional)
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")
     ANTHROPIC_API_KEY: Optional[str] = os.getenv("ANTHROPIC_API_KEY")
-    # If you switch to Kimi API or Minimax, add their keys here:
     KIMI_API_KEY: Optional[str] = os.getenv("KIMI_API_KEY")
-    MINIMAX_API_KEY: Optional[str] = os.getenv("MINIMAX_API_KEY")
 
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
     EMBEDDING_DIMENSION: int = int(os.getenv("EMBEDDING_DIMENSION", "1536"))
@@ -113,10 +117,10 @@ class Config:
     def check_deps(cls) -> dict:
         """Return which optional dependencies are available."""
         return {
+            "minimax": cls.MINIMAX_API_KEY is not None,
             "openai": cls.OPENAI_API_KEY is not None,
             "anthropic": cls.ANTHROPIC_API_KEY is not None,
             "kimi": cls.KIMI_API_KEY is not None,
-            "minimax": cls.MINIMAX_API_KEY is not None,
             "chroma": True,  # local, always available if installed
             "pinecone": cls.PINECONE_API_KEY is not None and cls.PINECONE_INDEX_NAME is not None,
             "ahrefs": cls.AHREFS_API_KEY is not None,

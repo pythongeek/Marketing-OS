@@ -99,8 +99,7 @@ def log_event(client, job_id: str, level: str, message: str, metadata: Dict = No
 
 def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Execute a job by calling the appropriate agent skill.
-    This is a stub — in production, this would import and run the actual skill.
+    Execute a job by calling the appropriate agent skill via Minimax M3.
     """
     job_type = job.get("type", "")
     skill_slug = job.get("skill_slug", "")
@@ -109,19 +108,110 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
 
     logger.info(f"Executing job {job['id']}: {job_type} / {skill_slug} / {client_slug}")
 
-    result = {
-        "executed_at": datetime.utcnow().isoformat() + "Z",
-        "job_type": job_type,
-        "skill_slug": skill_slug,
-        "client_slug": client_slug,
-        "message": f"Job {job_type} executed for {client_slug or 'agency'} via {skill_slug or 'manual'}",
+    # Build system prompt from skill context
+    system_prompt = build_system_prompt(skill_slug, client_slug, payload)
+    user_prompt = build_user_prompt(skill_slug, payload)
+
+    # Call Minimax M3
+    try:
+        from api_client.minimax import generate_with_minimax
+        from scripts.cost_tracker import CostTracker
+
+        cost_tracker = CostTracker()
+
+        result = generate_with_minimax(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            temperature=payload.get("temperature", 0.7),
+            max_tokens=payload.get("max_tokens", 4096),
+            model=Config.DEFAULT_LLM_MODEL,
+        )
+
+        content = result["content"]
+        tokens_in = result["tokens_in"]
+        tokens_out = result["tokens_out"]
+
+        # Log cost
+        cost_tracker.log_call(
+            agent_name=skill_slug or job_type,
+            provider="minimax",
+            model=Config.DEFAULT_LLM_MODEL,
+            tokens_in=tokens_in,
+            tokens_out=tokens_out,
+            call_type="completion",
+            metadata={"job_id": job["id"], "client_slug": client_slug, "skill_slug": skill_slug},
+        )
+
+        return {
+            "executed_at": datetime.utcnow().isoformat() + "Z",
+            "job_type": job_type,
+            "skill_slug": skill_slug,
+            "client_slug": client_slug,
+            "content": content,
+            "tokens_in": tokens_in,
+            "tokens_out": tokens_out,
+            "model": Config.DEFAULT_LLM_MODEL,
+            "provider": "minimax",
+            "message": f"Job {job_type} executed for {client_slug or 'agency'} via {skill_slug or 'manual'}",
+        }
+
+    except Exception as e:
+        logger.error(f"Minimax execution failed: {e}")
+        raise
+
+
+def build_system_prompt(skill_slug: str, client_slug: str, payload: Dict) -> str:
+    """Build a system prompt for the skill based on its slug."""
+    prompts = {
+        "content-strategist": "You are an expert content strategist for digital marketing agencies. You analyze business goals, target audiences, and competitive landscapes to produce comprehensive content strategies.",
+        "on-page-optimizer": "You are an expert SEO on-page optimizer. You analyze content for keyword optimization, semantic richness, internal linking opportunities, and technical SEO improvements.",
+        "technical-seo-auditor": "You are a senior technical SEO consultant. You audit websites for crawlability, indexability, Core Web Vitals, structured data, and technical issues.",
+        "keyword-researcher": "You are an expert keyword researcher. You identify high-intent keywords, map them to funnel stages, and analyze search volume and competition.",
+        "competitor-intelligence": "You are a competitive intelligence analyst. You analyze competitor strategies, content gaps, backlink profiles, and market positioning.",
+        "aeo-geo-strategist": "You are an AI Engine Optimization (AEO) and Generative Engine Optimization (GEO) specialist. You optimize content for AI citations, featured snippets, and generative AI visibility.",
+        "link-building-outreach": "You are a link building and digital PR specialist. You craft personalized outreach campaigns, identify link opportunities, and build relationships.",
+        "pseo-pipeline": "You are a programmatic SEO expert. You design data-driven content generation pipelines, identify scalable keyword opportunities, and build content templates.",
+        "content-brief-writer": "You are a content brief specialist. You create detailed, actionable briefs for writers that include SEO requirements, structure, tone, and key messages.",
+        "copywriter": "You are an expert conversion copywriter. You write compelling headlines, ad copy, landing pages, and email sequences that drive action.",
+        "social-media-manager": "You are a social media strategist. You plan content calendars, write engaging posts, and optimize for platform-specific algorithms.",
+        "paid-ads-manager": "You are a performance marketing specialist. You create and optimize Google Ads, Meta Ads, and LinkedIn campaigns for maximum ROI.",
+        "analytics-expert": "You are a marketing analytics expert. You analyze data, build dashboards, and provide actionable insights for marketing optimization.",
+        "conversion-optimizer": "You are a CRO (Conversion Rate Optimization) specialist. You analyze user behavior, design A/B tests, and optimize conversion funnels.",
+        "brand-voice-writer": "You are a brand voice specialist. You define and maintain consistent brand voice, tone, and messaging across all channels.",
+        "email-marketing-specialist": "You are an email marketing expert. You design sequences, optimize deliverability, and maximize engagement and conversions.",
+        "local-seo-manager": "You are a local SEO specialist. You optimize Google Business Profiles, local citations, and location-specific content.",
+        "video-script-writer": "You are a video content strategist. You write scripts, plan storyboards, and optimize video content for SEO and engagement.",
+        "reputation-manager": "You are a reputation management specialist. You monitor brand sentiment, manage reviews, and protect brand reputation.",
+        "market-researcher": "You are a market research analyst. You analyze market trends, customer segments, and competitive landscapes.",
+        "forecasting-revenue": "You are a revenue forecasting specialist. You build predictive models, analyze funnels, and project revenue growth.",
+        "reporting-automation": "You are a reporting automation expert. You build automated dashboards, data pipelines, and executive summaries.",
+        "playbook-creator": "You are a marketing operations specialist. You document SOPs, create playbooks, and standardize processes.",
+        "off-page-optimizer": "You are an off-page SEO specialist. You build backlinks, manage brand mentions, and improve domain authority.",
+        "agentic-marketing-os": "You are the master orchestrator of an AI-native marketing agency. You coordinate all agents, manage workflows, and ensure quality.",
     }
 
-    # TODO: Replace with actual skill execution
-    # from skills import run_skill
-    # result = run_skill(skill_slug, client_slug, payload)
+    base = prompts.get(skill_slug, "You are an expert marketing consultant. You provide high-quality, actionable marketing advice.")
 
-    return result
+    if client_slug:
+        base += f"\n\nYou are working for client: {client_slug}. Adapt your output to their specific business context and goals."
+
+    return base
+
+
+def build_user_prompt(skill_slug: str, payload: Dict) -> str:
+    """Build a user prompt from the job payload."""
+    # Default: serialize the payload as instructions
+    prompt_parts = [f"Task: {skill_slug}"]
+
+    for key, value in payload.items():
+        if key in ("temperature", "max_tokens", "model"):
+            continue
+        if isinstance(value, str) and value.strip():
+            prompt_parts.append(f"{key}: {value}")
+        elif isinstance(value, (list, dict)):
+            prompt_parts.append(f"{key}: {json.dumps(value, ensure_ascii=False)}")
+
+    return "\n\n".join(prompt_parts)
 
 
 def run_once(client):

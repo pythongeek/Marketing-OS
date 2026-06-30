@@ -36,7 +36,19 @@ def check_llm_apis() -> List[Dict[str, Any]]:
     """Check LLM / embedding API connectivity."""
     results = []
     
-    # OpenAI
+    # Minimax (Primary)
+    if Config.MINIMAX_API_KEY:
+        try:
+            from api_client.minimax import MinimaxClient
+            client = MinimaxClient()
+            results.append(client.health_check())
+            client.close()
+        except Exception as e:
+            results.append({"name": "minimax", "status": "error", "error": str(e), "timestamp": datetime.utcnow().isoformat() + "Z"})
+    else:
+        results.append({"name": "minimax", "status": "not_configured", "timestamp": datetime.utcnow().isoformat() + "Z"})
+
+    # OpenAI (Fallback)
     if Config.OPENAI_API_KEY:
         client = APIClient(
             base_url="https://api.openai.com",
@@ -48,7 +60,7 @@ def check_llm_apis() -> List[Dict[str, Any]]:
     else:
         results.append({"name": "openai", "status": "not_configured", "timestamp": datetime.utcnow().isoformat() + "Z"})
 
-    # Anthropic
+    # Anthropic (Fallback)
     if Config.ANTHROPIC_API_KEY:
         client = APIClient(
             base_url="https://api.anthropic.com",

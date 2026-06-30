@@ -26,15 +26,21 @@ logger = logging.getLogger("amp.cost")
 
 # Cost per 1K tokens (USD) — update as models/pricing change
 MODEL_COSTS = {
+    # Minimax M3 (Primary)
+    "MiniMax-Text-01": {"input": 0.0015, "output": 0.0015},
+    "minimax-m3": {"input": 0.0015, "output": 0.0015},
+    # OpenAI (Fallback)
     "gpt-4": {"input": 0.03, "output": 0.06},
     "gpt-4-turbo": {"input": 0.01, "output": 0.03},
     "gpt-4o": {"input": 0.005, "output": 0.015},
     "gpt-3.5-turbo": {"input": 0.0005, "output": 0.0015},
     "text-embedding-3-small": {"input": 0.00002, "output": 0.0},
     "text-embedding-3-large": {"input": 0.00013, "output": 0.0},
-    "kimi-moonshot-v1-8k": {"input": 0.003, "output": 0.003},  # Approximate
-    "kimi-moonshot-v1-32k": {"input": 0.006, "output": 0.006},  # Approximate
-    "minimax-abab5.5": {"input": 0.0015, "output": 0.0015},  # Approximate
+    # Kimi
+    "kimi-moonshot-v1-8k": {"input": 0.003, "output": 0.003},
+    "kimi-moonshot-v1-32k": {"input": 0.006, "output": 0.006},
+    # Legacy Minimax
+    "minimax-abab5.5": {"input": 0.0015, "output": 0.0015},
 }
 
 
@@ -234,9 +240,9 @@ if __name__ == "__main__":
     # Demo usage
     tracker = CostTracker()
     
-    # Log a few example calls
-    tracker.log_call("content-strategist", "openai", "gpt-4o", tokens_in=2000, tokens_out=800)
-    tracker.log_call("on-page-optimizer", "openai", "gpt-4o", tokens_in=1500, tokens_out=500)
+    # Log a few example calls with Minimax M3
+    tracker.log_call("content-strategist", "minimax", "MiniMax-Text-01", tokens_in=2000, tokens_out=800)
+    tracker.log_call("on-page-optimizer", "minimax", "MiniMax-Text-01", tokens_in=1500, tokens_out=500)
     tracker.log_call("analytics-expert", "openai", "text-embedding-3-small", tokens_in=1000, tokens_out=0, call_type="embedding")
     
     print("Daily spending:", tracker.get_spending(days=1))
