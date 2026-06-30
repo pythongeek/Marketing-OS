@@ -351,15 +351,18 @@ def generate_with_openai(
 
         content = response.choices[0].message.content
 
-        # Count tokens using tiktoken
+        # Count tokens using tiktoken if available
+        tokens_in = 0
+        tokens_out = 0
         try:
+            import tiktoken
             encoding = tiktoken.encoding_for_model(model)
             tokens_in = len(encoding.encode(system_prompt + user_prompt))
             tokens_out = len(encoding.encode(content))
-        except KeyError:
-            # Fallback for unknown models
-            tokens_in = len((system_prompt + user_prompt).split()) * 1.3
-            tokens_out = len(content.split()) * 1.3
+        except (ImportError, KeyError):
+            # Fallback: rough word count
+            tokens_in = int(len((system_prompt + user_prompt).split()) * 1.3)
+            tokens_out = int(len(content.split()) * 1.3)
 
         return {
             "content": content,
