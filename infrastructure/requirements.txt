@@ -1,6 +1,6 @@
-# LLM / Embeddings (OpenAI for embeddings + generation)
+# LLM / Embeddings (OpenAI for embeddings, Minimax M3 for generation)
 openai>=1.40.0,<2.0.0
-tiktoken>=0.13.0
+anthropic>=0.40.0
 httpx>=0.27.0
 
 # Vector DB
