@@ -323,6 +323,55 @@ def generate_with_minimax(
         client.close()
 
 
+def generate_with_openai(
+    system_prompt: str,
+    user_prompt: str,
+    temperature: float = 0.7,
+    max_tokens: int = 4096,
+    model: str = "gpt-4o",
+) -> Dict[str, Any]:
+    """
+    One-shot generation with OpenAI. Returns dict with content, tokens, cost.
+    """
+    from openai import OpenAI
+    from config import Config
+    import tiktoken
+
+    client = OpenAI(api_key=Config.OPENAI_API_KEY)
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+
+        content = response.choices[0].message.content
+
+        # Count tokens using tiktoken
+        try:
+            encoding = tiktoken.encoding_for_model(model)
+            tokens_in = len(encoding.encode(system_prompt + user_prompt))
+            tokens_out = len(encoding.encode(content))
+        except KeyError:
+            # Fallback for unknown models
+            tokens_in = len((system_prompt + user_prompt).split()) * 1.3
+            tokens_out = len(content.split()) * 1.3
+
+        return {
+            "content": content,
+            "tokens_in": int(tokens_in),
+            "tokens_out": int(tokens_out),
+            "model": model,
+            "provider": "openai",
+        }
+    finally:
+        client.close()
+
+
 if __name__ == "__main__":
     # Test
     import logging

@@ -112,17 +112,17 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
     system_prompt = build_system_prompt(skill_slug, client_slug, payload)
     user_prompt = build_user_prompt(skill_slug, payload)
 
-    # Call Minimax M3
+    # Call OpenAI GPT-4o
     try:
-        from api_client.minimax import generate_with_minimax
+        from api_client.minimax import generate_with_openai
         from scripts.cost_tracker import CostTracker
 
         cost_tracker = CostTracker()
 
-        result = generate_with_minimax(
+        result = generate_with_openai(
             system_prompt=system_prompt,
             user_prompt=user_prompt,
-            temperature=payload.get("temperature", 1.0),
+            temperature=payload.get("temperature", 0.7),
             max_tokens=payload.get("max_tokens", 4096),
             model=Config.DEFAULT_LLM_MODEL,
         )
@@ -134,7 +134,7 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
         # Log cost
         cost_tracker.log_call(
             agent_name=skill_slug or job_type,
-            provider="minimax",
+            provider="openai",
             model=Config.DEFAULT_LLM_MODEL,
             tokens_in=tokens_in,
             tokens_out=tokens_out,
@@ -151,12 +151,12 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
             "tokens_in": tokens_in,
             "tokens_out": tokens_out,
             "model": Config.DEFAULT_LLM_MODEL,
-            "provider": "minimax",
+            "provider": "openai",
             "message": f"Job {job_type} executed for {client_slug or 'agency'} via {skill_slug or 'manual'}",
         }
 
     except Exception as e:
-        logger.error(f"Minimax execution failed: {e}")
+        logger.error(f"OpenAI execution failed: {e}")
         raise
 
 

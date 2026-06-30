@@ -1,6 +1,5 @@
-# LLM / Embeddings (OpenAI for embeddings, Minimax M3 for generation)
+# LLM / Embeddings (OpenAI for embeddings + generation)
 openai>=1.40.0,<2.0.0
-anthropic>=0.40.0
 httpx>=0.27.0
 
 # Vector DB
