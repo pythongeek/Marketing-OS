@@ -335,7 +335,6 @@ def generate_with_openai(
     """
     from openai import OpenAI
     from config import Config
-    import tiktoken
 
     client = OpenAI(api_key=Config.OPENAI_API_KEY)
     try:
