@@ -1,192 +1,340 @@
-# AgenticMarketingPro — AI-Native Marketing OS
+# AgenticMarketingPro
 
-> The full agent operating system for running a digital marketing agency with AI. 30 specialist agents, an Obsidian vault brain, and a RAG pipeline that compounds with every client engagement.
-
-## What's in This Repo
-
-```
-AgenticMarketingPro-Vault/   ← The Obsidian vault (persistent data, client files, logs)
-  00-Agency-Core/            ← Mission, ICPs, pricing, brand voice, positioning
-  01-Clients/                ← One folder per active client
-  02-Competitors/            ← Competitor intelligence maps
-  03-SEO-Intelligence/       ← Keywords, topic clusters, GSC/Bing logs
-  04-Content-Production/     ← Briefs, drafts, published index, writer personas
-  05-Programmatic-SEO/       ← pSEO templates, data sources, guardrails
-  06-AEO-GEO/                ← AI citation tracking, entity registry, schema
-  07-Off-Page/               ← Link prospects, outreach, DR tracker
-  08-Paid-Ads/               ← Campaigns, ad copy, budget, audiences
-  09-Social/                 ← Calendars, repurpose queue, community health
-  10-Analytics/              ← Weekly digests, anomaly logs, attribution, KPIs
-  11-Ops/                    ← Agent configs, playbooks, integrations, logs
-
-skills/                      ← Kimi Work runtime skills (30 agent capabilities)
-  agentic-marketing-os/      ← Atlas orchestrator (master skill)
-  agent-prompt-engineer/     ← 5-layer config builder
-  qa-pipeline/               ← 7-check QA system
-  content-strategist/        ← Briefs, calendar, topic clusters
-  competitor-intel/          ← 5 competitor workflows
-  longform-writer/           ← Authority articles (2,000–5,000 words)
-  on-page-optimizer/         ← Title, meta, H1–H3, schema, links
-  off-page-strategist/       ← Link building, outreach, PR
-  gsc-expert/                ← Google Search Console monitoring
-  bing-wmt-expert/           ← Bing + Copilot optimization
-  aeo-geo-specialist/        ← AI citation optimization
-  pseo-engineer/             ← Programmatic SEO at scale
-  ad-expert/                 ← Google, Meta, LinkedIn, TikTok, Reddit ads
-  copywriter/                ← Landing pages, CTAs, emails, ad copy
-  social-media-manager/      ← 10+ format repurposing engine
-  email-lifecycle-agent/     ← Sequences, segmentation, deliverability
-  local-seo-agent/           ← GBP, geo-grid, reviews, citations
-  tech-seo-auditor/          ← Monthly technical health audits
-  analytics-expert/          ← Weekly digests, attribution, funnels
-  revenue-scout/             ← Revenue channel evaluation
-  market-signals/            ← Algorithm detection, trend monitoring
-  reporting-agent/           ← Monthly reports, QBRs
-  reputation-agent/          ← Brand mentions, reviews, crisis response
-  cro-agent/                 ← A/B tests, landing page optimization
-  onboarding-agent/          ← 30-day client intake, 47-item audit
-  pitch-agent/               ← Proposal building, competitive audits
-  forecasting-agent/           ← Revenue, traffic, conversion forecasting
-  influencer-agent/          ← Creator vetting, outreach, campaigns
-  video-image-producer/      ← Scripts, AI prompts, infographic specs
-  playbook-librarian/        ← SOP maintenance, versioning
-  martech-integration-agent/ ← API health, credentials, integrations
-
-agentic_marketing_os_master_plan.html         ← Visual agent architecture dashboard
-obsidian_rag_techstack_architecture.html    ← RAG pipeline & tech stack docs
-infrastructure/                              ← Python API wrappers, RAG, scripts
-  api_client/                                ← GSC, GA4, Ahrefs, Semrush, Bing
-  rag/                                       ← ChromaDB + LlamaIndex pipeline
-  scripts/                                   ← ingest, health_check, cost_tracker
-```
-
-## How It Works
-
-### Two-Location Architecture
-
-| Layer | Location | Purpose |
-|-------|----------|---------|
-| **Skills** (`skills/`) | Runtime capabilities — How agents execute | Procedural memory for 30+ specialist roles |
-| **Vault** (`AgenticMarketingPro-Vault/`) | Persistent data — What agents know and produce | Client data, competitor maps, content, KPIs, logs |
-| **Infrastructure** (`infrastructure/`) | Python scripts — What connects agents to APIs | API clients, RAG pipeline, health checks, cost tracking |
-
-### Data Flow
-
-```
-Vault (.md files)  ←──→  RAG Pipeline (ChromaDB)  ←──→  Agents (Skills)
-                              ↑
-                    API Clients (GSC, GA4, Ahrefs, etc.)
-```
-
-1. **Agents read** from vault via RAG (semantic search + metadata filters)
-2. **Agents call** APIs through infrastructure wrappers (with retry, rate limiting, auth)
-3. **Agents write** outputs back to vault with YAML frontmatter
-4. **Cost tracker** logs every API call and enforces daily/monthly budgets
-5. **Health checker** verifies all integrations daily
-
-### Daily Ops Loop (Atlas Orchestrator)
-
-1. **Site Health Check** → tech-seo-auditor
-2. **GSC / Bing Monitoring** → gsc-expert, bing-wmt-expert
-3. **Content Brief Generation** → content-strategist
-4. **Writer Assignment** → longform-writer (matched to persona)
-5. **On-Page Review** → on-page-optimizer
-6. **Social Repurposing** → social-media-manager
-7. **Outreach Queue** → off-page-strategist
-8. **Analytics Digest** → analytics-expert
-9. **Profit Plan Update** → Atlas (revenue-scout weekly)
-
-All outputs are written to the vault with YAML frontmatter. All actions are logged. HITL gates enforce human approval on high-risk decisions.
-
-## The 7 Non-Negotiables
-
-1. **Obsidian is the single source of truth**
-2. **Every agent reads before it writes** (RAG context injection)
-3. **Every action is logged** (inputs, context, outputs, cost, latency)
-4. **Humans approve high-risk decisions** (10 HITL gates)
-5. **No PII in the vault** (credentials in 1Password, not vault)
-6. **Every output passes QA** (7-check pipeline)
-7. **The vault compounds** (every engagement captured, every decision logged)
-
-## 10 Human-in-the-Loop Gates
-
-1. Publish content
-2. Send outreach email
-3. Change ad budget >$100/day
-4. Modify site technical structure
-5. Publish pSEO batch >50 pages
-6. Respond to negative review (<3 stars)
-7. Send client report
-8. Approve agent prompt change
-9. Launch new client campaign
-10. Declare incident
-
-## Getting Started
-
-### 1. Open the Vault in Obsidian
-1. Install [Obsidian](https://obsidian.md/)
-2. Open `AgenticMarketingPro-Vault/` as a vault
-3. Recommended plugins: Dataview, Templater, Obsidian Git, Smart Connections
-
-### 2. Install Python Infrastructure
-```bash
-# Install all dependencies
-python setup.py --install
-
-# Verify environment
-python setup.py --test
-```
-
-### 3. Configure API Keys
-```bash
-cp .env.example .env
-# Edit .env with your actual API keys
-```
-
-Store credentials in 1Password or a password manager. Never commit `.env` to Git.
-
-### 4. Install Skills into Kimi Work
-Skills are managed in `~/.kimi/daimon/skills/` on your Kimi Work runtime. Copy the `skills/` folder contents there:
-```bash
-cp -r skills/* ~/.kimi/daimon/skills/
-```
-
-### 5. Stand Up the RAG Pipeline
-```bash
-# Ingest all vault markdown into ChromaDB
-python infrastructure/scripts/ingest_vault.py --force
-
-# Verify
-python -c "from infrastructure.rag.pipeline import VaultRAG; rag = VaultRAG(); print(rag.stats())"
-```
-
-### 6. Run Health Check
-```bash
-python infrastructure/scripts/health_check.py --verbose
-```
-
-This tests connectivity for all configured APIs across 7 categories (LLM, SEO, Google, Ads, Social, Monitoring, Vector DB).
-
-### 7. Run the Daily Ops Loop
-Trigger via Kimi Work Cron or manually: "Run the daily ops loop for [client]"
-
-Agents will read from the vault via RAG, call APIs through the infrastructure wrappers, and write outputs back to the vault with YAML frontmatter.
-
-## Business Model
-
-| Tier | Monthly | Best For |
-|------|---------|----------|
-| Starter | $2,500 | Early-stage startups |
-| Growth | $4,500 | Series A–C SaaS, scaling e-commerce |
-| Scale | $8,500 | Growth-stage with in-house marketing lead |
-| Enterprise | $15,000+ | Series C+ / public companies |
-
-2026 Targets: $15K MRR (Q1) → $75K MRR (Q4), 17 active clients, 65% gross margin.
-
-## License
-
-This is proprietary software for the AgenticMarketingPro agency. All agent configs, playbooks, and operational procedures are confidential.
+> A complete AI-native marketing agency operating system. 31 specialized agents, interactive HTML forms, a visual Next.js admin dashboard, and a Supabase-backed job queue — all orchestrated by Kimi Work.
 
 ---
 
-*Built with Kimi Work. The vault is the agency's primary moat.*
+## 🚀 Quick Start (Vercel Deployment)
+
+This repo is designed to deploy to **Vercel** in minutes. The admin dashboard lives in the `web/` folder.
+
+### 1. Deploy to Vercel (One-Click)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/pythongeek/Marketing-OS)
+
+**Important:** During import, set the **Root Directory** to `web/`:
+
+```
+Vercel Import Settings:
+├── Framework Preset: Next.js
+├── Root Directory: web/        ← IMPORTANT
+└── Build Command: (default)
+```
+
+### 2. Add Environment Variables
+
+In Vercel dashboard → Project Settings → Environment Variables, add:
+
+| Variable | Value | Environment |
+|----------|-------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://your-project.supabase.co` | Production, Preview, Development |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJ...` | Production, Preview, Development |
+| `WEBHOOK_SECRET` | `your-secret-string` | Production, Preview |
+
+Get these from your [Supabase project](https://supabase.com) → Settings → API.
+
+### 3. Set Up Supabase Database
+
+1. Create a free project at [supabase.com](https://supabase.com)
+2. Go to SQL Editor → New Query
+3. Paste the contents of [`supabase/schema.sql`](supabase/schema.sql)
+4. Click **Run**
+5. Seed the skills table: paste the SQL from `DEPLOYMENT.md` Section 1.5
+
+### 4. Set Up Kimi Work Poller (Local Machine)
+
+On the machine where Kimi Work runs:
+
+```bash
+# Clone this repo
+git clone https://github.com/pythongeek/Marketing-OS.git
+cd Marketing-OS
+
+# Install Python dependencies
+pip install -r infrastructure/requirements.txt
+pip install supabase
+
+# Add to .env:
+# SUPABASE_URL=https://your-project.supabase.co
+# SUPABASE_SERVICE_KEY=your-service-role-key
+# OPENAI_API_KEY=sk-...
+
+# Run the poller
+python infrastructure/webhooks/poller.py --verbose
+```
+
+Full instructions: [`DEPLOYMENT.md`](DEPLOYMENT.md)
+
+---
+
+## 📁 Repo Structure
+
+```
+Marketing-OS/
+├── web/                          ← Next.js admin dashboard (Vercel deploys this)
+│   ├── app/                      ← Pages: Dashboard, Clients, Skills, Jobs, Forms, Brain Map
+│   ├── app/api/                  ← API routes: /webhook, /jobs, /skills, /clients
+│   ├── components/             ← Nav, StatusBadge, MetricCard
+│   ├── lib/supabase.ts           ← Supabase client + types
+│   ├── package.json
+│   └── .env.example
+│
+├── skills/                       ← 31 agent skill definitions (Kimi Work runtime)
+│   ├── agentic-marketing-os/     ← Atlas orchestrator (master)
+│   ├── onboarding-agent/
+│   ├── content-strategist/
+│   ├── gsc-expert/
+│   ├── ad-expert/
+│   ├── social-media-manager/
+│   └── ... (31 total)
+│
+├── forms/                        ← 30 interactive HTML forms (dark theme, auto-save, JSON export)
+│   ├── client-onboarding.html    ← 24 fields, creates vault folder
+│   ├── api-credentials.html      ← 23 API integrations
+│   ├── wordpress-config.html     ← WP REST API setup
+│   ├── content-brief.html
+│   ├── competitor-intake.html
+│   ├── ad-campaign.html
+│   └── ... (30 total)
+│
+├── infrastructure/               ← Python execution layer
+│   ├── api_client/             ← GSC, GA4, Ahrefs, Semrush, Bing, WordPress
+│   ├── rag/                    ← ChromaDB + LlamaIndex pipeline
+│   ├── ui/                     ← Form engine + response processors
+│   ├── webhooks/             ← Kimi Work poller (polls Supabase jobs)
+│   ├── scripts/                ← ingest_vault, health_check, cost_tracker, generate_dashboard
+│   ├── config.py               ← Central config (50+ env vars)
+│   └── requirements.txt
+│
+├── AgenticMarketingPro-Vault/  ← Obsidian vault (persistent data, NOT deployed to Vercel)
+│   ├── 00-Agency-Core/
+│   ├── 01-Clients/
+│   ├── 03-SEO-Intelligence/
+│   ├── 04-Content-Production/
+│   └── ... (11 folders)
+│
+├── supabase/
+│   └── schema.sql              ← Database schema (6 tables, indexes, RLS, triggers, realtime)
+│
+├── .env.example                ← Root .env template (Kimi Work machine)
+├── web/.env.example            ← Vercel admin .env template
+├── DEPLOYMENT.md               ← Full production deployment guide (29.7 KB)
+└── README.md                   ← This file
+```
+
+---
+
+## 🧠 The 31 Agents
+
+| Category | Agents |
+|----------|--------|
+| **Core** | Atlas Orchestrator, QA Pipeline, Agent Prompt Engineer |
+| **SEO** | Content Strategist, Competitor Intel, GSC Expert, Bing WMT Expert, On-Page Optimizer, Technical SEO Auditor, PSEO Engineer, AEO/GEO Specialist, Local SEO Agent |
+| **Content** | Longform Writer, Copywriter, Video/Image Producer |
+| **Off-Page** | Off-Page Strategist, Influencer Agent |
+| **Paid** | Ad Expert |
+| **Social** | Social Media Manager |
+| **Email** | Email/Lifecycle Agent |
+| **Analytics** | Analytics Expert, Reporting Agent, Market Signals |
+| **Business** | Revenue Scout, Forecasting Agent, CRO Agent, Pitch Agent |
+| **Operations** | Onboarding Agent, Playbook Librarian, MarTech Integration Agent, Reputation Agent |
+
+Every skill is **form-first interactive**: when data is missing, the agent generates an HTML form, the user fills it in their browser, and the agent processes the response.
+
+---
+
+## 🎨 The Admin Dashboard
+
+### Pages
+
+| Page | What You Can Do |
+|------|-----------------|
+| **Dashboard** | View metrics (clients, skills, jobs, cost), recent jobs, quick actions |
+| **Clients** | View active clients, onboard new ones via form link, open vault files |
+| **Skills** | View all 31 agents, edit instructions inline, trigger runs, open forms |
+| **Jobs** | Monitor job queue, filter by status, track execution history and cost |
+| **Forms** | Launch any of the 30 interactive HTML forms in a new tab |
+| **Brain Map** | View the interactive D3.js force-directed graph of vault entities |
+| **Analytics** | (Future: charts, KPIs, reports) |
+
+### Features
+
+- **Dark theme** (`#0f0f1a` background) matching the form aesthetic
+- **Real-time job updates** via Supabase polling
+- **Inline skill editing** — edit agent instructions directly in the browser
+- **One-click agent runs** — enqueue a job for any skill
+- **Cost tracking** — monitor cumulative agent spend
+- **Mobile responsive** — works on phone, tablet, desktop
+
+---
+
+## 🔗 How the Pieces Connect
+
+```
+┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
+│      Vercel         │     │     Supabase        │     │     Kimi Work       │
+│   (Next.js Admin)   │ ←→  │   (PostgreSQL DB)   │ ←→  │   (Local Poller)    │
+│                     │     │   + Realtime        │     │   + Skills + Vault    │
+│  • Dashboard        │     │                     │     │                     │
+│  • Skills editor    │     │  • clients table    │     │  • Polls jobs         │
+│  • Job queue UI     │     │  • skills table     │     │  • Executes skills    │
+│  • Form launcher    │     │  • jobs table ←     │     │  • Writes results     │
+│  • Brain map iframe │     │  • agent_logs       │     │  • Updates vault      │
+│                     │     │  • form_responses   │     │                     │
+│  /api/webhook       │     │  • kpis             │     │   ~/.kimi/daimon/     │
+│  (POST receiver)    │     │                     │     │   skills/             │
+└─────────────────────┘     └─────────────────────┘     └─────────────────────┘
+         ↑                          ↑                          ↑
+         │                          │                          │
+   cron-job.org               User fills forms          Local filesystem
+   (free external              in browser              (.env, vault .md)
+    cron scheduler)
+```
+
+### Data Flow: End to End
+
+1. **User clicks "Run Agent"** in Vercel admin → Vercel writes `job` row to Supabase (`status: pending`)
+2. **Kimi Work poller** (running on your local machine) polls every 5 min → picks up `pending` job
+3. **Poller marks job `running`** → loads the skill from `~/.kimi/daimon/skills/` → executes it
+4. **Skill reads vault** (local `.md` files), calls APIs via wrappers, writes outputs to vault
+5. **Poller writes result back** to Supabase (`status: completed`, `result: {...}`, `cost_usd: ...`)
+6. **Vercel admin** refreshes via polling → UI shows "Done" with result
+
+---
+
+## 📝 Interactive Forms
+
+All 30 forms are **self-contained HTML files** with:
+- Dark theme (matching admin dashboard)
+- Conditional fields (e.g., WP fields only show if "Enable WordPress" is checked)
+- Auto-save to browser localStorage (never lose progress)
+- Validation (required fields, email/URL format, password masking)
+- One-click JSON export (download `*-response.json`)
+- Mobile responsive
+
+### Example Flow: Client Onboarding
+
+```bash
+# 1. Agent generates form
+python infrastructure/ui/form_engine.py --client-onboarding
+# → forms/client-onboarding.html
+
+# 2. User opens form in browser, fills it, clicks Submit
+# → downloads client-onboarding-response.json
+
+# 3. Agent processes response
+python infrastructure/ui/processors.py client forms/client-onboarding-response.json
+# → creates 01-Clients/[slug]/ with profile.md, manifest.md, kpis.md, strategy.md
+```
+
+---
+
+## 🛠️ Local Development
+
+### Prerequisites
+
+- Node.js 18+ (for Vercel admin)
+- Python 3.9+ (for Kimi Work infrastructure)
+- Git
+
+### Run the Admin Locally
+
+```bash
+cd web/
+npm install
+cp .env.example .env.local
+# Edit .env.local with your Supabase credentials
+npm run dev
+# Open http://localhost:3000
+```
+
+### Run the Poller Locally
+
+```bash
+# From repo root
+pip install -r infrastructure/requirements.txt
+pip install supabase
+python infrastructure/webhooks/poller.py --once --verbose
+```
+
+### Generate All Forms
+
+```bash
+python -c "from infrastructure.ui.form_engine import FormEngine; from infrastructure.ui.form_presets import FormPresets; e=FormEngine(); FormPresets(e).generate_all()"
+```
+
+---
+
+## 📚 Documentation
+
+| Document | What It Covers |
+|----------|---------------|
+| [`DEPLOYMENT.md`](DEPLOYMENT.md) | Full production deployment guide: Supabase → Vercel → Poller → Cron |
+| [`infrastructure/README.md`](infrastructure/README.md) | Python infrastructure: API clients, RAG, scripts, form engine |
+| [`web/.env.example`](web/.env.example) | Vercel admin environment variables |
+| [`.env.example`](.env.example) | Kimi Work / local machine environment variables |
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Admin UI** | Next.js 14, TypeScript, Tailwind CSS, App Router |
+| **Database** | Supabase PostgreSQL + Realtime |
+| **API** | Next.js API Routes, REST |
+| **Agent Runtime** | Kimi Work (local) |
+| **Skills** | Markdown SKILL.md files (31 agents) |
+| **Forms** | Self-contained HTML with vanilla JS |
+| **RAG** | ChromaDB + LlamaIndex + OpenAI embeddings |
+| **API Wrappers** | Python (GSC, GA4, Ahrefs, Semrush, Bing, WordPress) |
+| **Poller** | Python `supabase-py`, polling every 5 min |
+| **Scheduling** | cron-job.org (free external cron) |
+| **Vault** | Obsidian-compatible Markdown files |
+
+---
+
+## 🗺️ Roadmap
+
+### Immediate (Week 1)
+- [ ] Wire `execute_job()` in poller to actually run skills (currently a stub)
+- [ ] Add authentication to Vercel admin (Clerk or NextAuth.js)
+- [ ] Add real-time job updates via Supabase Realtime subscription
+- [ ] Create first real client via onboarding form
+- [ ] Run full daily ops loop end-to-end
+
+### Short Term (Month 1)
+- [ ] Email/Slack notifications for failed jobs and completed reports
+- [ ] Analytics page with charts (Recharts already installed)
+- [ ] Client-specific dashboards (filter by client)
+- [ ] Real cost tracking in dashboard
+- [ ] Job retry logic (failed jobs auto-retry up to 3x)
+
+### Medium Term (Month 2-3)
+- [ ] Multi-user support (team members, roles, permissions)
+- [ ] API playground for testing individual skills
+- [ ] AI chat interface in admin (ask questions about any client)
+- [ ] Automated billing/invoicing based on job logs
+
+---
+
+## 🙏 Contributing
+
+This is a private operating system for your agency. The repo is designed to be forked and customized for your specific clients, verticals, and workflows.
+
+To add a new skill:
+1. Create `skills/your-skill-name/SKILL.md` following the 5-layer template
+2. Add a form in `infrastructure/ui/form_presets.py` if the skill needs user input
+3. Seed the skill in Supabase `skills` table
+4. Test via Vercel admin → Skills → Run
+
+---
+
+## 📄 License
+
+Private / Proprietary. Built for your agency's internal use.
+
+---
+
+*Built with Kimi Work + Next.js + Supabase + ChromaDB + 31 specialized agents.*
+*Last updated: 2025-06-20*

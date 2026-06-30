@@ -46,3 +46,29 @@ chroma_db/
 *.tmp
 *.temp
 *.log
+
+# Next.js build output
+.next/
+out/
+dist/
+
+# Python build artifacts
+*.egg-info/
+*.egg
+build/
+
+coverage/
+
+# Vercel
+.vercel
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Windows
+*.lnk
+*.desktop
+
