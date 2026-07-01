@@ -36,9 +36,9 @@ def get_supabase_client():
     try:
         from supabase import create_client
         url = os.getenv("SUPABASE_URL")
-        key = os.getenv("SUPABASE_SERVICE_KEY")
+        key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
         if not url or not key:
-            raise ValueError("SUPABASE_URL and SUPABASE_SERVICE_KEY must be set")
+            raise ValueError("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set")
         return create_client(url, key)
     except ImportError:
         logger.error("supabase-py not installed. Run: pip install supabase")

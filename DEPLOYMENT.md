@@ -279,7 +279,7 @@ Add to your main `.env` file (project root, alongside `OPENAI_API_KEY`):
 ```bash
 # Supabase (Service Role Key — this has full DB access, keep it secret)
 SUPABASE_URL=https://xxxxxxxx.supabase.co
-SUPABASE_SERVICE_KEY=eyJ...  # service_role key (NOT the anon key)
+SUPABASE_SERVICE_ROLE_KEY=eyJ...  # service_role key (NOT the anon key)
 ```
 
 ### 3.3 Test the Poller
@@ -326,7 +326,7 @@ Type=simple
 User=your-username
 WorkingDirectory=/home/your-username/AgenticMarketingPro/marketing
 Environment="SUPABASE_URL=https://xxxxxxxx.supabase.co"
-Environment="SUPABASE_SERVICE_KEY=eyJ..."
+Environment="SUPABASE_SERVICE_ROLE_KEY=eyJ..."
 Environment="OPENAI_API_KEY=sk-..."
 Environment="VAULT_ROOT=/home/your-username/AgenticMarketingPro/marketing/AgenticMarketingPro-Vault"
 ExecStart=/usr/bin/python3 /home/your-username/AgenticMarketingPro/marketing/infrastructure/webhooks/poller.py --interval 300
@@ -489,7 +489,7 @@ Expected response:
 ```bash
 # === Supabase (for poller) ===
 SUPABASE_URL=https://xxxxxxxx.supabase.co
-SUPABASE_SERVICE_KEY=eyJ...  # service_role key (secret!)
+SUPABASE_SERVICE_ROLE_KEY=eyJ...  # service_role key (secret!)
 
 # === LLM / Embeddings ===
 OPENAI_API_KEY=sk-...
@@ -562,10 +562,10 @@ If you deployed via Git integration, also set these in Vercel dashboard → Proj
 **Symptoms:** `Failed to initialize Supabase: ...` or `Connection refused`
 
 **Fixes:**
-1. Check `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` in `.env` (project root, not `web/.env.local`)
+1. Check `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in `.env` (project root, not `web/.env.local`)
 2. Verify the service key is correct (Project Settings → API → service_role)
 3. Check if `supabase` Python package is installed: `pip install supabase`
-4. Test connectivity: `curl $SUPABASE_URL/rest/v1/skills?select=* -H "apikey: $SUPABASE_SERVICE_KEY"`
+4. Test connectivity: `curl $SUPABASE_URL/rest/v1/skills?select=* -H "apikey: $SUPABASE_SERVICE_ROLE_KEY"`
 
 ### Problem: Vercel API returns 500
 
