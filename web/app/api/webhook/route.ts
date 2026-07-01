@@ -9,6 +9,12 @@ export const dynamic = "force-dynamic";
  */
 export async function POST(request: Request) {
   try {
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel Environment Variables." },
+        { status: 503 }
+      );
+    }
     const body = await request.json();
     const { type, client_slug, skill_slug, payload = {}, secret } = body;
 

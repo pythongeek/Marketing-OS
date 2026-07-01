@@ -5,6 +5,12 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel Environment Variables." },
+        { status: 503 }
+      );
+    }
     const { data, error } = await supabase
       .from("agent_logs")
       .select("*")
@@ -23,6 +29,12 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   try {
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel Environment Variables." },
+        { status: 503 }
+      );
+    }
     const body = await request.json();
     const { level, message, metadata = {} } = body;
 
