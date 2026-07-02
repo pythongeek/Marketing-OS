@@ -223,7 +223,7 @@ Variant: New headline 'Close More Deals in Half the Time'" rows="4"></textarea>
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
