@@ -1,10 +1,6 @@
--- Clear and re-seed skills table (guaranteed no duplicates)
--- Run this in Supabase SQL Editor
-
--- First, remove existing skills (safe if no jobs reference them yet)
+DELETE FROM public.jobs;
 DELETE FROM public.skills;
 
--- Insert all 31 skills fresh
 INSERT INTO public.skills (slug, name, description, category, status) VALUES
 ('content-strategist', 'Content Strategist', 'Analyzes business goals and creates comprehensive content strategies', 'strategy', 'active'),
 ('on-page-optimizer', 'On-Page Optimizer', 'Optimizes content for keywords, semantic richness, and technical SEO', 'seo', 'active'),
