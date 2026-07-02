@@ -1,7 +1,10 @@
--- Seed all 31 skills into the skills table
--- Run this in Supabase SQL Editor after applying schema.sql
--- Handles duplicates gracefully (updates existing skills instead of failing)
+-- Clear and re-seed skills table (guaranteed no duplicates)
+-- Run this in Supabase SQL Editor
 
+-- First, remove existing skills (safe if no jobs reference them yet)
+DELETE FROM public.skills;
+
+-- Insert all 31 skills fresh
 INSERT INTO public.skills (slug, name, description, category, status) VALUES
 ('content-strategist', 'Content Strategist', 'Analyzes business goals and creates comprehensive content strategies', 'strategy', 'active'),
 ('on-page-optimizer', 'On-Page Optimizer', 'Optimizes content for keywords, semantic richness, and technical SEO', 'seo', 'active'),
@@ -33,10 +36,4 @@ INSERT INTO public.skills (slug, name, description, category, status) VALUES
 ('seo-data-pipeline', 'SEO Data Pipeline', 'Pulls keyword, backlink, and traffic data from APIs', 'data', 'active'),
 ('content-production-pipeline', 'Content Production Pipeline', 'Automates blog post creation and publishing', 'automation', 'active'),
 ('site-monitoring-pipeline', 'Site Monitoring Pipeline', 'Checks uptime, speed, and Core Web Vitals', 'monitoring', 'active'),
-('competitor-intelligence-mesh', 'Competitor Intelligence Mesh', 'Tracks competitor rankings, content, and mentions', 'research', 'active')
-ON CONFLICT (slug) DO UPDATE SET
-    name = EXCLUDED.name,
-    description = EXCLUDED.description,
-    category = EXCLUDED.category,
-    status = EXCLUDED.status,
-    last_updated = now();
+('competitor-intelligence-mesh', 'Competitor Intelligence Mesh', 'Tracks competitor rankings, content, and mentions', 'research', 'active');
