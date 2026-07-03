@@ -45,10 +45,7 @@
             <p>Configure Bing WMT property monitoring for a client website.</p>
         </div>
         <form data-skill-slug="bing-property" id="agent-form">
-            <div class="field" id="field-client">
-  <label for="client">Client <span class="required">*</span></label>
-  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
-</div>
+            
 <div class="field" id="field-bing_site_url">
   <label for="bing_site_url">Bing Site URL <span class="required">*</span></label>
   <input type="url" name="bing_site_url" id="bing_site_url" required placeholder="https://example.com/" value="">
@@ -102,7 +99,7 @@
         </div>
     </div>
     <script>
-        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "bing_site_url", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "sitemap_url", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "monitoring_focus", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "traffic_alert_threshold", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "crawl_error_alert_threshold", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "reporting_frequency", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [ {"name": "bing_site_url", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "sitemap_url", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "monitoring_focus", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "traffic_alert_threshold", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "crawl_error_alert_threshold", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "reporting_frequency", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 

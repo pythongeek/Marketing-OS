@@ -45,10 +45,7 @@
             <p>Request landing page copy, email copy, ad copy, or any short-form marketing copy.</p>
         </div>
         <form data-skill-slug="copy-request" id="agent-form">
-            <div class="field" id="field-client">
-  <label for="client">Client <span class="required">*</span></label>
-  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
-</div>
+            
 <div class="field" id="field-copy_type">
   <label for="copy_type">Copy Type <span class="required">*</span></label>
   <select name="copy_type" id="copy_type" required>
@@ -146,7 +143,7 @@
         </div>
     </div>
     <script>
-        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "copy_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "copy_type_other", "type": "text", "required": false, "depends_on": "copy_type", "depends_value": "Other"}, {"name": "target_audience", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "value_proposition", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "tone", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "word_count", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "key_messages", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "cta", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "cta_url", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "objections_to_address", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "examples", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "forbidden_words", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "seo_keywords", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "deadline", "type": "date", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [ {"name": "copy_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "copy_type_other", "type": "text", "required": false, "depends_on": "copy_type", "depends_value": "Other"}, {"name": "target_audience", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "value_proposition", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "tone", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "word_count", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "key_messages", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "cta", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "cta_url", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "objections_to_address", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "examples", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "forbidden_words", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "seo_keywords", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "deadline", "type": "date", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 

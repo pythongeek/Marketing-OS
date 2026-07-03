@@ -45,10 +45,7 @@
             <p>Request a full technical SEO audit for a client website.</p>
         </div>
         <form data-skill-slug="tech-audit" id="agent-form">
-            <div class="field" id="field-client">
-  <label for="client">Client <span class="required">*</span></label>
-  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
-</div>
+            
 <div class="field" id="field-website">
   <label for="website">Website to Audit <span class="required">*</span></label>
   <input type="url" name="website" id="website" required placeholder="https://example.com" value="">
@@ -135,7 +132,7 @@
         </div>
     </div>
     <script>
-        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "website", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "audit_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "audit_scope_custom", "type": "textarea", "required": false, "depends_on": "audit_type", "depends_value": "Custom scope"}, {"name": "page_count_estimate", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "staging_site", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "has_javascript", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "has_international", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "has_ecommerce", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "has_subdomains", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "exclusions", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "previous_issues", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "priority", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [ {"name": "website", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "audit_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "audit_scope_custom", "type": "textarea", "required": false, "depends_on": "audit_type", "depends_value": "Custom scope"}, {"name": "page_count_estimate", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "staging_site", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "has_javascript", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "has_international", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "has_ecommerce", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "has_subdomains", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "exclusions", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "previous_issues", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "priority", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 

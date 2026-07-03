@@ -45,10 +45,7 @@
             <p>Add new link prospects or request an outreach campaign for a specific client or page.</p>
         </div>
         <form data-skill-slug="outreach-prospect" id="agent-form">
-            <div class="field" id="field-client">
-  <label for="client">Client <span class="required">*</span></label>
-  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
-</div>
+            
 <div class="field" id="field-target_page">
   <label for="target_page">Page to Build Links To <span class="required">*</span></label>
   <input type="url" name="target_page" id="target_page" required placeholder="https://example.com/blog/target-page" value="">
@@ -132,7 +129,7 @@
         </div>
     </div>
     <script>
-        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "target_page", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "target_keywords", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "prospect_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "prospect_url", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "prospect_contact", "type": "email", "required": false, "depends_on": null, "depends_value": null}, {"name": "prospect_dr", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "outreach_angle", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "personalization_notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "follow_up_count", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "template_style", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "batch_size", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [ {"name": "target_page", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "target_keywords", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "prospect_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "prospect_url", "type": "url", "required": true, "depends_on": null, "depends_value": null}, {"name": "prospect_contact", "type": "email", "required": false, "depends_on": null, "depends_value": null}, {"name": "prospect_dr", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "outreach_angle", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "personalization_notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "follow_up_count", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "template_style", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "batch_size", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 
