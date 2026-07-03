@@ -44,7 +44,7 @@
             <h1>🔮 Forecasting Request</h1>
             <p>Request a revenue, traffic, or conversion forecast with scenario modeling.</p>
         </div>
-        <form id="agent-form">
+        <form data-skill-slug="forecasting-request" id="agent-form">
             <div class="field" id="field-client">
   <label for="client">Client <span class="required">*</span></label>
   <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
@@ -245,5 +245,6 @@ Feb: 1,200 sessions, 60 leads, $12K revenue
         loadForm();
         updateConditionalFields();
     </script>
+<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

@@ -44,7 +44,7 @@
             <h1>🎯 Pitch & Proposal Builder</h1>
             <p>Build a client proposal or competitive pitch deck with audit findings and strategic recommendations.</p>
         </div>
-        <form id="agent-form">
+        <form data-skill-slug="pitch-proposal" id="agent-form">
             <div class="field" id="field-client">
   <label for="client">Prospect Name <span class="required">*</span></label>
   <input type="text" name="client" id="client" required placeholder="e.g., Prospect Corp" value="">
@@ -255,5 +255,6 @@
         loadForm();
         updateConditionalFields();
     </script>
+<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

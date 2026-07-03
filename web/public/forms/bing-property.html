@@ -44,7 +44,7 @@
             <h1>🔎 Bing Webmaster Tools — Property Setup</h1>
             <p>Configure Bing WMT property monitoring for a client website.</p>
         </div>
-        <form id="agent-form">
+        <form data-skill-slug="bing-property" id="agent-form">
             <div class="field" id="field-client">
   <label for="client">Client <span class="required">*</span></label>
   <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
@@ -203,5 +203,6 @@
         loadForm();
         updateConditionalFields();
     </script>
+<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

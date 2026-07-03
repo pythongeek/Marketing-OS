@@ -1,19 +1,19 @@
-/**
- * AgenticMarketingPro — Kimi Work Job Poller
- * ============================================
- * Runs locally (on the Kimi Work machine) to poll Supabase for pending jobs,
- * execute them via the appropriate agent skill, and write results back.
- *
- * Usage:
- *   python infrastructure/webhooks/poller.py
- *   python infrastructure/webhooks/poller.py --once  # Single run, then exit
- *   python infrastructure/webhooks/poller.py --interval 300  # Poll every 5 min
- *
- * Setup:
- *   1. Set SUPABASE_URL and SUPABASE_SERVICE_KEY in .env
- *   2. Run this as a systemd service, cron job, or manually
- *   3. It will pick up jobs enqueued by the Vercel admin
- */
+"""
+AgenticMarketingPro — Kimi Work Job Poller
+============================================
+Runs locally (on the Kimi Work machine) to poll Supabase for pending jobs,
+execute them via the appropriate agent skill, and write results back.
+
+Usage:
+  python infrastructure/webhooks/poller.py
+  python infrastructure/webhooks/poller.py --once  # Single run, then exit
+  python infrastructure/webhooks/poller.py --interval 300  # Poll every 5 min
+
+Setup:
+  1. Set SUPABASE_URL and SUPABASE_SERVICE_KEY in .env
+  2. Run this as a systemd service, cron job, or manually
+  3. It will pick up jobs enqueued by the Vercel admin
+"""
 
 import json
 import logging

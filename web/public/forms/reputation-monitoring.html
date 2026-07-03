@@ -44,7 +44,7 @@
             <h1>🛡️ Reputation Monitoring Setup</h1>
             <p>Configure brand mention monitoring, review tracking, and crisis response protocols.</p>
         </div>
-        <form id="agent-form">
+        <form data-skill-slug="reputation-monitoring" id="agent-form">
             <div class="field" id="field-client">
   <label for="client">Client <span class="required">*</span></label>
   <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
@@ -248,5 +248,6 @@
         loadForm();
         updateConditionalFields();
     </script>
+<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

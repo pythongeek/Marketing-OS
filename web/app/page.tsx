@@ -6,11 +6,13 @@ import { MetricCard } from "@/components/metric-card";
 import { StatusBadge } from "@/components/status-badge";
 import { Users, Wrench, Activity, Zap, TrendingUp, DollarSign } from "lucide-react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({ clients: 0, skills: 0, jobs: 0, pendingJobs: 0, completedJobs: 0, totalCost: 0 });
   const [recentJobs, setRecentJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [liveStatus, setLiveStatus] = useState("🔴 Disconnected");
 
   useEffect(() => {
     async function fetchData() {
@@ -47,15 +49,61 @@ export default function DashboardPage() {
     fetchData();
   }, []);
 
+  // ── Supabase Realtime ─────────────────────────────────────────────
+  useEffect(() => {
+    if (!supabase) return;
+
+    const channel = supabase
+      .channel("jobs-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "jobs" },
+        (payload) => {
+          console.log("Realtime job change:", payload);
+          setLiveStatus("🟢 Live");
+          // Refresh all data when any job changes
+          fetch("/api/jobs")
+            .then((r) => r.json())
+            .then((data) => {
+              const jobsList = data.jobs || [];
+              const pending = jobsList.filter((j: any) => j.status === "pending").length;
+              const completed = jobsList.filter((j: any) => j.status === "completed").length;
+              const totalCost = jobsList.reduce((sum: number, j: any) => sum + (j.cost_usd || 0), 0);
+              setStats((prev) => ({
+                ...prev,
+                jobs: jobsList.length,
+                pendingJobs: pending,
+                completedJobs: completed,
+                totalCost: Math.round(totalCost * 100) / 100,
+              }));
+              setRecentJobs(jobsList.slice(0, 5));
+            });
+        }
+      )
+      .subscribe((status) => {
+        console.log("Realtime subscription status:", status);
+        if (status === "SUBSCRIBED") {
+          setLiveStatus("🟢 Live");
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   if (loading) return <div className="p-8 text-muted">Loading...</div>;
 
   return (
     <div className="flex min-h-screen">
       <Nav />
       <main className="flex-1 p-8 overflow-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-text">Dashboard</h1>
-          <p className="text-muted text-sm mt-1">AgenticMarketingPro Command Center</p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-text">Dashboard</h1>
+            <p className="text-muted text-sm mt-1">AgenticMarketingPro Command Center</p>
+          </div>
+          <span className="text-xs text-muted bg-card border border-border rounded-full px-3 py-1">{liveStatus}</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">

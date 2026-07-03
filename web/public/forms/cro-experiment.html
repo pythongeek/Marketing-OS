@@ -44,7 +44,7 @@
             <h1>🧪 CRO Experiment Setup</h1>
             <p>Design an A/B test, multivariate test, or landing page optimization experiment.</p>
         </div>
-        <form id="agent-form">
+        <form data-skill-slug="cro-experiment" id="agent-form">
             <div class="field" id="field-client">
   <label for="client">Client <span class="required">*</span></label>
   <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
@@ -264,5 +264,6 @@ Variant: New headline 'Close More Deals in Half the Time'" rows="4"></textarea>
         loadForm();
         updateConditionalFields();
     </script>
+<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

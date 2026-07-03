@@ -44,7 +44,7 @@
             <h1>📧 Email Sequence Builder</h1>
             <p>Design an email lifecycle sequence: welcome, nurture, re-engagement, or promotional.</p>
         </div>
-        <form id="agent-form">
+        <form data-skill-slug="email-sequence" id="agent-form">
             <div class="field" id="field-client">
   <label for="client">Client <span class="required">*</span></label>
   <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
@@ -286,5 +286,6 @@ etc." rows="4"></textarea>
         loadForm();
         updateConditionalFields();
     </script>
+<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>
