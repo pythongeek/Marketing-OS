@@ -41,7 +41,7 @@ export default function JobsPage() {
           fetchJobs();
         }
       )
-      .subscribe((status) => {
+      .subscribe((status: any) => {
         if (status === "SUBSCRIBED") setLiveStatus("🟢 Live");
       });
 

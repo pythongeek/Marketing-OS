@@ -80,7 +80,7 @@ export default function DashboardPage() {
             });
         }
       )
-      .subscribe((status) => {
+      .subscribe((status: any) => {
         console.log("Realtime subscription status:", status);
         if (status === "SUBSCRIBED") {
           setLiveStatus("🟢 Live");
