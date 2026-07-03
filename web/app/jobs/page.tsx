@@ -35,7 +35,7 @@ export default function JobsPage() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "jobs" },
-        (payload) => {
+        (payload: any) => {
           console.log("Realtime job change:", payload);
           setLiveStatus("🟢 Live");
           fetchJobs();

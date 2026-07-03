@@ -58,7 +58,7 @@ export default function DashboardPage() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "jobs" },
-        (payload) => {
+        (payload: any) => {
           console.log("Realtime job change:", payload);
           setLiveStatus("🟢 Live");
           // Refresh all data when any job changes
