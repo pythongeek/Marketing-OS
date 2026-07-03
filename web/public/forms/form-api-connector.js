@@ -3,7 +3,7 @@
 
   // ═══════════════════════════════════════════════════════════
   // AgenticMarketingPro — Form API Connector
-  // All forms include this script to:
+  // All skill forms include this script to:
   // 1. Fetch clients from API and show a dropdown
   // 2. POST form data to /api/webhook to create a job
   // 3. Show real-time status messages
@@ -52,30 +52,6 @@
       form.insertBefore(wrapper, form.firstChild);
     });
   }
-  function injectClientSelector() {
-    const forms = document.querySelectorAll("form");
-    forms.forEach((form) => {
-      if (form.querySelector("[name=client_slug]")) return; // already injected
-
-      const wrapper = document.createElement("div");
-      wrapper.className = "form-section";
-      wrapper.innerHTML = `
-        <div class="section-header">
-          <div class="section-title">👤 Client</div>
-          <div class="section-desc">Select the client for this job</div>
-        </div>
-        <div class="form-group">
-          <label class="required">Select Client</label>
-          <select name="client_slug" class="form-input" required>
-            <option value="">-- Choose a client --</option>
-            ${clients.map((c) => `<option value="${c.slug}">${c.name} (${c.slug})</option>`).join("")}
-          </select>
-          <div class="field-help">This job will be tagged to this client</div>
-        </div>
-      `;
-      form.insertBefore(wrapper, form.firstChild);
-    });
-  }
 
   // ── Override form submit to create job via API ──────────
   function attachFormSubmit() {
@@ -84,11 +60,6 @@
       if (form.dataset.apiHooked) return;
       // Skip client onboarding form — it has its own /api/clients handler
       if (form.dataset.skillSlug === "client-onboarding") return;
-      form.dataset.apiHooked = "true";
-  function attachFormSubmit() {
-    const forms = document.querySelectorAll("form");
-    forms.forEach((form) => {
-      if (form.dataset.apiHooked) return;
       form.dataset.apiHooked = "true";
 
       form.addEventListener("submit", async function (e) {
