@@ -4,7 +4,40 @@ import { useEffect, useState } from "react";
 import { Nav } from "@/components/nav";
 import { StatusBadge } from "@/components/status-badge";
 import { Wrench, Edit3, Play, ExternalLink } from "lucide-react";
-import Link from "next/link";
+
+const skillFormMap: Record<string, string> = {
+  "content-strategist": "content-brief.html",
+  "on-page-optimizer": "on-page-request.html",
+  "technical-seo-auditor": "tech-audit.html",
+  "keyword-researcher": "pseo-config.html",
+  "competitor-intelligence": "competitor-intake.html",
+  "aeo-geo-strategist": "aeo-entity-schema.html",
+  "link-building-outreach": "outreach-prospect.html",
+  "pseo-pipeline": "pseo-config.html",
+  "content-brief-writer": "content-brief.html",
+  "copywriter": "copy-request.html",
+  "social-media-manager": "social-calendar.html",
+  "paid-ads-manager": "ad-campaign.html",
+  "analytics-expert": "analytics-report.html",
+  "conversion-optimizer": "cro-experiment.html",
+  "brand-voice-writer": "copy-request.html",
+  "email-marketing-specialist": "email-sequence.html",
+  "local-seo-manager": "local-seo.html",
+  "video-script-writer": "video-image-brief.html",
+  "reputation-manager": "reputation-monitoring.html",
+  "market-researcher": "market-alert.html",
+  "forecasting-revenue": "forecasting-request.html",
+  "reporting-automation": "report-config.html",
+  "playbook-creator": "playbook-request.html",
+  "off-page-optimizer": "outreach-prospect.html",
+  "agentic-marketing-os": "agent-config.html",
+  "onboarding-agent": "client-onboarding.html",
+  "martech-integration-agent": "api-credentials.html",
+  "seo-data-pipeline": "gsc-property.html",
+  "content-production-pipeline": "content-brief.html",
+  "site-monitoring-pipeline": "qa-check-request.html",
+  "competitor-intelligence-mesh": "competitor-intake.html",
+};
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState<any[]>([]);
@@ -101,7 +134,7 @@ export default function SkillsPage() {
                     <Play className="w-3 h-3" /> Run
                   </button>
                   <a
-                    href={`/forms/${skill.slug}.html`}
+                    href={`/forms/${skillFormMap[skill.slug] || skill.slug + ".html"}`}
                     target="_blank"
                     className="flex items-center gap-1 bg-border/50 hover:bg-border text-text px-3 py-1.5 rounded-lg text-xs transition-colors"
                   >
