@@ -17,11 +17,45 @@
     try {
       const res = await fetch(API_BASE + "/api/clients");
       const data = await res.json();
+      console.log("[AMP Connector] Fetched clients:", data);
+      
+      if (!res.ok) {
+        console.error("[AMP Connector] API error:", data.error || res.statusText);
+        showGlobalError("Failed to load clients: " + (data.error || res.statusText));
+        return;
+      }
+      
       clients = data.clients || [];
+      if (clients.length === 0) {
+        console.warn("[AMP Connector] No clients found in database.");
+        showGlobalError("No clients found. Please create a client first.");
+      }
       injectClientSelector();
     } catch (e) {
-      console.error("Failed to load clients:", e);
+      console.error("[AMP Connector] Failed to load clients:", e);
+      showGlobalError("Network error loading clients. Check console.");
     }
+  }
+
+  // ── Show global error above form ────────────────────────
+  function showGlobalError(message) {
+    const forms = document.querySelectorAll("form");
+    forms.forEach((form) => {
+      if (form.dataset.skillSlug === "client-onboarding") return;
+      const wrapper = document.createElement("div");
+      wrapper.style.cssText = `
+        margin-bottom: 16px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        background: rgba(231, 76, 60, 0.15);
+        color: #E74C3C;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+      `;
+      wrapper.textContent = "⚠️ " + message;
+      form.parentElement.insertBefore(wrapper, form);
+    });
   }
 
   // ── Inject client dropdown into every form ──────────────
@@ -31,7 +65,15 @@
       // Skip client onboarding form (creates new clients, doesn't select one)
       const skillSlug = form.dataset.skillSlug || "";
       if (skillSlug === "client-onboarding") return;
-      if (form.querySelector("[name=client_slug]")) return; // already injected
+      
+      // Already injected?
+      if (form.querySelector("[name=client_slug]")) return;
+      
+      // Already has a hardcoded client field? Replace it
+      const existingClientField = form.querySelector('[name="client"], [name="client_slug"]');
+      if (existingClientField) {
+        console.log("[AMP Connector] Replacing existing client field");
+      }
 
       const wrapper = document.createElement("div");
       wrapper.className = "form-section";
@@ -46,7 +88,7 @@
             <option value="">-- Choose a client --</option>
             ${clients.map((c) => `<option value="${c.slug}">${c.name} (${c.slug})</option>`).join("")}
           </select>
-          <div class="field-help">This job will be tagged to this client</div>
+          <div class="field-help">${clients.length} client(s) available. This job will be tagged to this client.</div>
         </div>
       `;
       form.insertBefore(wrapper, form.firstChild);
@@ -148,6 +190,7 @@
 
   // ── Initialize ──────────────────────────────────────────
   document.addEventListener("DOMContentLoaded", function () {
+    console.log("[AMP Connector] Initializing...");
     loadClients();
     attachFormSubmit();
   });
