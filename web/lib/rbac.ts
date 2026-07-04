@@ -19,7 +19,7 @@ const ROLE_LEVELS: Record<string, number> = { viewer: 0, editor: 1, admin: 2 };
 
 export function withRole(
   allowedRoles: string[],
-  handler: (request: Request, user: { id: string; role: string; email: string }) => Promise<Response>,
+  handler: (request: Request, user: { id: string; role: string; email: string; display_name: string }) => Promise<Response>,
 ) {
   return async (request: Request): Promise<Response> => {
     // Extract Bearer token from Authorization header

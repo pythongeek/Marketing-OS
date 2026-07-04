@@ -5,7 +5,7 @@ import { withRole, requireAdmin, requireEditor } from "@/lib/rbac";
 export const dynamic = "force-dynamic";
 
 // GET /api/jobs — any authenticated user (viewer+)
-export const GET = withRole(["viewer", "editor", "admin"], async (_request: Request, _user: { id: string; role: string; email: string; display_name: string }) => {
+export const GET = withRole(["viewer", "editor", "admin"], async () => {
   try {
     if (!supabase) {
       return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
@@ -26,7 +26,7 @@ export const GET = withRole(["viewer", "editor", "admin"], async (_request: Requ
 });
 
 // POST /api/jobs — editors and admins can create jobs
-export const POST = requireEditor(async (request: Request, _user: { id: string; role: string; email: string; display_name: string }) => {
+export const POST = requireEditor(async (request: Request) => {
   try {
     if (!supabase) {
       return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
