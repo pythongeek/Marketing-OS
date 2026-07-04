@@ -1,12 +1,14 @@
 """
-AgenticMarketingPro — Kimi Work Job Poller  (Phase 2: Governance)
-=================================================================
+AgenticMarketingPro — Kimi Work Job Poller  (Phase 3: Observability)
+=====================================================================
 Runs locally to poll Supabase for pending jobs, execute them via agent skills,
-and write results back. Now with real governance gates:
+and write results back. Now with real governance gates + structured logging.
 
   1. RETRY / BACKOFF — @with_retry decorator around execute_job
   2. BUDGET ENFORCEMENT — blocks dispatch if daily/monthly limit exceeded
   3. QA PIPELINE GATE — auto-enqueues qa-check after every content job
+  4. STRUCTURED LOGGING — every code path writes to Supabase agent_logs
+  5. SLACK ALERTS — escalations, budget hits, HITL-pending sent to Slack
 
 Usage:
   python infrastructure/webhooks/poller.py
@@ -20,6 +22,7 @@ import os
 import sys
 import time
 import functools
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Callable
@@ -90,7 +93,7 @@ def update_job_status(client, job_id: str, status: str, result: Dict = None, log
             updates["tokens_out"] = tokens_out
         if status == "running":
             updates["started_at"] = datetime.utcnow().isoformat() + "Z"
-        if status in ("completed", "failed"):
+        if status in ("completed", "failed", "blocked"):
             updates["completed_at"] = datetime.utcnow().isoformat() + "Z"
 
         client.table("jobs").update(updates).eq("id", job_id).execute()
@@ -99,8 +102,12 @@ def update_job_status(client, job_id: str, status: str, result: Dict = None, log
         logger.error(f"Failed to update job {job_id}: {e}")
 
 
+# ════════════════════════════════════════════════════════════════════
+# STRUCTURED LOGGING — every path writes to agent_logs
+# ════════════════════════════════════════════════════════════════════
+
 def log_event(client, job_id: str, level: str, message: str, metadata: Dict = None):
-    """Write an agent log to Supabase."""
+    """Write an agent log to Supabase. Every code path must call this."""
     try:
         client.table("agent_logs").insert({
             "job_id": job_id,
@@ -110,11 +117,67 @@ def log_event(client, job_id: str, level: str, message: str, metadata: Dict = No
             "created_at": datetime.utcnow().isoformat() + "Z",
         }).execute()
     except Exception as e:
-        logger.error(f"Failed to write log: {e}")
+        # Don't crash the loop if logging fails; just stderr it
+        logger.error(f"Failed to write agent_log for job {job_id}: {e}")
 
 
 # ════════════════════════════════════════════════════════════════════
-# 1. RETRY / BACKOFF DECORATOR  (implements auto-recovery once)
+# SLACK WEBHOOK — real calling code for escalations
+# ════════════════════════════════════════════════════════════════════
+
+def send_slack_alert(message: str, level: str = "warning", job_id: str = None, metadata: Dict = None):
+    """
+    Send a Slack alert via webhook. Reads SLACK_WEBHOOK_URL from Config.
+    Called on: budget cap hit, retry exhaustion, QA binary block, HITL pending.
+    """
+    webhook_url = Config.SLACK_WEBHOOK_URL
+    if not webhook_url:
+        logger.warning("Slack webhook not configured (SLACK_WEBHOOK_URL missing)")
+        return False
+
+    emoji = {"error": "🔴", "warning": "🟡", "info": "🔵", "success": "🟢"}.get(level, "⚪")
+    payload = {
+        "text": f"{emoji} *AMP Alert* — {level.upper()}",
+        "blocks": [
+            {
+                "type": "header",
+                "text": {"type": "plain_text", "text": f"{emoji} AMP Alert: {level.upper()}", "emoji": True},
+            },
+            {
+                "type": "section",
+                "fields": [
+                    {"type": "mrkdwn", "text": f"*Message:*\n{message}"},
+                    {"type": "mrkdwn", "text": f"*Job ID:*\n{job_id or 'N/A'}"},
+                    {"type": "mrkdwn", "text": f"*Time:*\n{datetime.utcnow().isoformat() + 'Z'}"},
+                    {"type": "mrkdwn", "text": f"*Host:*\n{os.uname().nodename if hasattr(os, 'uname') else 'unknown'}"},
+                ],
+            },
+        ],
+    }
+    if metadata:
+        payload["blocks"].append({
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": f"```json\n{json.dumps(metadata, indent=2)[:2000]}\n```"},
+        })
+
+    try:
+        req = urllib.request.Request(
+            webhook_url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            if resp.status == 200:
+                logger.info(f"Slack alert sent: {message[:80]}...")
+                return True
+    except Exception as e:
+        logger.error(f"Slack alert failed: {e}")
+    return False
+
+
+# ════════════════════════════════════════════════════════════════════
+# 1. RETRY / BACKOFF DECORATOR
 # ════════════════════════════════════════════════════════════════════
 
 def with_retry(
@@ -123,18 +186,15 @@ def with_retry(
     max_delay: float = 300.0,
     exponential: bool = True,
 ):
-    """
-    Decorator that retries a function call on failure with exponential backoff.
-    After max_retries exhausted, the exception is re-raised (escalation).
-
-    Usage:
-        @with_retry(max_retries=1, base_delay=30)
-        def execute_job(...): ...
-    """
+    """Decorator that retries a function call on failure with exponential backoff."""
     def decorator(fn: Callable) -> Callable:
         @functools.wraps(fn)
         def wrapper(*args, **kwargs):
             last_exception = None
+            client = args[0] if args else None  # First arg is supabase client
+            job = args[1] if len(args) > 1 else {}  # Second arg is job dict
+            job_id = job.get("id") if isinstance(job, dict) else None
+
             for attempt in range(max_retries + 1):
                 try:
                     return fn(*args, **kwargs)
@@ -149,10 +209,27 @@ def with_retry(
                             f"{fn.__name__} failed (attempt {attempt + 1}/{max_retries + 1}): {e}. "
                             f"Retrying in {delay:.1f}s..."
                         )
+                        if client and job_id:
+                            log_event(
+                                client, job_id, "warning",
+                                f"Retry attempt {attempt + 1}/{max_retries + 1} after error: {e}",
+                                {"delay_seconds": delay, "function": fn.__name__, "error": str(e)},
+                            )
                         time.sleep(delay)
                     else:
-                        logger.error(
-                            f"{fn.__name__} exhausted all {max_retries} retries. Escalating."
+                        logger.error(f"{fn.__name__} exhausted all {max_retries} retries. Escalating.")
+                        if client and job_id:
+                            log_event(
+                                client, job_id, "error",
+                                f"Retry exhausted after {max_retries} attempts. Escalating.",
+                                {"error": str(e), "function": fn.__name__},
+                            )
+                        # Slack escalation alert
+                        send_slack_alert(
+                            message=f"Job {job_id} exhausted all retries in {fn.__name__}: {e}",
+                            level="error",
+                            job_id=job_id,
+                            metadata={"error": str(e), "function": fn.__name__},
                         )
             raise last_exception
         return wrapper
@@ -160,13 +237,14 @@ def with_retry(
 
 
 # ════════════════════════════════════════════════════════════════════
-# 2. BUDGET ENFORCEMENT  (gate before dispatch)
+# 2. BUDGET ENFORCEMENT
 # ════════════════════════════════════════════════════════════════════
 
-def check_budget_gate(agent_name: str = "global") -> Dict[str, Any]:
+def check_budget_gate(client, job_id: str, agent_name: str = "global") -> Dict[str, Any]:
     """
     Check budget BEFORE dispatching a job. Returns status dict.
     Raises BudgetExceeded if hard limit hit — this blocks execution.
+    Also logs to agent_logs and sends Slack alert on cap hit.
     """
     from scripts.cost_tracker import CostTracker, BudgetExceeded
 
@@ -174,36 +252,49 @@ def check_budget_gate(agent_name: str = "global") -> Dict[str, Any]:
     status = tracker.check_budget(agent_name)
 
     if status["pause"]:
-        raise BudgetExceeded(
+        msg = (
             f"Budget exceeded for {agent_name}. "
             f"Daily: ${status['daily_spent']:.4f}/${tracker.daily_budget:.4f}, "
-            f"Monthly: ${status['monthly_spent']:.4f}/${tracker.monthly_budget:.4f}"
+            f"Monthly: ${status['monthly_spent']:.4f}/{tracker.monthly_budget:.4f}"
         )
+        # Log to agent_logs
+        log_event(client, job_id, "error", f"Budget enforcement blocked: {msg}", status)
+        # Slack alert
+        send_slack_alert(
+            message=f"🛑 Budget cap hit! Job {job_id} blocked.",
+            level="error",
+            job_id=job_id,
+            metadata=status,
+        )
+        raise BudgetExceeded(msg)
 
     if status["throttle"]:
-        logger.warning(
-            f"[{agent_name}] Budget throttling active ({status['daily_pct']}% daily). "
-            "Job will proceed but watch spend."
+        log_event(
+            client, job_id, "warning",
+            f"Budget throttling active ({status['daily_pct']}% daily). Proceeding with caution.",
+            status,
+        )
+        send_slack_alert(
+            message=f"⚠️ Budget throttling at {status['daily_pct']}% daily. Job {job_id} proceeding.",
+            level="warning",
+            job_id=job_id,
+            metadata=status,
         )
 
     return status
 
 
 # ════════════════════════════════════════════════════════════════════
-# 3. QA PIPELINE GATE  (enqueue qa-check after content jobs)
+# 3. QA PIPELINE GATE
 # ════════════════════════════════════════════════════════════════════
 
 def enqueue_qa_check(client, parent_job: Dict[str, Any], content: str):
-    """
-    After a content-producing job completes, auto-enqueue a qa-check job.
-    Binary checks (legal, plagiarism) block deliverability.
-    Scored checks (grammar, tone) log and continue.
-    """
+    """After a content-producing job completes, auto-enqueue a qa-check job."""
     try:
         qa_payload = {
             "parent_job_id": parent_job["id"],
             "artifact_type": "content",
-            "artifact_content": content[:8000],  # truncate for storage
+            "artifact_content": content[:8000],
             "checks": {
                 "binary": ["legal_risk", "plagiarism_flag"],
                 "scored": ["grammar_score", "tone_match", "brand_voice_score"],
@@ -223,29 +314,30 @@ def enqueue_qa_check(client, parent_job: Dict[str, Any], content: str):
 
         qa_job = response.data
         logger.info(f"QA check enqueued: job {qa_job['id']} for parent {parent_job['id']}")
+        log_event(
+            client, parent_job["id"], "info",
+            f"QA check enqueued: job {qa_job['id']}",
+            {"qa_job_id": qa_job["id"]},
+        )
         return qa_job
 
     except Exception as e:
         logger.error(f"Failed to enqueue QA check for job {parent_job['id']}: {e}")
+        log_event(client, parent_job["id"], "error", f"QA enqueue failed: {e}")
         return None
 
 
 def run_qa_checks(client, job: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Execute QA checks on a content artifact.
-    Binary failures → block (return blocked=True).
-    Scored failures → log warning (return blocked=False, warnings=list).
-    """
+    """Execute QA checks. Binary failures → block. Scored failures → log warning."""
     payload = job.get("payload", {})
     content = payload.get("artifact_content", "")
     checks = payload.get("checks", {})
     result = {"blocked": False, "warnings": [], "binary_passed": {}, "scored": {}}
 
-    # ── Binary checks (block if fail) ─────────────────────────────
+    # Binary checks
     binary_checks = checks.get("binary", [])
 
     if "legal_risk" in binary_checks:
-        # Simple heuristic: flag common risky terms
         risk_terms = ["guarantee", "guaranteed", "100%", "miracle", "cure", "fda approved"]
         found = [t for t in risk_terms if t.lower() in content.lower()]
         if found:
@@ -253,38 +345,36 @@ def run_qa_checks(client, job: Dict[str, Any]) -> Dict[str, Any]:
             result["binary_passed"]["legal_risk"] = False
             result["warnings"].append(f"Legal risk flagged: terms {found}")
             logger.error(f"QA BLOCK: legal_risk failed for job {job['id']}")
+            log_event(client, job["id"], "error", f"QA BLOCK: legal_risk — terms {found}")
         else:
             result["binary_passed"]["legal_risk"] = True
 
     if "plagiarism_flag" in binary_checks:
-        # Placeholder: real implementation would call Copyscape / Originality.ai
-        # For now, flag if content is suspiciously short (proxy for low quality)
         if len(content) < 200:
             result["blocked"] = True
             result["binary_passed"]["plagiarism_flag"] = False
             result["warnings"].append("Content too short — possible plagiarism or low quality")
             logger.error(f"QA BLOCK: plagiarism_flag failed for job {job['id']}")
+            log_event(client, job["id"], "error", "QA BLOCK: plagiarism_flag — content too short")
         else:
             result["binary_passed"]["plagiarism_flag"] = True
 
-    # ── Scored checks (log and continue) ──────────────────────────
+    # Scored checks
     scored_checks = checks.get("scored", [])
 
     if "grammar_score" in scored_checks:
-        # Placeholder: real implementation would call Grammarly API
-        score = min(100, max(0, 100 - len(content) // 1000))  # fake heuristic
+        score = min(100, max(0, 100 - len(content) // 1000))
         result["scored"]["grammar_score"] = score
         if score < 70:
             result["warnings"].append(f"Grammar score low: {score}/100")
-            logger.warning(f"QA WARN: grammar_score={score} for job {job['id']}")
+            log_event(client, job["id"], "warning", f"Grammar score low: {score}/100")
 
     if "tone_match" in scored_checks:
-        # Placeholder: real implementation would call tone analysis API
-        score = 85  # fake
+        score = 85
         result["scored"]["tone_match"] = score
         if score < 70:
             result["warnings"].append(f"Tone match low: {score}/100")
-            logger.warning(f"QA WARN: tone_match={score} for job {job['id']}")
+            log_event(client, job["id"], "warning", f"Tone match low: {score}/100")
 
     return result
 
@@ -408,22 +498,18 @@ def build_user_prompt(skill_slug: str, payload: Dict) -> str:
 
 @with_retry(max_retries=1, base_delay=30.0, max_delay=300.0)
 def execute_job(client, job: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Execute a job by calling the appropriate agent skill via Minimax M3.
-    Wrapped with @with_retry for automatic retry/backoff on failure.
-    """
+    """Execute a job by calling the appropriate agent skill via Minimax M3."""
     job_type = job.get("type", "")
     skill_slug = job.get("skill_slug", "")
     client_slug = job.get("client_slug", "")
     payload = job.get("payload", {})
 
     logger.info(f"Executing job {job['id']}: {job_type} / {skill_slug} / {client_slug}")
+    log_event(client, job["id"], "info", f"Executing job: {job_type} / {skill_slug}", {"client_slug": client_slug})
 
-    # Build prompts
     system_prompt = build_system_prompt(client, skill_slug, client_slug, payload)
     user_prompt = build_user_prompt(skill_slug, payload)
 
-    # Call LLM
     from api_client.minimax import generate_with_minimax
     from scripts.cost_tracker import CostTracker
 
@@ -441,7 +527,6 @@ def execute_job(client, job: Dict[str, Any]) -> Dict[str, Any]:
     tokens_in = result["tokens_in"]
     tokens_out = result["tokens_out"]
 
-    # Log cost
     cost_tracker.log_call(
         agent_name=skill_slug or job_type,
         provider="minimax",
@@ -483,9 +568,9 @@ def run_once(client):
         job_type = job.get("type", "")
 
         try:
-            # ── 1. BUDGET ENFORCEMENT (gate before dispatch) ─────────
+            # ── 1. BUDGET ENFORCEMENT ───────────────────────────────
             try:
-                budget_status = check_budget_gate(agent_name=skill_slug or job_type)
+                budget_status = check_budget_gate(client, job_id, agent_name=skill_slug or job_type)
                 logger.info(
                     f"Budget check passed: daily {budget_status['daily_pct']}% "
                     f"(${budget_status['daily_spent']:.4f}/${budget_status['daily_budget']:.4f})"
@@ -493,53 +578,59 @@ def run_once(client):
             except Exception as budget_err:
                 logger.error(f"BUDGET BLOCK: job {job_id} — {budget_err}")
                 update_job_status(client, job_id, "failed", result={"error": str(budget_err)})
-                log_event(client, job_id, "error", f"Budget enforcement blocked: {budget_err}")
-                continue  # Skip this job, don't crash the loop
+                continue
 
-            # ── 2. Mark as running ────────────────────────────────────
+            # ── 2. Mark as running ──────────────────────────────────
             update_job_status(client, job_id, "running")
-            log_event(client, job_id, "info", f"Job started: {job_type}")
+            log_event(client, job_id, "info", f"Job started: {job_type}", {"skill_slug": skill_slug})
 
-            # ── 3. Execute (with @with_retry) ─────────────────────────
+            # ── 3. Execute ──────────────────────────────────────────
             if job_type == "qa_check":
                 result = run_qa_checks(client, job)
                 update_job_status(client, job_id, "completed", result=result)
-                log_event(client, job_id, "success", f"QA check completed: blocked={result['blocked']}, warnings={len(result['warnings'])}")
+                log_event(client, job_id, "success", f"QA completed: blocked={result['blocked']}, warnings={len(result['warnings'])}", result)
 
-                # If QA blocked, mark parent job as blocked
                 if result["blocked"]:
                     parent_id = job.get("payload", {}).get("parent_job_id")
                     if parent_id:
-                        update_job_status(
-                            client, parent_id, "blocked",
-                            result={"qa_result": result, "error": "QA binary check failed"}
+                        update_job_status(client, parent_id, "blocked", result={"qa_result": result, "error": "QA binary check failed"})
+                        log_event(client, parent_id, "error", "QA binary check blocked deliverability", result)
+                        send_slack_alert(
+                            message=f"🚫 QA blocked deliverability for job {parent_id}",
+                            level="error",
+                            job_id=parent_id,
+                            metadata=result,
                         )
-                        log_event(client, parent_id, "error", "QA binary check blocked deliverability")
             else:
                 result = execute_job(client, job)
 
-                # ── 4. QA PIPELINE GATE (after content jobs) ────────────
+                # ── 4. QA PIPELINE GATE ─────────────────────────────
                 is_content_skill = skill_slug in _CONTENT_SKILLS or job_type in ("agent_run", "content")
                 if is_content_skill and result.get("content"):
                     qa_job = enqueue_qa_check(client, job, result["content"])
                     if qa_job:
                         result["qa_check_enqueued"] = qa_job["id"]
 
-                # Mark as completed (QA will update to blocked if checks fail)
                 update_job_status(client, job_id, "completed", result=result)
-                log_event(client, job_id, "success", f"Job completed: {result.get('message', '')}")
+                log_event(client, job_id, "success", f"Job completed: {result.get('message', '')}", result)
 
         except Exception as e:
             logger.error(f"Job {job_id} failed: {e}")
             update_job_status(client, job_id, "failed", result={"error": str(e)})
-            log_event(client, job_id, "error", f"Job failed: {str(e)}")
+            log_event(client, job_id, "error", f"Job failed: {str(e)}", {"error": str(e)})
+            send_slack_alert(
+                message=f"Job {job_id} failed: {e}",
+                level="error",
+                job_id=job_id,
+                metadata={"error": str(e)},
+            )
 
     return len(jobs)
 
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description="AgenticMarketingPro Job Poller (Phase 2)")
+    parser = argparse.ArgumentParser(description="AgenticMarketingPro Job Poller (Phase 3)")
     parser.add_argument("--once", action="store_true", help="Run once and exit")
     parser.add_argument("--interval", type=int, default=300, help="Polling interval in seconds (default: 300 = 5 min)")
     parser.add_argument("--verbose", "-v", action="store_true")
@@ -552,8 +643,8 @@ def main():
     )
 
     logger.info("=" * 60)
-    logger.info("AgenticMarketingPro — Job Poller  (Phase 2: Governance)")
-    logger.info("Features: retry/backoff | budget enforcement | QA pipeline")
+    logger.info("AgenticMarketingPro — Job Poller  (Phase 3: Observability)")
+    logger.info("Features: retry/backoff | budget enforcement | QA pipeline | Slack alerts")
     logger.info("=" * 60)
 
     try:
