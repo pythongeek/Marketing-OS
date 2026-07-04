@@ -4,8 +4,8 @@ import { withRole, requireAdmin, requireEditor } from "@/lib/rbac";
 
 export const dynamic = "force-dynamic";
 
-// GET /api/skills — any authenticated user
-export const GET = withRole(["viewer", "editor", "admin"], async () => {
+// GET /api/skills — public (no auth required)
+export async function GET() {
   try {
     if (!supabase) {
       return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
@@ -22,9 +22,9 @@ export const GET = withRole(["viewer", "editor", "admin"], async () => {
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
-});
+}
 
-// PUT /api/skills — editors and admins can update skill instructions
+// PUT /api/skills — editors and admins can update skill instructions (RBAC protected)
 export const PUT = requireEditor(async (request: Request) => {
   try {
     if (!supabase) {

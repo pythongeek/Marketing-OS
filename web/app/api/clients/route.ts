@@ -4,8 +4,8 @@ import { withRole, requireEditor } from "@/lib/rbac";
 
 export const dynamic = "force-dynamic";
 
-// GET /api/clients — any authenticated user
-export const GET = withRole(["viewer", "editor", "admin"], async () => {
+// GET /api/clients — public (no auth required)
+export async function GET() {
   try {
     if (!supabase) {
       return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
@@ -22,9 +22,9 @@ export const GET = withRole(["viewer", "editor", "admin"], async () => {
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
-});
+}
 
-// POST /api/clients — editors and admins only
+// POST /api/clients — editors and admins only (RBAC protected)
 export const POST = requireEditor(async (request: Request) => {
   try {
     if (!supabase) {
