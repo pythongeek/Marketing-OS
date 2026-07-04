@@ -44,8 +44,11 @@
             <h1>🤖 Programmatic SEO — Data Source & Template Setup</h1>
             <p>Configure a pSEO project: data source, template, URL pattern, and quality guardrails.</p>
         </div>
-        <form data-skill-slug="pseo-config" id="agent-form">
-            
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
 <div class="field" id="field-project_name">
   <label for="project_name">Project Name <span class="required">*</span></label>
   <input type="text" name="project_name" id="project_name" required placeholder="e.g., City Landing Pages for HVAC" value="">
@@ -165,7 +168,7 @@
         </div>
     </div>
     <script>
-        const fields = [ {"name": "project_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "data_source", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "data_source_url", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "data_schema", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "template_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "url_pattern", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "page_count_estimate", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "content_quality", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "min_word_count", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "schema_type", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "internal_linking", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "publishing_schedule", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "indexing_strategy", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "duplicate_content_check", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "project_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "data_source", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "data_source_url", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "data_schema", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "template_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "url_pattern", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "page_count_estimate", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "content_quality", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "min_word_count", "type": "number", "required": false, "depends_on": null, "depends_value": null}, {"name": "schema_type", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "internal_linking", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "publishing_schedule", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "indexing_strategy", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "duplicate_content_check", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 
@@ -225,7 +228,7 @@
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
@@ -266,6 +269,5 @@
         loadForm();
         updateConditionalFields();
     </script>
-<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

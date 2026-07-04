@@ -4,6 +4,13 @@ AgenticMarketingPro — Kimi Work Job Poller
 Runs locally (on the Kimi Work machine) to poll Supabase for pending jobs,
 execute them via the appropriate agent skill, and write results back.
 
+Skills are resolved in this order:
+  1. Supabase `skills` table (instructions column)
+  2. Vault `skills/<slug>/SKILL.md` (fallback)
+  3. Generic marketing consultant (last resort)
+
+RAG context from the vault is injected into every system prompt.
+
 Usage:
   python infrastructure/webhooks/poller.py
   python infrastructure/webhooks/poller.py --once  # Single run, then exit
@@ -29,6 +36,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import Config
 
 logger = logging.getLogger("amp.poller")
+
+# ── Skill resolution cache ──────────────────────────────────────────
+_skill_cache: Dict[str, str] = {}
 
 
 def get_supabase_client():
@@ -97,7 +107,148 @@ def log_event(client, job_id: str, level: str, message: str, metadata: Dict = No
         logger.error(f"Failed to write log: {e}")
 
 
-def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
+# ── Skill resolution ────────────────────────────────────────────────
+
+def load_skill_from_supabase(client, skill_slug: str) -> str:
+    """Fetch skill instructions from Supabase skills table."""
+    try:
+        response = client.table("skills").select("instructions").eq("slug", skill_slug).limit(1).execute()
+        if response.data and response.data[0].get("instructions"):
+            return response.data[0]["instructions"]
+    except Exception as e:
+        logger.warning(f"Failed to load skill from Supabase: {e}")
+    return ""
+
+
+def load_skill_from_vault(skill_slug: str) -> str:
+    """Fetch skill instructions from vault SKILL.md file."""
+    skill_path = Path(Config.VAULT_ROOT).parent / "skills" / skill_slug / "SKILL.md"
+    if not skill_path.exists():
+        # Also check relative to repo root
+        skill_path = Path(__file__).parent.parent.parent / "skills" / skill_slug / "SKILL.md"
+    try:
+        if skill_path.exists():
+            text = skill_path.read_text(encoding="utf-8")
+            # Strip YAML frontmatter if present
+            if text.startswith("---"):
+                parts = text.split("---", 2)
+                if len(parts) >= 3:
+                    return parts[2].strip()
+            return text.strip()
+    except Exception as e:
+        logger.warning(f"Failed to load skill from vault: {e}")
+    return ""
+
+
+def resolve_skill_instructions(client, skill_slug: str) -> str:
+    """Resolve skill instructions: cache → Supabase → vault → generic."""
+    if skill_slug in _skill_cache:
+        return _skill_cache[skill_slug]
+
+    # 1. Try Supabase
+    instructions = load_skill_from_supabase(client, skill_slug)
+    source = "supabase"
+
+    # 2. Fallback to vault SKILL.md
+    if not instructions:
+        instructions = load_skill_from_vault(skill_slug)
+        source = "vault"
+
+    # 3. Last resort generic
+    if not instructions:
+        instructions = (
+            "You are an expert marketing consultant. You provide high-quality, "
+            "actionable marketing advice."
+        )
+        source = "generic"
+
+    _skill_cache[skill_slug] = instructions
+    logger.info(f"Resolved skill '{skill_slug}' from {source} ({len(instructions)} chars)")
+    return instructions
+
+
+# ── RAG context injection ───────────────────────────────────────────
+
+def fetch_rag_context(skill_slug: str, client_slug: str, query: str = "") -> str:
+    """Query VaultRAG for relevant context and return as a formatted block."""
+    try:
+        from rag.pipeline import VaultRAG
+
+        rag = VaultRAG()
+        # Build a contextual query
+        q = query or f"Best practices and context for {skill_slug}"
+        if client_slug:
+            q += f" for client {client_slug}"
+
+        results = rag.query(
+            query_text=q,
+            top_k=5,
+            source_type=None,  # Allow any source type
+        )
+
+        if not results:
+            return ""
+
+        context_parts = ["## Relevant Context from Vault\n"]
+        for i, r in enumerate(results, 1):
+            meta = r.get("metadata", {})
+            source = meta.get("source_path", "unknown")
+            section = meta.get("section", "")
+            title = meta.get("title", "")
+            text = r.get("text", "")
+            # Truncate very long chunks
+            if len(text) > 2000:
+                text = text[:2000] + "\n...[truncated]"
+            context_parts.append(
+                f"### Context {i}: {title} — {section}\n"
+                f"*Source: {source}*\n\n{text}\n"
+            )
+
+        return "\n".join(context_parts)
+
+    except Exception as e:
+        logger.warning(f"RAG context fetch failed: {e}")
+        return ""
+
+
+# ── Prompt builders ─────────────────────────────────────────────────
+
+def build_system_prompt(client, skill_slug: str, client_slug: str, payload: Dict) -> str:
+    """Build a system prompt from skill instructions + RAG context."""
+    base = resolve_skill_instructions(client, skill_slug)
+
+    # Inject RAG context
+    rag_context = fetch_rag_context(skill_slug, client_slug)
+    if rag_context:
+        base += f"\n\n{rag_context}"
+
+    if client_slug:
+        base += (
+            f"\n\nYou are working for client: {client_slug}. "
+            f"Adapt your output to their specific business context and goals."
+        )
+
+    return base
+
+
+def build_user_prompt(skill_slug: str, payload: Dict) -> str:
+    """Build a user prompt from the job payload."""
+    prompt_parts = [f"Task: {skill_slug}"]
+
+    for key, value in payload.items():
+        if key in ("temperature", "max_tokens", "model"):
+            continue
+        if isinstance(value, str) and value.strip():
+            prompt_parts.append(f"{key}: {value}")
+        elif isinstance(value, (list, dict)):
+            prompt_parts.append(f"{key}: {json.dumps(value, ensure_ascii=False)}")
+
+    return "\n\n".join(prompt_parts)
+
+
+# ── Job execution ───────────────────────────────────────────────────
+
+def execute_job(client, job: Dict[str, Any]) -> Dict[str, Any]:
     """
     Execute a job by calling the appropriate agent skill via Minimax M3.
     """
@@ -108,8 +259,8 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
 
     logger.info(f"Executing job {job['id']}: {job_type} / {skill_slug} / {client_slug}")
 
-    # Build system prompt from skill context
-    system_prompt = build_system_prompt(skill_slug, client_slug, payload)
+    # Build system prompt from skill context + RAG
+    system_prompt = build_system_prompt(client, skill_slug, client_slug, payload)
     user_prompt = build_user_prompt(skill_slug, payload)
 
     # Call Minimax M3
@@ -160,59 +311,7 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
         raise
 
 
-def build_system_prompt(skill_slug: str, client_slug: str, payload: Dict) -> str:
-    """Build a system prompt for the skill based on its slug."""
-    prompts = {
-        "content-strategist": "You are an expert content strategist for digital marketing agencies. You analyze business goals, target audiences, and competitive landscapes to produce comprehensive content strategies.",
-        "on-page-optimizer": "You are an expert SEO on-page optimizer. You analyze content for keyword optimization, semantic richness, internal linking opportunities, and technical SEO improvements.",
-        "technical-seo-auditor": "You are a senior technical SEO consultant. You audit websites for crawlability, indexability, Core Web Vitals, structured data, and technical issues.",
-        "keyword-researcher": "You are an expert keyword researcher. You identify high-intent keywords, map them to funnel stages, and analyze search volume and competition.",
-        "competitor-intelligence": "You are a competitive intelligence analyst. You analyze competitor strategies, content gaps, backlink profiles, and market positioning.",
-        "aeo-geo-strategist": "You are an AI Engine Optimization (AEO) and Generative Engine Optimization (GEO) specialist. You optimize content for AI citations, featured snippets, and generative AI visibility.",
-        "link-building-outreach": "You are a link building and digital PR specialist. You craft personalized outreach campaigns, identify link opportunities, and build relationships.",
-        "pseo-pipeline": "You are a programmatic SEO expert. You design data-driven content generation pipelines, identify scalable keyword opportunities, and build content templates.",
-        "content-brief-writer": "You are a content brief specialist. You create detailed, actionable briefs for writers that include SEO requirements, structure, tone, and key messages.",
-        "copywriter": "You are an expert conversion copywriter. You write compelling headlines, ad copy, landing pages, and email sequences that drive action.",
-        "social-media-manager": "You are a social media strategist. You plan content calendars, write engaging posts, and optimize for platform-specific algorithms.",
-        "paid-ads-manager": "You are a performance marketing specialist. You create and optimize Google Ads, Meta Ads, and LinkedIn campaigns for maximum ROI.",
-        "analytics-expert": "You are a marketing analytics expert. You analyze data, build dashboards, and provide actionable insights for marketing optimization.",
-        "conversion-optimizer": "You are a CRO (Conversion Rate Optimization) specialist. You analyze user behavior, design A/B tests, and optimize conversion funnels.",
-        "brand-voice-writer": "You are a brand voice specialist. You define and maintain consistent brand voice, tone, and messaging across all channels.",
-        "email-marketing-specialist": "You are an email marketing expert. You design sequences, optimize deliverability, and maximize engagement and conversions.",
-        "local-seo-manager": "You are a local SEO specialist. You optimize Google Business Profiles, local citations, and location-specific content.",
-        "video-script-writer": "You are a video content strategist. You write scripts, plan storyboards, and optimize video content for SEO and engagement.",
-        "reputation-manager": "You are a reputation management specialist. You monitor brand sentiment, manage reviews, and protect brand reputation.",
-        "market-researcher": "You are a market research analyst. You analyze market trends, customer segments, and competitive landscapes.",
-        "forecasting-revenue": "You are a revenue forecasting specialist. You build predictive models, analyze funnels, and project revenue growth.",
-        "reporting-automation": "You are a reporting automation expert. You build automated dashboards, data pipelines, and executive summaries.",
-        "playbook-creator": "You are a marketing operations specialist. You document SOPs, create playbooks, and standardize processes.",
-        "off-page-optimizer": "You are an off-page SEO specialist. You build backlinks, manage brand mentions, and improve domain authority.",
-        "agentic-marketing-os": "You are the master orchestrator of an AI-native marketing agency. You coordinate all agents, manage workflows, and ensure quality.",
-    }
-
-    base = prompts.get(skill_slug, "You are an expert marketing consultant. You provide high-quality, actionable marketing advice.")
-
-    if client_slug:
-        base += f"\n\nYou are working for client: {client_slug}. Adapt your output to their specific business context and goals."
-
-    return base
-
-
-def build_user_prompt(skill_slug: str, payload: Dict) -> str:
-    """Build a user prompt from the job payload."""
-    # Default: serialize the payload as instructions
-    prompt_parts = [f"Task: {skill_slug}"]
-
-    for key, value in payload.items():
-        if key in ("temperature", "max_tokens", "model"):
-            continue
-        if isinstance(value, str) and value.strip():
-            prompt_parts.append(f"{key}: {value}")
-        elif isinstance(value, (list, dict)):
-            prompt_parts.append(f"{key}: {json.dumps(value, ensure_ascii=False)}")
-
-    return "\n\n".join(prompt_parts)
-
+# ── Polling loop ────────────────────────────────────────────────────
 
 def run_once(client):
     """Single polling cycle: fetch pending jobs, execute them, update status."""
@@ -231,7 +330,7 @@ def run_once(client):
             log_event(client, job_id, "info", f"Job started: {job.get('type', 'unknown')}")
 
             # Execute
-            result = execute_job(job)
+            result = execute_job(client, job)
 
             # Mark as completed
             update_job_status(client, job_id, "completed", result=result)

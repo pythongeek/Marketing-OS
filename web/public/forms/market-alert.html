@@ -44,8 +44,11 @@
             <h1>📡 Market Signals — Alert Configuration</h1>
             <p>Configure algorithm update alerts, SERP volatility monitoring, and trend detection.</p>
         </div>
-        <form data-skill-slug="market-alert" id="agent-form">
-            
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client (or 'All' for agency-wide)</label>
+  <input type="text" name="client" id="client" placeholder="e.g., acme-saas or All" value="">
+</div>
 <div class="field" id="field-alert_type">
   <label for="alert_type">Alert Types <span class="required">*</span></label>
   <div class="checkbox-group">
@@ -129,7 +132,7 @@
         </div>
     </div>
     <script>
-        const fields = [ {"name": "alert_type", "type": "checkbox", "required": true, "depends_on": null, "depends_value": null}, {"name": "monitoring_tools", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "alert_threshold", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "affected_keywords", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "notification_method", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "response_protocol", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "reporting_frequency", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [{"name": "client", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "alert_type", "type": "checkbox", "required": true, "depends_on": null, "depends_value": null}, {"name": "monitoring_tools", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "alert_threshold", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "affected_keywords", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "notification_method", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "response_protocol", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "reporting_frequency", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 
@@ -189,7 +192,7 @@
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
@@ -230,6 +233,5 @@
         loadForm();
         updateConditionalFields();
     </script>
-<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

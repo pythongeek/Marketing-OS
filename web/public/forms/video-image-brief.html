@@ -44,8 +44,11 @@
             <h1>🎬 Video & Image Production Brief</h1>
             <p>Request a video script, AI image prompt, infographic spec, or thumbnail design.</p>
         </div>
-        <form data-skill-slug="video-image-brief" id="agent-form">
-            
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
 <div class="field" id="field-asset_type">
   <label for="asset_type">Asset Type <span class="required">*</span></label>
   <select name="asset_type" id="asset_type" required>
@@ -167,7 +170,7 @@
         </div>
     </div>
     <script>
-        const fields = [ {"name": "asset_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "content_topic", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "target_audience", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "duration_length", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "style", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "key_visual_elements", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "reference_examples", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "brand_colors", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "text_overlay", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "cta", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "platform", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "ai_tools", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "deadline", "type": "date", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "asset_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "content_topic", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "target_audience", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "duration_length", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "style", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "key_visual_elements", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "reference_examples", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "brand_colors", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "text_overlay", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "cta", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "platform", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "ai_tools", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "deadline", "type": "date", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 
@@ -227,7 +230,7 @@
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
@@ -268,6 +271,5 @@
         loadForm();
         updateConditionalFields();
     </script>
-<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

@@ -97,12 +97,13 @@ ALTER TABLE public.agent_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.form_responses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.kpis ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Allow all" ON public.clients FOR ALL USING (true);
-CREATE POLICY "Allow all" ON public.skills FOR ALL USING (true);
-CREATE POLICY "Allow all" ON public.jobs FOR ALL USING (true);
-CREATE POLICY "Allow all" ON public.agent_logs FOR ALL USING (true);
-CREATE POLICY "Allow all" ON public.form_responses FOR ALL USING (true);
-CREATE POLICY "Allow all" ON public.kpis FOR ALL USING (true);
+-- Short-term: require authentication. Long-term: tie to Clerk/NextAuth JWT.
+CREATE POLICY "Authenticated users" ON public.clients FOR ALL USING (auth.uid() IS NOT NULL);
+CREATE POLICY "Authenticated users" ON public.skills FOR ALL USING (auth.uid() IS NOT NULL);
+CREATE POLICY "Authenticated users" ON public.jobs FOR ALL USING (auth.uid() IS NOT NULL);
+CREATE POLICY "Authenticated users" ON public.agent_logs FOR ALL USING (auth.uid() IS NOT NULL);
+CREATE POLICY "Authenticated users" ON public.form_responses FOR ALL USING (auth.uid() IS NOT NULL);
+CREATE POLICY "Authenticated users" ON public.kpis FOR ALL USING (auth.uid() IS NOT NULL);
 
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$

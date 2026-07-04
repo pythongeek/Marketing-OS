@@ -44,7 +44,7 @@
             <h1>🎯 Onboard New Client</h1>
             <p>Fill in the details below. This will create the client vault folder, website manifest, and initial strategy documents.</p>
         </div>
-        <form data-skill-slug="client-onboarding" id="agent-form">
+        <form id="agent-form">
             <div class="field" id="field-client_name">
   <label for="client_name">Client Name <span class="required">*</span></label>
   <input type="text" name="client_name" id="client_name" required placeholder="e.g., Acme SaaS" value="">
@@ -257,7 +257,7 @@
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options && f.options && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
@@ -273,7 +273,6 @@
                 form_id: "client-onboarding"
             };
 
-            // Export JSON to file (local backup)
             const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -284,36 +283,8 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            // POST to API to create client in database
-            fetch('/api/clients', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    slug: result.client_name?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/--+/g, '-').replace(/^-|-$/g, '') || 'client-' + Date.now(),
-                    name: result.client_name,
-                    website: result.website,
-                    industry: result.industry,
-                    tier: result.tier,
-                    mrr: 0,
-                    target_geo: result.target_geo || '',
-                    primary_language: result.primary_language || 'en',
-                    business_goal_1: result.business_goal_1 || '',
-                    business_goal_2: result.business_goal_2 || ''
-                })
-            })
-            .then(res => {
-                if (res.ok) {
-                    status.textContent = "Client created successfully! Saved to database and downloaded JSON.";
-                    status.className = "status success";
-                    setTimeout(() => window.location.href = '/clients', 1500);
-                } else {
-                    return res.json().then(err => { throw new Error(err.error || 'API error'); });
-                }
-            })
-            .catch(err => {
-                status.textContent = "JSON saved, but database save failed: " + err.message;
-                status.className = "status error";
-            });
+            status.textContent = "Form saved successfully! Response written to: " + a.download;
+            status.className = "status success";
         });
 
         function clearForm() {

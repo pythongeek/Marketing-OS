@@ -2,7 +2,8 @@
 AgenticMarketingPro — Central Configuration
 ============================================
 Reads environment variables and provides typed config for all scripts.
-Credentials are NEVER hardcoded. Use .env file or system env vars.
+Credentials are NEVER hardcoded. Use .env file, system env vars, or
+~/.amp/secrets.json for local dev.
 """
 
 import os
@@ -20,6 +21,18 @@ for _p in _ENV_PATHS:
     if _p.exists():
         load_dotenv(dotenv_path=_p)
         break
+
+# Load external secrets.json for local dev (outside repo, never committed)
+_SECRETS_PATH = Path.home() / ".amp" / "secrets.json"
+if _SECRETS_PATH.exists():
+    try:
+        import json as _json
+        _secrets = _json.loads(_SECRETS_PATH.read_text(encoding="utf-8"))
+        for _k, _v in _secrets.items():
+            if _k not in os.environ:
+                os.environ[_k] = str(_v)
+    except Exception:
+        pass  # Graceful degradation if secrets.json is malformed
 
 
 class Config:

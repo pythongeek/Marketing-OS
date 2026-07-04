@@ -1,3 +1,7 @@
+# Generated forms (built from form_engine.py + form_presets.py)
+forms/*.html
+web/public/forms/*.html
+
 # Sensitive data
 .env
 .env.local

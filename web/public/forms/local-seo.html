@@ -44,8 +44,11 @@
             <h1>📍 Local SEO — Location Management</h1>
             <p>Add or update a local business location for GBP, citation, and review management.</p>
         </div>
-        <form data-skill-slug="local-seo" id="agent-form">
-            
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
 <div class="field" id="field-business_name">
   <label for="business_name">Business Name <span class="required">*</span></label>
   <input type="text" name="business_name" id="business_name" required placeholder="e.g., Acme Dental" value="">
@@ -140,7 +143,7 @@
         </div>
     </div>
     <script>
-        const fields = [ {"name": "business_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "business_category", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "address", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "phone", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "website", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "gbp_url", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "service_area", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "hours", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "target_keywords", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "citations_needed", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "review_platforms", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "review_response_tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "geo_grid_cities", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "competitor_locations", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "business_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "business_category", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "address", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "phone", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "website", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "gbp_url", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "service_area", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "hours", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "target_keywords", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "citations_needed", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "review_platforms", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "review_response_tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "geo_grid_cities", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "competitor_locations", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 
@@ -200,7 +203,7 @@
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
@@ -241,6 +244,5 @@
         loadForm();
         updateConditionalFields();
     </script>
-<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

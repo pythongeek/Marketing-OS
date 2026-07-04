@@ -44,8 +44,11 @@
             <h1>🛡️ Reputation Monitoring Setup</h1>
             <p>Configure brand mention monitoring, review tracking, and crisis response protocols.</p>
         </div>
-        <form data-skill-slug="reputation-monitoring" id="agent-form">
-            
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
 <div class="field" id="field-brand_name">
   <label for="brand_name">Brand Name(s) to Monitor <span class="required">*</span></label>
   <input type="text" name="brand_name" id="brand_name" required placeholder="e.g., Acme, Acme Inc., Acme Software" value="">
@@ -144,7 +147,7 @@
         </div>
     </div>
     <script>
-        const fields = [ {"name": "brand_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "product_names", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "executive_names", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "monitoring_sources", "type": "checkbox", "required": true, "depends_on": null, "depends_value": null}, {"name": "alert_threshold", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "response_protocol", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "response_tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "competitor_mentions", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "crisis_keywords", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "escalation_contact", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "reporting_frequency", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "brand_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "product_names", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "executive_names", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "monitoring_sources", "type": "checkbox", "required": true, "depends_on": null, "depends_value": null}, {"name": "alert_threshold", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "response_protocol", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "response_tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "competitor_mentions", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "crisis_keywords", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "escalation_contact", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "reporting_frequency", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 
@@ -204,7 +207,7 @@
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
@@ -245,6 +248,5 @@
         loadForm();
         updateConditionalFields();
     </script>
-<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

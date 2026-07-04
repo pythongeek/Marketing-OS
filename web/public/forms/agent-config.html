@@ -44,7 +44,7 @@
             <h1>🤖 Agent Config — New Agent or Update</h1>
             <p>Create or update an agent configuration with the 5-layer template.</p>
         </div>
-        <form data-skill-slug="agent-config" id="agent-form">
+        <form id="agent-form">
             <div class="field" id="field-agent_name">
   <label for="agent_name">Agent Name (kebab-case) <span class="required">*</span></label>
   <input type="text" name="agent_name" id="agent_name" required placeholder="e.g., new-specialist-agent" value="">
@@ -166,7 +166,7 @@
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
@@ -207,6 +207,5 @@
         loadForm();
         updateConditionalFields();
     </script>
-<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>

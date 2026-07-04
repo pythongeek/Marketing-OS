@@ -44,8 +44,11 @@
             <h1>📧 Email Sequence Builder</h1>
             <p>Design an email lifecycle sequence: welcome, nurture, re-engagement, or promotional.</p>
         </div>
-        <form data-skill-slug="email-sequence" id="agent-form">
-            
+        <form id="agent-form">
+            <div class="field" id="field-client">
+  <label for="client">Client <span class="required">*</span></label>
+  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+</div>
 <div class="field" id="field-sequence_name">
   <label for="sequence_name">Sequence Name <span class="required">*</span></label>
   <input type="text" name="sequence_name" id="sequence_name" required placeholder="e.g., 7-Day Welcome Nurture" value="">
@@ -182,7 +185,7 @@ etc." rows="4"></textarea>
         </div>
     </div>
     <script>
-        const fields = [ {"name": "sequence_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "sequence_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "email_count", "type": "number", "required": true, "depends_on": null, "depends_value": null}, {"name": "send_schedule", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "trigger", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "audience_segment", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "personalization_fields", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "cta_per_email", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "subject_line_style", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "spam_check", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "email_platform", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "email_platform_other", "type": "text", "required": false, "depends_on": "email_platform", "depends_value": "Other"}, {"name": "existing_sequence", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
+        const fields = [{"name": "client", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "sequence_name", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "sequence_type", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "email_count", "type": "number", "required": true, "depends_on": null, "depends_value": null}, {"name": "send_schedule", "type": "textarea", "required": true, "depends_on": null, "depends_value": null}, {"name": "trigger", "type": "select", "required": true, "depends_on": null, "depends_value": null}, {"name": "audience_segment", "type": "text", "required": true, "depends_on": null, "depends_value": null}, {"name": "personalization_fields", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "tone", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "cta_per_email", "type": "text", "required": false, "depends_on": null, "depends_value": null}, {"name": "subject_line_style", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "spam_check", "type": "checkbox", "required": false, "depends_on": null, "depends_value": null}, {"name": "email_platform", "type": "select", "required": false, "depends_on": null, "depends_value": null}, {"name": "email_platform_other", "type": "text", "required": false, "depends_on": "email_platform", "depends_value": "Other"}, {"name": "existing_sequence", "type": "url", "required": false, "depends_on": null, "depends_value": null}, {"name": "notes", "type": "textarea", "required": false, "depends_on": null, "depends_value": null}];
         const form = document.getElementById('agent-form');
         const status = document.getElementById('status');
 
@@ -242,7 +245,7 @@ etc." rows="4"></textarea>
             const formData = new FormData(form);
             const result = {};
             fields.forEach(f => {
-                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
+                if (f.type === 'checkbox' && f.options.length > 1) {
                     result[f.name] = formData.getAll(f.name);
                 } else if (f.type === 'checkbox') {
                     result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
@@ -283,6 +286,5 @@ etc." rows="4"></textarea>
         loadForm();
         updateConditionalFields();
     </script>
-<script src="/forms/form-api-connector.js"></script>
 </body>
 </html>
