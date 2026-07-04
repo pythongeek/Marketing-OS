@@ -1,12 +1,14 @@
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
+import { withRole, requireAdmin, requireEditor } from "@/lib/rbac";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+// GET /api/jobs — any authenticated user (viewer+)
+export const GET = withRole(["viewer", "editor", "admin"], async (_request, _user) => {
   try {
     if (!supabase) {
-      return NextResponse.json({ error: "Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel Environment Variables." }, { status: 503 });
+      return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
     }
     const { data, error } = await supabase
       .from("jobs")
@@ -17,17 +19,17 @@ export async function GET() {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-
     return NextResponse.json({ jobs: data });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
-}
+});
 
-export async function POST(request: Request) {
+// POST /api/jobs — editors and admins can create jobs
+export const POST = requireEditor(async (request: Request, _user) => {
   try {
     if (!supabase) {
-      return NextResponse.json({ error: "Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel Environment Variables." }, { status: 503 });
+      return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
     }
     const body = await request.json();
     const { type, client_slug, skill_slug, payload = {} } = body;
@@ -47,9 +49,8 @@ export async function POST(request: Request) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-
     return NextResponse.json({ job: data }, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
-}
+});

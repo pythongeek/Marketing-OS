@@ -1,5 +1,27 @@
 """
-AgenticMarketingPro — Kimi Work Job Poller  (Phase 3: Observability)
+"""
+AgenticMarketingPro — Kimi Work Job Poller  (Phase 4: Local Fallback)
+======================================================================
+⚠️  DEPRECATION NOTICE: The primary job executor is now the Supabase Edge
+    Function at supabase/functions/execute-jobs/index.ts. This local poller
+    remains as a fallback for local development, VaultRAG access, or when
+    the Edge Function is unavailable.
+
+    To use the hosted worker (recommended):
+      1. Deploy the Edge Function: supabase functions deploy execute-jobs
+      2. Set pg_cron to trigger it every 5 minutes (see migration 003)
+      3. Disable the local Kimi Work cron job
+
+    To use this local fallback:
+      python infrastructure/webhooks/poller.py --once
+
+Features (all mirrored in Edge Function):
+  1. RETRY / BACKOFF — @with_retry decorator
+  2. BUDGET ENFORCEMENT — blocks if daily/monthly limit exceeded
+  3. QA PIPELINE GATE — auto-enqueues qa-check after content jobs
+  4. STRUCTURED LOGGING — every code path writes to agent_logs
+  5. SLACK ALERTS — escalations, budget hits, failures
+"""
 =====================================================================
 Runs locally to poll Supabase for pending jobs, execute them via agent skills,
 and write results back. Now with real governance gates + structured logging.
