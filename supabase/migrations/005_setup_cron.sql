@@ -10,12 +10,9 @@
 
 -- ── Schedule the Edge Function trigger ─────────────────────────────
 -- This calls the Edge Function via HTTP every 5 minutes.
--- Replace <project-ref> and <anon-key> with your actual values.
+-- Replace <your-anon-key> with your actual Supabase anon key.
 
 DO $$
-DECLARE
-    project_ref TEXT := 'pusttdxrtmgvhdzdyvbd';
-    anon_key TEXT := '<your-anon-key>';  -- Replace with actual anon key
 BEGIN
     -- Only schedule if pg_cron is available
     IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_cron') THEN
@@ -23,14 +20,10 @@ BEGIN
         PERFORM cron.schedule(
             'amp-execute-jobs',
             '*/5 * * * *',
-            format(
-                $$SELECT net.http_post(
-                    url:='https://%s.supabase.co/functions/v1/execute-jobs',
-                    headers:='{"Authorization": "Bearer %s", "Content-Type": "application/json"}'::jsonb
-                )$$,
-                project_ref,
-                anon_key
-            )
+            'SELECT net.http_post(''
+                https://pusttdxrtmgvhdzdyvbd.supabase.co/functions/v1/execute-jobs'',
+                ''{"Authorization": "Bearer <your-anon-key>", "Content-Type": "application/json"}''::jsonb
+            )'
         );
         RAISE NOTICE 'pg_cron job scheduled successfully.';
     ELSE
@@ -39,23 +32,18 @@ BEGIN
 END $$;
 
 -- ── Alternative: Manual trigger function ───────────────────────────
--- Call this function manually or from an external cron service:
+-- Call this function manually or from an external cron service.
+-- Requires: CREATE EXTENSION IF NOT EXISTS http;
 CREATE OR REPLACE FUNCTION public.trigger_execute_jobs()
 RETURNS void AS $$
 DECLARE
     response JSONB;
 BEGIN
     SELECT content::jsonb INTO response
-    FROM http(('
-        GET',
-        'https://pusttdxrtmgvhdzdyvbd.supabase.co/functions/v1/execute-jobs',
-        ARRAY[
-            http_header('Authorization', 'Bearer <anon-key>'),
-            http_header('Content-Type', 'application/json')
-        ],
-        '',
-        5000
-    )::http_request);
+    FROM net.http_post(
+        url := 'https://pusttdxrtmgvhdzdyvbd.supabase.co/functions/v1/execute-jobs',
+        headers := '{"Authorization": "Bearer <your-anon-key>", "Content-Type": "application/json"}'::jsonb
+    );
     
     RAISE NOTICE 'Edge Function response: %', response;
 END;
