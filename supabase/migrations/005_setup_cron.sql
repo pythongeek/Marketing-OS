@@ -4,6 +4,9 @@
 -- Primary cron is handled by cron-job.org (job 8023152).
 -- This function is for manual testing or fallback.
 
+-- Drop existing function first (return type changed from void to text)
+DROP FUNCTION IF EXISTS public.trigger_execute_jobs() CASCADE;
+
 -- ── Manual trigger function ────────────────────────────────────────
 -- Call with: SELECT public.trigger_execute_jobs();
 CREATE OR REPLACE FUNCTION public.trigger_execute_jobs()
