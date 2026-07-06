@@ -12,9 +12,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const LLM_API_KEY = Deno.env.get("MINIMAX_API_KEY") || Deno.env.get("OPENAI_API_KEY")!;
+const LLM_API_KEY = Deno.env.get("OPENAI_API_KEY") || Deno.env.get("MINIMAX_API_KEY")!;
 const LLM_PROVIDER = Deno.env.get("DEFAULT_LLM_PROVIDER") || "openai";
-const LLM_MODEL = Deno.env.get("DEFAULT_LLM_MODEL") || "gpt-4o";
+const LLM_MODEL = Deno.env.get("DEFAULT_LLM_MODEL") || "kimi-latest";
+const LLM_BASE_URL = Deno.env.get("LLM_BASE_URL") || "https://api.openai.com/v1";
 const SLACK_WEBHOOK_URL = Deno.env.get("SLACK_WEBHOOK_URL");
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -134,8 +135,9 @@ async function callLLM(systemPrompt: string, userPrompt: string): Promise<{
   tokensIn: number;
   tokensOut: number;
 }> {
-  if (LLM_PROVIDER === "openai") {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+  // Use LLM_BASE_URL from env (defaults to OpenAI, set to https://api.moonshot.cn/v1 for Kimi)
+  const apiUrl = `${LLM_BASE_URL}/chat/completions`;
+  const res = await fetch(apiUrl, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${LLM_API_KEY}`,
@@ -153,41 +155,13 @@ async function callLLM(systemPrompt: string, userPrompt: string): Promise<{
     });
     if (!res.ok) {
       const err = await res.text();
-      throw new Error(`OpenAI error ${res.status}: ${err}`);
+      throw new Error(`LLM error ${res.status}: ${err}`);
     }
     const data = await res.json();
     const content = data.choices?.[0]?.message?.content ?? "";
     const tokensIn = data.usage?.prompt_tokens ?? 0;
     const tokensOut = data.usage?.completion_tokens ?? 0;
     return { content, tokensIn, tokensOut };
-  }
-
-  // Minimax fallback
-  const res = await fetch("https://api.minimaxi.chat/v1/text/chatcompletion_v2", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${LLM_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: LLM_MODEL,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-      temperature: 1.0,
-      max_tokens: 4096,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Minimax error ${res.status}: ${err}`);
-  }
-  const data = await res.json();
-  const content = data.choices?.[0]?.message?.content ?? "";
-  const tokensIn = data.usage?.prompt_tokens ?? 0;
-  const tokensOut = data.usage?.completion_tokens ?? 0;
-  return { content, tokensIn, tokensOut };
 }
 
 // ── Build prompts ─────────────────────────────────────────────────
