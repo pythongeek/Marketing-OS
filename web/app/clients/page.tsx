@@ -53,9 +53,9 @@ export default function ClientsPage() {
                 <Link href={`/jobs?client=${client.slug}`} className="flex items-center gap-1 bg-border/50 hover:bg-border text-text px-3 py-1.5 rounded-lg text-xs transition-colors">
                   <ExternalLink className="w-3 h-3" /> Jobs
                 </Link>
-                <a href={`../../AgenticMarketingPro-Vault/01-Clients/${client.slug}/client-profile.md`} target="_blank" className="flex items-center gap-1 bg-border/50 hover:bg-border text-text px-3 py-1.5 rounded-lg text-xs transition-colors">
+                <Link href={`/clients/${client.slug}`} className="flex items-center gap-1 bg-accent/20 hover:bg-accent/30 text-accent px-3 py-1.5 rounded-lg text-xs transition-colors">
                   <ExternalLink className="w-3 h-3" /> Vault
-                </a>
+                </Link>
               </div>
             </div>
           ))}

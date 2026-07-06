@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
-import { withRole, requireEditor } from "@/lib/rbac";
+import { requireEditor } from "@/lib/rbac";
+import { generateVaultContent } from "@/lib/vault-generator";
 
 export const dynamic = "force-dynamic";
 
@@ -31,11 +32,42 @@ export const POST = requireEditor(async (request: Request) => {
       return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
     }
     const body = await request.json();
-    const { slug, name, website, industry, tier, mrr, target_geo, primary_language, business_goal_1, business_goal_2 } = body;
+    const { slug, name, website, industry, tier, mrr, target_geo, primary_language, business_goal_1, business_goal_2, business_goal_3, contact_name, contact_email, contact_phone } = body;
+
+    // Generate vault content from templates
+    const vaultContent = generateVaultContent({
+      slug,
+      name,
+      website,
+      industry,
+      tier,
+      mrr,
+      target_geo,
+      primary_language,
+      business_goal_1,
+      business_goal_2,
+      business_goal_3,
+      contact_name,
+      contact_email,
+      contact_phone,
+      status: "active",
+    });
 
     const { data, error } = await supabase
       .from("clients")
-      .insert({ slug, name, website, industry, tier, mrr, target_geo, primary_language, business_goal_1, business_goal_2 })
+      .insert({
+        slug,
+        name,
+        website,
+        industry,
+        tier,
+        mrr,
+        target_geo,
+        primary_language,
+        business_goal_1,
+        business_goal_2,
+        vault_content: vaultContent,
+      })
       .select()
       .single();
 
