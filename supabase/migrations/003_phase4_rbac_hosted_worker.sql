@@ -15,6 +15,10 @@ CREATE TABLE IF NOT EXISTS public.users (
 -- ── User roles RLS ─────────────────────────────────────────────────
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
+-- Drop policies if they exist (idempotent) to avoid 42710 errors
+DROP POLICY IF EXISTS "Users can read own profile" ON public.users;
+DROP POLICY IF EXISTS "Admins can manage all users" ON public.users;
+
 CREATE POLICY "Users can read own profile" ON public.users
     FOR SELECT USING (auth.uid() = id);
 

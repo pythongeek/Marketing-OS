@@ -10,7 +10,7 @@
 
 -- ── Schedule the Edge Function trigger ─────────────────────────────
 -- This calls the Edge Function via HTTP every 5 minutes.
--- Replace <your-anon-key> with your actual Supabase anon key.
+-- Using the actual Supabase anon key for the Edge Function.
 
 DO $$
 BEGIN
@@ -22,7 +22,7 @@ BEGIN
             '*/5 * * * *',
             'SELECT net.http_post(''
                 https://pusttdxrtmgvhdzdyvbd.supabase.co/functions/v1/execute-jobs'',
-                ''{"Authorization": "Bearer <your-anon-key>", "Content-Type": "application/json"}''::jsonb
+                ''{"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1c3R0ZHhydG1ndmhkemR5dmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzkwNDQsImV4cCI6MjA5ODQxNTA0NH0.czorJe8WQ2mLliNQqHraU2E3Tqor7lE0hYaksLRPwmU", "Content-Type": "application/json"}''::jsonb
             )'
         );
         RAISE NOTICE 'pg_cron job scheduled successfully.';
