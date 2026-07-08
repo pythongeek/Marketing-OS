@@ -243,7 +243,7 @@ function SkillCard({ skill, clientSlug }: { skill: any; clientSlug: string }) {
         <span className="bg-border/50 px-2 py-0.5 rounded">{skill.category}</span>
       </div>
       <a
-        href={`/forms/${skill.slug}.html`}
+        href={`/skills?run=${skill.slug}href={`/skills?run=${skill.slug}client=${clientSlug}`}client=${clientSlug}`}
         target="_blank"
         className="block w-full text-center bg-accent/20 hover:bg-accent/30 text-accent px-3 py-1.5 rounded-lg text-xs transition-colors"
       >

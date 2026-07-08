@@ -36,13 +36,13 @@ export default function JobsPage() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "jobs" },
-        (payload: any) => {
+        (payload: { new: any; old: any; eventType: string }) => {
           console.log("Realtime job change:", payload);
           setLiveStatus("🟢 Live");
           fetchJobs();
         }
       )
-      .subscribe((status: any) => {
+      .subscribe((status: "SUBSCRIBED" | "CLOSED" | "CHANNEL_ERROR" | "TIMED_OUT") => {
         if (status === "SUBSCRIBED") setLiveStatus("🟢 Live");
       });
 

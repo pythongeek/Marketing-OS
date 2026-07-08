@@ -19,7 +19,7 @@ const ROLE_LEVELS: Record<string, number> = { viewer: 0, editor: 1, admin: 2 };
 
 export function withRole(
   allowedRoles: string[],
-  handler: (request: Request, user: { id: string; role: string; email: string; display_name: string }) => Promise<Response>,
+  handler: (request: Request, user: { id: string; role: string; email: string; display_name?: string }) => Promise<Response>,
 ) {
   return async (request: Request): Promise<Response> => {
     // Extract Bearer token from Authorization header
@@ -89,7 +89,10 @@ export function withRole(
   };
 }
 
-// Convenience exports
+// Convenience exports with proper typing
+export const requireAdmin = (handler: (request: Request, user?: { id: string; role: string; email: string; display_name?: string }) => Promise<Response>) => withRole(["admin"], handler);
+export const requireEditor = (handler: (request: Request, user?: { id: string; role: string; email: string; display_name?: string }) => Promise<Response>) => withRole(["admin", "editor"], handler);
+export const requireViewer = (handler: (request: Request, user?: { id: string; role: string; email: string; display_name?: string }) => Promise<Response>) => withRole(["admin", "editor", "viewer"], handler);
 export const requireAdmin = (handler: Function) => withRole(["admin"], handler as any);
 export const requireEditor = (handler: Function) => withRole(["admin", "editor"], handler as any);
 export const requireViewer = (handler: Function) => withRole(["admin", "editor", "viewer"], handler as any);
