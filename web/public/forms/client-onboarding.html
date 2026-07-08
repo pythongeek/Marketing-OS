@@ -251,7 +251,74 @@
 
         form.addEventListener('change', updateConditionalFields);
 
-        // Submit handler
+        // Submit handler - creates client via API
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const result = {};
+            fields.forEach(f => {
+                if (f.type === 'checkbox' && f.options && f.options.length > 1) {
+                    result[f.name] = formData.getAll(f.name);
+                } else if (f.type === 'checkbox') {
+                    result[f.name] = form.querySelector(`[name="${f.name}"]`).checked;
+                } else {
+                    result[f.name] = formData.get(f.name);
+                }
+            });
+
+            // Build slug from client name
+            const slug = result.client_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+            // Prepare API payload
+            const payload = {
+                slug: slug,
+                name: result.client_name,
+                website: result.website,
+                industry: result.industry,
+                tier: result.tier,
+                target_geo: result.target_geo || 'US',
+                primary_language: result.primary_language || 'en',
+                business_goal_1: result.business_goal_1,
+                business_goal_2: result.business_goal_2 || '',
+                contact_name: result.contact_name || '',
+                contact_email: result.contact_email || '',
+                contact_phone: result.contact_slack || ''
+            };
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Creating...';
+            submitBtn.disabled = true;
+            status.textContent = 'Creating client...';
+            status.className = 'status';
+
+            // Call API
+            fetch('/api/clients', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.client) {
+                    status.textContent = '✅ Client "' + result.client_name + '" created successfully! Redirecting...';
+                    status.className = 'status success';
+                    localStorage.removeItem('form_' + form.id);
+                    setTimeout(() => {
+                        window.location.href = '/clients/' + slug;
+                    }, 1500);
+                } else {
+                    throw new Error(data.error || 'Failed to create client');
+                }
+            })
+            .catch(err => {
+                status.textContent = '❌ Error: ' + err.message;
+                status.className = 'status error';
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        });
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(form);
