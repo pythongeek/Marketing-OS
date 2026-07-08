@@ -1,6 +1,6 @@
 "use client";
 
-type Status = "pending" | "running" | "completed" | "failed" | "cancelled" | "active" | "paused";
+type Status = "pending" | "running" | "completed" | "failed" | "cancelled" | "active" | "paused" | "inactive";
 
 const statusColors: Record<string, string> = {
   pending: "bg-warning/20 text-warning",
@@ -10,6 +10,7 @@ const statusColors: Record<string, string> = {
   cancelled: "bg-muted/20 text-muted",
   active: "bg-success/20 text-success",
   paused: "bg-warning/20 text-warning",
+  inactive: "bg-muted/20 text-muted",
 };
 
 export function StatusBadge({ status }: { status: Status }) {
