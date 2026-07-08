@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Nav } from "@/components/nav";
 import { StatusBadge } from "@/components/status-badge";
-import { Users, ExternalLink, FileText, Target, Globe, BarChart3, Zap, ChevronRight } from "lucide-react";
+import { Users, ExternalLink, FileText, Target, Globe, BarChart3, Zap, ChevronRight, RefreshCw } from "lucide-react";
 import Link from "next/link";
 
 const VAULT_TABS = [
@@ -18,7 +18,6 @@ const VAULT_TABS = [
   { key: "technical-fix-queue", label: "Tech Queue", icon: Zap },
 ];
 
-// Skills recommended per industry (personalization)
 const INDUSTRY_SKILLS: Record<string, string[]> = {
   healthcare: ["content-strategist", "local-seo-manager", "email-marketing-specialist", "analytics-expert"],
   "real estate": ["content-strategist", "local-seo-manager", "paid-ads-manager", "social-media-manager"],
@@ -36,29 +35,56 @@ export default function ClientDetailPage() {
   const [client, setClient] = useState<any>(null);
   const [skills, setSkills] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState("client-profile");
   const [activeSection, setActiveSection] = useState<"vault" | "skills">("vault");
 
+  async function loadData() {
+    try {
+      const [clientRes, skillsRes] = await Promise.all([
+        fetch(`/api/clients/${slug}`),
+        fetch("/api/skills"),
+      ]);
+      const clientData = await clientRes.json();
+      const skillsData = await skillsRes.json();
+      setClient(clientData.client);
+      setSkills(skillsData.skills || []);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    Promise.all([
-      fetch(`/api/clients/${slug}`).then((r) => r.json()),
-      fetch("/api/skills").then((r) => r.json()),
-    ])
-      .then(([clientData, skillsData]) => {
-        setClient(clientData.client);
-        setSkills(skillsData.skills || []);
-        setLoading(false);
-      })
-      .catch(console.error);
+    loadData();
   }, [slug]);
+
+  async function generateVault() {
+    if (!client) return;
+    setGenerating(true);
+    try {
+      const res = await fetch(`/api/clients/${slug}/generate-vault`, { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        setClient(data.client);
+      } else {
+        alert("Failed to generate vault: " + (data.error || "Unknown error"));
+      }
+    } catch (e: any) {
+      alert("Error: " + e.message);
+    } finally {
+      setGenerating(false);
+    }
+  }
 
   if (loading) return <div className="p-8 text-muted">Loading...</div>;
   if (!client) return <div className="p-8 text-muted">Client not found</div>;
 
   const vault = client.vault_content || {};
+  const hasVault = Object.keys(vault).length > 0;
   const currentTabContent = vault[activeTab] || "No content available for this tab.";
 
-  // Personalize skills based on client industry
   const clientIndustry = (client.industry || "").toLowerCase();
   const recommendedSlugs = INDUSTRY_SKILLS[clientIndustry] || INDUSTRY_SKILLS["saas"] || [];
   const recommendedSkills = skills.filter((s) => recommendedSlugs.includes(s.slug));
@@ -145,11 +171,30 @@ export default function ClientDetailPage() {
                 </h2>
                 <span className="text-xs text-muted">Last updated: {new Date().toLocaleDateString()}</span>
               </div>
-              <div className="prose prose-sm max-w-none text-text">
-                <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-text bg-background border border-border rounded-lg p-4 overflow-auto max-h-[70vh]">
-                  {currentTabContent}
-                </pre>
-              </div>
+
+              {!hasVault ? (
+                <div className="text-center py-12">
+                  <p className="text-muted mb-4">This client does not have a vault yet.</p>
+                  <button
+                    onClick={generateVault}
+                    disabled={generating}
+                    className="inline-flex items-center gap-2 bg-accent text-white px-4 py-2 rounded-lg text-sm hover:bg-accent-hover transition-colors disabled:opacity-50"
+                  >
+                    {generating ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <FileText className="w-4 h-4" />
+                    )}
+                    {generating ? "Generating..." : "Generate Vault"}
+                  </button>
+                </div>
+              ) : (
+                <div className="prose prose-sm max-w-none text-text">
+                  <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-text bg-background border border-border rounded-lg p-4 overflow-auto max-h-[70vh]">
+                    {currentTabContent}
+                  </pre>
+                </div>
+              )}
             </div>
           </div>
         ) : (
