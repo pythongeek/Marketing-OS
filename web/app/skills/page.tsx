@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Nav } from "@/components/nav";
 import { StatusBadge } from "@/components/status-badge";
-import { Wrench, Edit3, Play, ExternalLink, X, ChevronDown, Sparkles } from "lucide-react";
+import { Wrench, Edit3, Play, X, ChevronDown, Sparkles, Key, Check } from "lucide-react";
 
 interface Skill {
   id: string;
@@ -24,16 +24,26 @@ interface Client {
   industry: string | null;
 }
 
+interface Credential {
+  id: string;
+  client_slug: string | null;
+  service: string;
+  label: string;
+  is_active: boolean;
+}
+
 interface SkillRunConfig {
   skill: Skill;
   clientSlug: string;
   promptOverride: string;
   additionalContext: string;
+  selectedCredentialIds: string[];
 }
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
+  const [credentials, setCredentials] = useState<Credential[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editInstructions, setEditInstructions] = useState("");
@@ -47,14 +57,17 @@ export default function SkillsPage() {
 
   async function loadData() {
     try {
-      const [skillsRes, clientsRes] = await Promise.all([
+      const [skillsRes, clientsRes, credsRes] = await Promise.all([
         fetch("/api/skills"),
         fetch("/api/clients"),
+        fetch("/api/credentials"),
       ]);
       const skillsData = await skillsRes.json();
       const clientsData = await clientsRes.json();
+      const credsData = await credsRes.json();
       setSkills(skillsData.skills || []);
       setClients(clientsData.clients || []);
+      setCredentials(credsData.credentials || []);
     } catch (e) {
       console.error(e);
     } finally {
@@ -90,6 +103,7 @@ export default function SkillsPage() {
           payload: {
             prompt_override: runConfig.promptOverride || undefined,
             additional_context: runConfig.additionalContext || undefined,
+            credential_ids: runConfig.selectedCredentialIds.length > 0 ? runConfig.selectedCredentialIds : undefined,
           },
         }),
       });
@@ -105,6 +119,23 @@ export default function SkillsPage() {
     } finally {
       setIsRunning(false);
     }
+  }
+
+  // Get credentials available for the selected client
+  function getAvailableCredentials(clientSlug: string): Credential[] {
+    if (!clientSlug) return [];
+    return credentials.filter(
+      (c) => c.is_active && (c.client_slug === clientSlug || c.client_slug === null)
+    );
+  }
+
+  function toggleCredential(credId: string) {
+    if (!runConfig) return;
+    const current = runConfig.selectedCredentialIds;
+    const updated = current.includes(credId)
+      ? current.filter((id) => id !== credId)
+      : [...current, credId];
+    setRunConfig({ ...runConfig, selectedCredentialIds: updated });
   }
 
   if (loading) return <div className="p-8 text-muted">Loading...</div>;
@@ -164,7 +195,7 @@ export default function SkillsPage() {
                     <Edit3 className="w-3 h-3" /> Edit
                   </button>
                   <button
-                    onClick={() => setRunConfig({ skill, clientSlug: "", promptOverride: "", additionalContext: "" })}
+                    onClick={() => setRunConfig({ skill, clientSlug: "", promptOverride: "", additionalContext: "", selectedCredentialIds: [] })}
                     className="flex items-center gap-1 bg-accent/20 hover:bg-accent/30 text-accent px-3 py-1.5 rounded-lg text-xs transition-colors"
                   >
                     <Play className="w-3 h-3" /> Run
@@ -199,13 +230,13 @@ export default function SkillsPage() {
               {/* Client Selection */}
               <div>
                 <label className="block text-sm font-medium text-text mb-2">
-                  👤 Client <span className="text-danger">*</span>
+                  Client <span className="text-danger">*</span>
                 </label>
                 <p className="text-xs text-muted mb-2">Select the client this skill will work for</p>
                 <div className="relative">
                   <select
                     value={runConfig.clientSlug}
-                    onChange={(e) => setRunConfig({ ...runConfig, clientSlug: e.target.value })}
+                    onChange={(e) => setRunConfig({ ...runConfig, clientSlug: e.target.value, selectedCredentialIds: [] })}
                     className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-text appearance-none cursor-pointer"
                   >
                     <option value="">-- Choose a client --</option>
@@ -217,15 +248,54 @@ export default function SkillsPage() {
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                 </div>
-                {clients.length === 0 && (
-                  <p className="text-xs text-danger mt-1">No clients found. <a href="/forms/client-onboarding.html" target="_blank" className="underline">Onboard a client first</a>.</p>
-                )}
               </div>
+
+              {/* Credentials Selection */}
+              {runConfig.clientSlug && (
+                <div>
+                  <label className="block text-sm font-medium text-text mb-2">
+                    <Key className="w-3.5 h-3.5 inline mr-1" />
+                    Credentials <span className="text-muted font-normal">(optional)</span>
+                  </label>
+                  <p className="text-xs text-muted mb-2">
+                    Select API keys and service accounts this skill should use.
+                    <a href="/credentials" target="_blank" className="text-accent underline ml-1">Manage credentials →</a>
+                  </p>
+                  {getAvailableCredentials(runConfig.clientSlug).length === 0 ? (
+                    <p className="text-xs text-muted bg-border/20 rounded-lg p-3">
+                      No credentials found for this client. 
+                      <a href="/credentials" target="_blank" className="text-accent underline">Add credentials first</a>.
+                    </p>
+                  ) : (
+                    <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                      {getAvailableCredentials(runConfig.clientSlug).map((cred) => (
+                        <button
+                          key={cred.id}
+                          onClick={() => toggleCredential(cred.id)}
+                          className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors text-left ${
+                            runConfig.selectedCredentialIds.includes(cred.id)
+                              ? "bg-accent/10 border border-accent/30 text-accent"
+                              : "bg-border/20 border border-transparent text-text hover:bg-border/30"
+                          }`}
+                        >
+                          {runConfig.selectedCredentialIds.includes(cred.id) ? (
+                            <Check className="w-3.5 h-3.5" />
+                          ) : (
+                            <div className="w-3.5 h-3.5 rounded border border-muted/50" />
+                          )}
+                          <span className="font-medium">{cred.label}</span>
+                          <span className="text-muted ml-auto">{cred.service}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Prompt Override */}
               <div>
                 <label className="block text-sm font-medium text-text mb-2">
-                  📝 Prompt Override <span className="text-muted font-normal">(optional)</span>
+                  Prompt Override <span className="text-muted font-normal">(optional)</span>
                 </label>
                 <p className="text-xs text-muted mb-2">
                   Override the default skill instructions. Leave empty to use the skill's built-in prompt.
@@ -242,7 +312,7 @@ export default function SkillsPage() {
               {/* Additional Context */}
               <div>
                 <label className="block text-sm font-medium text-text mb-2">
-                  📎 Additional Context <span className="text-muted font-normal">(optional)</span>
+                  Additional Context <span className="text-muted font-normal">(optional)</span>
                 </label>
                 <p className="text-xs text-muted mb-2">
                   Extra data, URLs, or notes to pass to the skill for this run.

@@ -1,7 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Activity, Brain, Users, FileText, Wrench, BarChart3, FormInput, Home } from "lucide-react";
+import { Activity, Brain, Users, FileText, Wrench, BarChart3, FormInput, Home, Key } from "lucide-react";
+
+const navItems = [
+  { href: "/", label: "Dashboard", icon: Home },
+  { href: "/clients", label: "Clients", icon: Users },
+  { href: "/credentials", label: "Credentials", icon: Key },
+  { href: "/skills", label: "Skills", icon: Wrench },
+  { href: "/jobs", label: "Jobs", icon: Activity },
+  { href: "/forms", label: "Forms", icon: FormInput },
+  { href: "/brain-map", label: "Brain Map", icon: Brain },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
+];"lucide-react";
 import Link from "next/link";
 
 const navItems = [
