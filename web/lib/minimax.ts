@@ -281,5 +281,5 @@ export function buildMinimaxSystemPrompt(basePrompt: string): string {
  * Strip thinking tags from Minimax M3 output (when reasoning_split is false)
  */
 export function stripMinimaxThinking(content: string): string {
-  return content.replace(/<thinking>.*?<\/thinking>/gs, "").trim();
+  return content.replace(/<thinking>[\s\S]*?<\/thinking>/g, "").trim();
 }
