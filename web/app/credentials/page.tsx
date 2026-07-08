@@ -171,6 +171,19 @@ const SERVICE_DEFINITIONS: ServiceDef[] = [
     ],
   },
   {
+    key: "n8n",
+    label: "n8n (Workflow Automation)",
+    icon: Code,
+    category: "Automation",
+    configFields: [
+      { key: "instance_url", label: "Instance URL", type: "url", placeholder: "https://n8n.yourdomain.com" },
+      { key: "webhook_base", label: "Webhook Base URL", type: "url", placeholder: "https://n8n.yourdomain.com/webhook" },
+    ],
+    secretFields: [
+      { key: "api_key", label: "API Key", type: "password", placeholder: "n8n_api_..." },
+    ],
+  },
+  {
     key: "openai",
     label: "OpenAI",
     icon: Code,
