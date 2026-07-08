@@ -54,11 +54,16 @@ export async function GET(
 // ─────────────────────────────────────────────────────────────────────────────
 // PATCH /api/credentials/[id] — update credential config/label/active status
 // ─────────────────────────────────────────────────────────────────────────────
-export const PATCH = requireEditor(async (request: Request, { params }: { params: { id: string } }) => {
+export const PATCH = requireEditor(async (request: Request) => {
   try {
     if (!supabase) {
       return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
     }
+
+    // Extract ID from URL path
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
 
     const body = await request.json();
     const { label, config, secrets, is_active } = body;
@@ -72,7 +77,7 @@ export const PATCH = requireEditor(async (request: Request, { params }: { params
     const { data, error } = await supabase
       .from("credentials")
       .update(updates)
-      .eq("id", params.id)
+      .eq("id", id)
       .select()
       .single();
 
@@ -103,16 +108,21 @@ export const PATCH = requireEditor(async (request: Request, { params }: { params
 // ─────────────────────────────────────────────────────────────────────────────
 // DELETE /api/credentials/[id] — delete a credential
 // ─────────────────────────────────────────────────────────────────────────────
-export const DELETE = requireEditor(async (_request: Request, { params }: { params: { id: string } }) => {
+export const DELETE = requireEditor(async (_request: Request) => {
   try {
     if (!supabase) {
       return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
     }
 
+    // Extract ID from URL path
+    const url = new URL(_request.url);
+    const pathParts = url.pathname.split("/");
+    const id = pathParts[pathParts.length - 1];
+
     const { error } = await supabase
       .from("credentials")
       .delete()
-      .eq("id", params.id);
+      .eq("id", id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
