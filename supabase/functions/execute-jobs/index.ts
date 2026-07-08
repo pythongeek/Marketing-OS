@@ -2,7 +2,7 @@
  * Supabase Edge Function: execute-jobs
  * ====================================
  * Hosted worker that polls Supabase for pending jobs, executes them via
- * MiniMax M3 API (primary AI), and writes results back.
+ * AI APIs (MiniMax M3 primary, with OpenAI/Kimi fallback), and writes results back.
  *
  * Trigger: HTTP (from cron-job.org) or manual
  * Runtime: Deno (Supabase Edge Functions)
@@ -13,16 +13,29 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-// ── MiniMax M3 Configuration (Primary AI) ─────────────────────────
-const MINIMAX_API_KEY = Deno.env.get("MINIMAX_API_KEY") || Deno.env.get("OPENAI_API_KEY")!;
+// ── AI Provider Configuration ──────────────────────────────────────
+// Priority: MINIMAX → OPENAI → KIMI (fallback chain)
+const MINIMAX_API_KEY = Deno.env.get("MINIMAX_API_KEY");
 const MINIMAX_BASE_URL = Deno.env.get("MINIMAX_BASE_URL") || "https://api.minimax.io/v1";
 const MINIMAX_MODEL = Deno.env.get("MINIMAX_MODEL") || "MiniMax-M3";
-const MINIMAX_TEMPERATURE = Number(Deno.env.get("MINIMAX_TEMPERATURE") || "0.7");
-const MINIMAX_MAX_TOKENS = Number(Deno.env.get("MINIMAX_MAX_TOKENS") || "4096");
 
-// Cost tracking: $0.0015/1K input, $0.006/1K output (approximate)
-const COST_PER_1K_INPUT = 0.0015;
-const COST_PER_1K_OUTPUT = 0.006;
+const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const OPENAI_BASE_URL = Deno.env.get("OPENAI_BASE_URL") || "https://api.openai.com/v1";
+const OPENAI_MODEL = Deno.env.get("OPENAI_MODEL") || "gpt-4o";
+
+const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
+const KIMI_BASE_URL = Deno.env.get("KIMI_BASE_URL") || "https://api.moonshot.cn/v1";
+const KIMI_MODEL = Deno.env.get("KIMI_MODEL") || "kimi-latest";
+
+const LLM_TEMPERATURE = Number(Deno.env.get("LLM_TEMPERATURE") || "0.7");
+const LLM_MAX_TOKENS = Number(Deno.env.get("LLM_MAX_TOKENS") || "4096");
+
+// Cost tracking (approximate per 1K tokens)
+const COST_RATES: Record<string, { input: number; output: number }> = {
+  minimax: { input: 0.0015, output: 0.006 },
+  openai: { input: 0.005, output: 0.015 },
+  kimi: { input: 0.003, output: 0.009 },
+};
 
 const SLACK_WEBHOOK_URL = Deno.env.get("SLACK_WEBHOOK_URL");
 
@@ -41,7 +54,7 @@ const CONTENT_SKILLS = new Set([
   "revenue-opportunity", "tech-audit", "qa-check-request",
 ]);
 
-// ── Skill prompts optimized for MiniMax M3 ────────────────────────
+// ── Skill prompts optimized for AI execution ──────────────────────
 const SKILL_PROMPTS: Record<string, string> = {
   "content-strategist": `You are an expert content strategist for digital marketing agencies. Think step-by-step before answering. Provide structured, actionable content briefs with clear SEO targets.`,
   "on-page-optimizer": `You are an expert SEO on-page optimizer. Audit pages systematically: title tags, meta descriptions, H1-H3 structure, schema markup, internal links, image alt text, keyword density. Provide before/after recommendations.`,
@@ -112,7 +125,7 @@ async function sendSlackAlert(
           { type: "mrkdwn", text: `*Message:*\n${message}` },
           { type: "mrkdwn", text: `*Job ID:*\n${jobId ?? "N/A"}` },
           { type: "mrkdwn", text: `*Time:*\n${new Date().toISOString()}` },
-          { type: "mrkdwn", text: `*AI Provider:*\nMiniMax M3` },
+          { type: "mrkdwn", text: `*AI Provider:*\nMulti-provider fallback` },
         ],
       },
     ],
@@ -171,13 +184,78 @@ async function fetchCredentialsForJob(
   }
 }
 
-// ── MiniMax M3 API call ───────────────────────────────────────────
-interface MinimaxMessage {
+// ── Provider health check ────────────────────────────────────────
+interface ProviderHealth {
+  name: string;
+  available: boolean;
+  error?: string;
+  latencyMs?: number;
+}
+
+async function checkProviderHealth(provider: string, apiKey: string | undefined, baseUrl: string): Promise<ProviderHealth> {
+  if (!apiKey) {
+    return { name: provider, available: false, error: "API key not configured" };
+  }
+
+  const start = Date.now();
+  try {
+    const res = await fetch(`${baseUrl}/models`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    const latencyMs = Date.now() - start;
+
+    if (res.ok) {
+      return { name: provider, available: true, latencyMs };
+    } else if (res.status === 401) {
+      return { name: provider, available: false, error: "Invalid API key (401)", latencyMs };
+    } else {
+      const errText = await res.text();
+      return { name: provider, available: false, error: `HTTP ${res.status}: ${errText.slice(0, 200)}`, latencyMs };
+    }
+  } catch (e) {
+    return { name: provider, available: false, error: `Network error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}
+
+async function getAvailableProvider(): Promise<{ name: string; apiKey: string; baseUrl: string; model: string } | null> {
+  // Check MiniMax first
+  if (MINIMAX_API_KEY) {
+    const health = await checkProviderHealth("minimax", MINIMAX_API_KEY, MINIMAX_BASE_URL);
+    if (health.available) {
+      return { name: "minimax", apiKey: MINIMAX_API_KEY, baseUrl: MINIMAX_BASE_URL, model: MINIMAX_MODEL };
+    }
+    console.warn(`MiniMax unavailable: ${health.error}`);
+  }
+
+  // Fall back to OpenAI
+  if (OPENAI_API_KEY) {
+    const health = await checkProviderHealth("openai", OPENAI_API_KEY, OPENAI_BASE_URL);
+    if (health.available) {
+      return { name: "openai", apiKey: OPENAI_API_KEY, baseUrl: OPENAI_BASE_URL, model: OPENAI_MODEL };
+    }
+    console.warn(`OpenAI unavailable: ${health.error}`);
+  }
+
+  // Fall back to Kimi
+  if (KIMI_API_KEY) {
+    const health = await checkProviderHealth("kimi", KIMI_API_KEY, KIMI_BASE_URL);
+    if (health.available) {
+      return { name: "kimi", apiKey: KIMI_API_KEY, baseUrl: KIMI_BASE_URL, model: KIMI_MODEL };
+    }
+    console.warn(`Kimi unavailable: ${health.error}`);
+  }
+
+  return null;
+}
+
+// ── Unified LLM API call ────────────────────────────────────────
+interface LLMMessage {
   role: "system" | "user" | "assistant";
   content: string;
 }
 
-interface MinimaxResponse {
+interface LLMResponse {
   choices: Array<{
     message: {
       content: string;
@@ -192,12 +270,13 @@ interface MinimaxResponse {
   };
 }
 
-async function callMiniMaxM3(
+async function callLLM(
+  provider: { name: string; apiKey: string; baseUrl: string; model: string },
   systemPrompt: string,
   userPrompt: string,
   credentials: Array<{ service: string; config: Record<string, unknown>; secrets: Record<string, unknown> }> = []
-): Promise<{ content: string; tokensIn: number; tokensOut: number; reasoning?: string }> {
-  const messages: MinimaxMessage[] = [
+): Promise<{ content: string; tokensIn: number; tokensOut: number; reasoning?: string; provider: string; model: string }> {
+  const messages: LLMMessage[] = [
     { role: "system", content: systemPrompt },
   ];
 
@@ -217,29 +296,30 @@ async function callMiniMaxM3(
 
   messages.push({ role: "user", content: userPrompt });
 
-  const apiUrl = `${MINIMAX_BASE_URL}/chat/completions`;
+  const apiUrl = `${provider.baseUrl}/chat/completions`;
   const res = await fetch(apiUrl, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${MINIMAX_API_KEY}`,
+      Authorization: `Bearer ${provider.apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: MINIMAX_MODEL,
+      model: provider.model,
       messages,
-      temperature: MINIMAX_TEMPERATURE,
-      max_tokens: MINIMAX_MAX_TOKENS,
+      temperature: LLM_TEMPERATURE,
+      max_tokens: LLM_MAX_TOKENS,
       top_p: 1.0,
-      reasoning_split: true,
+      // MiniMax-specific: reasoning split
+      ...(provider.name === "minimax" ? { reasoning_split: true } : {}),
     }),
   });
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`MiniMax M3 API error ${res.status}: ${err}`);
+    throw new Error(`${provider.name} API error ${res.status}: ${err}`);
   }
 
-  const data: MinimaxResponse = await res.json();
+  const data: LLMResponse = await res.json();
   const choice = data.choices[0];
   const content = choice?.message?.content ?? "";
   const reasoning = choice?.message?.reasoning_details ?? "";
@@ -250,13 +330,16 @@ async function callMiniMaxM3(
     tokensIn: usage.prompt_tokens,
     tokensOut: usage.completion_tokens,
     reasoning: reasoning || undefined,
+    provider: provider.name,
+    model: provider.model,
   };
 }
 
 // ── Calculate cost ────────────────────────────────────────────────
-function calculateCost(tokensIn: number, tokensOut: number): number {
-  const inputCost = (tokensIn / 1000) * COST_PER_1K_INPUT;
-  const outputCost = (tokensOut / 1000) * COST_PER_1K_OUTPUT;
+function calculateCost(provider: string, tokensIn: number, tokensOut: number): number {
+  const rates = COST_RATES[provider] || COST_RATES.openai;
+  const inputCost = (tokensIn / 1000) * rates.input;
+  const outputCost = (tokensOut / 1000) * rates.output;
   return Number((inputCost + outputCost).toFixed(6));
 }
 
@@ -267,7 +350,7 @@ function buildSystemPrompt(skillSlug: string, clientSlug?: string): string {
 
   let prompt = base;
 
-  // Add MiniMax M3 optimization instructions
+  // Add response format instructions
   prompt += `\n\n## Response Format\n- Think step-by-step before answering\n- Use markdown formatting for readability\n- Be specific and actionable\n- When uncertain, state your reasoning clearly`;
 
   if (clientSlug) {
@@ -282,12 +365,18 @@ function buildUserPrompt(skillSlug: string, payload: Record<string, unknown>): s
 
   for (const [key, value] of Object.entries(payload)) {
     // Skip internal/meta fields
-    if (["temperature", "max_tokens", "model", "credential_ids"].includes(key)) continue;
+    if (["temperature", "max_tokens", "model", "credential_ids", "prompt_override"].includes(key)) continue;
     if (typeof value === "string" && value.trim()) {
       parts.push(`${key}: ${value}`);
     } else if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
       parts.push(`${key}: ${JSON.stringify(value)}`);
     }
+  }
+
+  // If prompt override is provided, use it
+  const promptOverride = payload.prompt_override as string;
+  if (promptOverride?.trim()) {
+    parts.push(`\n\n## Custom Instructions\n${promptOverride}`);
   }
 
   return parts.join("\n\n");
@@ -365,6 +454,30 @@ async function enqueueQACheck(parentJob: Record<string, unknown>, content: strin
   return data;
 }
 
+// ── Retry wrapper with backoff ────────────────────────────────────
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelayMs: number = 1000
+): Promise<T> {
+  let lastError: Error | undefined;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < maxRetries) {
+        const delay = baseDelayMs * Math.pow(2, attempt);
+        console.log(`Retry ${attempt + 1}/${maxRetries} after ${delay}ms: ${lastError.message}`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
 // ── Execute a single job ──────────────────────────────────────────
 async function executeJob(job: Record<string, unknown>) {
   const jobId = job.id as string;
@@ -374,7 +487,26 @@ async function executeJob(job: Record<string, unknown>) {
   const credentialIds = (payload.credential_ids as string[]) ?? [];
 
   console.log(`Executing job ${jobId}: ${skillSlug} / ${clientSlug ?? "agency"}`);
-  await logEvent(jobId, "info", `Executing job: ${skillSlug} via MiniMax M3`, { client_slug: clientSlug });
+
+  // Get available AI provider
+  const provider = await getAvailableProvider();
+  if (!provider) {
+    const errorMsg = "No AI provider available. Please configure MINIMAX_API_KEY, OPENAI_API_KEY, or KIMI_API_KEY in Supabase secrets.";
+    await supabase.from("jobs").update({
+      status: "failed",
+      result: { error: errorMsg, provider_status: "none_available" },
+      completed_at: new Date().toISOString(),
+    }).eq("id", jobId);
+    await logEvent(jobId, "error", errorMsg, { provider_status: "none_available" });
+    await sendSlackAlert(errorMsg, "error", jobId);
+    throw new Error(errorMsg);
+  }
+
+  await logEvent(jobId, "info", `Executing job: ${skillSlug} via ${provider.name} (${provider.model})`, {
+    client_slug: clientSlug,
+    provider: provider.name,
+    model: provider.model,
+  });
 
   // Mark running
   await supabase.from("jobs").update({ status: "running", started_at: new Date().toISOString() }).eq("id", jobId);
@@ -383,13 +515,18 @@ async function executeJob(job: Record<string, unknown>) {
     // Fetch credentials if specified
     const credentials = await fetchCredentialsForJob(credentialIds, jobId);
 
-    // Build and call MiniMax M3
+    // Build and call LLM with retry
     const systemPrompt = buildSystemPrompt(skillSlug, clientSlug);
     const userPrompt = buildUserPrompt(skillSlug, payload);
-    const llmResult = await callMiniMaxM3(systemPrompt, userPrompt, credentials);
+
+    const llmResult = await withRetry(
+      () => callLLM(provider, systemPrompt, userPrompt, credentials),
+      3,
+      1000
+    );
 
     // Calculate cost
-    const costUsd = calculateCost(llmResult.tokensIn, llmResult.tokensOut);
+    const costUsd = calculateCost(llmResult.provider, llmResult.tokensIn, llmResult.tokensOut);
 
     const result = {
       executed_at: new Date().toISOString(),
@@ -400,10 +537,10 @@ async function executeJob(job: Record<string, unknown>) {
       reasoning: llmResult.reasoning,
       tokens_in: llmResult.tokensIn,
       tokens_out: llmResult.tokensOut,
-      model: MINIMAX_MODEL,
-      provider: "minimax",
+      model: llmResult.model,
+      provider: llmResult.provider,
       cost_usd: costUsd,
-      message: `Job executed for ${clientSlug ?? "agency"} via ${skillSlug} (MiniMax M3)`,
+      message: `Job executed for ${clientSlug ?? "agency"} via ${skillSlug} (${llmResult.provider})`,
     };
 
     // Update job
@@ -420,6 +557,7 @@ async function executeJob(job: Record<string, unknown>) {
       tokens_in: llmResult.tokensIn,
       tokens_out: llmResult.tokensOut,
       cost_usd: costUsd,
+      provider: llmResult.provider,
     });
 
     // QA gate for content skills
@@ -437,18 +575,47 @@ async function executeJob(job: Record<string, unknown>) {
     console.error(`Job ${jobId} failed:`, errorMsg);
     await supabase.from("jobs").update({
       status: "failed",
-      result: { error: errorMsg },
+      result: { error: errorMsg, provider: provider.name },
       completed_at: new Date().toISOString(),
     }).eq("id", jobId);
-    await logEvent(jobId, "error", `Job failed: ${errorMsg}`, { error: errorMsg });
-    await sendSlackAlert(`Job ${jobId} failed: ${errorMsg}`, "error", jobId, { error: errorMsg });
+    await logEvent(jobId, "error", `Job failed: ${errorMsg}`, { error: errorMsg, provider: provider.name });
+    await sendSlackAlert(`Job ${jobId} failed: ${errorMsg}`, "error", jobId, { error: errorMsg, provider: provider.name });
     throw err;
   }
 }
 
+// ── Health check endpoint ─────────────────────────────────────────
+async function handleHealthCheck(): Promise<Response> {
+  const checks = await Promise.all([
+    checkProviderHealth("minimax", MINIMAX_API_KEY, MINIMAX_BASE_URL),
+    checkProviderHealth("openai", OPENAI_API_KEY, OPENAI_BASE_URL),
+    checkProviderHealth("kimi", KIMI_API_KEY, KIMI_BASE_URL),
+  ]);
+
+  const available = checks.filter((c) => c.available);
+  const status = available.length > 0 ? "healthy" : "unhealthy";
+
+  return new Response(
+    JSON.stringify({
+      status,
+      timestamp: new Date().toISOString(),
+      providers: checks,
+      active_provider: available[0]?.name || null,
+    }),
+    { headers: { "Content-Type": "application/json" } }
+  );
+}
+
 // ── Main handler ──────────────────────────────────────────────────
-Deno.serve(async (_req) => {
-  console.log("=== AMP Edge Function: execute-jobs (MiniMax M3) ===");
+Deno.serve(async (req) => {
+  const url = new URL(req.url);
+
+  // Health check endpoint
+  if (url.pathname === "/health" || url.pathname === "/healthz") {
+    return handleHealthCheck();
+  }
+
+  console.log("=== AMP Edge Function: execute-jobs (Multi-provider) ===");
   const startTime = Date.now();
 
   try {
@@ -465,7 +632,7 @@ Deno.serve(async (_req) => {
     }
 
     if (!jobs || jobs.length === 0) {
-      return new Response(JSON.stringify({ status: "ok", processed: 0, message: "No pending jobs", provider: "minimax" }), {
+      return new Response(JSON.stringify({ status: "ok", processed: 0, message: "No pending jobs" }), {
         headers: { "Content-Type": "application/json" },
       });
     }
@@ -508,7 +675,7 @@ Deno.serve(async (_req) => {
 
     const elapsed = Date.now() - startTime;
     return new Response(
-      JSON.stringify({ status: "ok", processed: jobs.length, results, elapsed_ms: elapsed, provider: "minimax" }),
+      JSON.stringify({ status: "ok", processed: jobs.length, results, elapsed_ms: elapsed }),
       { headers: { "Content-Type": "application/json" } },
     );
 
