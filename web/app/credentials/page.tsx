@@ -158,6 +158,19 @@ const SERVICE_DEFINITIONS: ServiceDef[] = [
     ],
   },
   {
+    key: "minimax",
+    label: "MiniMax M3 (Primary AI)",
+    icon: Code,
+    category: "AI",
+    configFields: [
+      { key: "model", label: "Model", type: "text", placeholder: "MiniMax-M3" },
+      { key: "base_url", label: "Base URL", type: "url", placeholder: "https://api.minimax.io/v1" },
+    ],
+    secretFields: [
+      { key: "api_key", label: "API Key", type: "password", placeholder: "MiniMax API key" },
+    ],
+  },
+  {
     key: "openai",
     label: "OpenAI",
     icon: Code,
