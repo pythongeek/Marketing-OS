@@ -31,8 +31,9 @@ primary_language: en
 
 AgenticMarketingPro is an AI automation agency that designs, develops, and deploys custom AI agent workforces using n8n (open-source workflow automation). They position themselves as a full-stack AI operations partner — not just an automation tool vendor, but a strategic consultancy that implements end-to-end AI-powered business systems.
 
-**Sister Concern:** Bdowneer LLC
-**Address:** 500 Lee Road
+**Sister Concern:** Bdowneer LLC  
+**Address:** 500 Lee Road  
+**Primary Goal:** Get real client leads for automation, n8n, SaaS building, or AI agent building services.
 
 ## Service Portfolio (10 Core Offerings)
 
@@ -69,7 +70,7 @@ AgenticMarketingPro is an AI automation agency that designs, develops, and deplo
 | **Professional** | $15,000 – $50,000 | Medium complexity (4-6 weeks), multi-agent system, integrations |
 | **Enterprise** | $50,000+ | Complex deployment (8-12 weeks), full AI ops, ongoing management |
 
-**Payback Period:** 3–6 months (claimed)
+**Payback Period:** 3–6 months (claimed)  
 **Monthly Retainers:** Implied for ongoing AI Agent Management
 
 ## Certifications & Partnerships
@@ -86,6 +87,7 @@ AgenticMarketingPro is an AI automation agency that designs, develops, and deplo
 |-------|-----------|
 | **Automation Engine** | n8n (self-hosted or cloud) |
 | **AI Models** | OpenAI GPT-4o, GPT-4.1-mini, O3 (for CMO/strategic agent) |
+| **Primary AI (Marketing OS)** | MiniMax M3 |
 | **Vector Store** | Supabase (pgvector) |
 | **Database** | PostgreSQL (via Supabase) |
 | **Frontend** | Next.js (admin dashboard), WordPress (client sites) |
@@ -104,21 +106,46 @@ Based on the "5-Step Process" and service breadth:
 - **Project Managers** — agile delivery, client communication
 - **Account Managers** — ongoing support, optimization
 
-## Business Goals (from onboarding)
+## Business Goals (Updated)
 
-1. **Primary:** Increase qualified leads by 50% by Q4 2026 through AEO/GEO + content marketing
-2. **Secondary:** Achieve AI citation in Perplexity/ChatGPT for 10+ target keywords by Q1 2027
+1. **Primary:** Close mid-market and enterprise automation deals; deploy pilot AI agent projects to demonstrate ROI
+2. **Secondary:** Increase AEO/GEO visibility, generate qualified inbound leads, and productize 3 niche offers (Dental, Real-estate, Eco DTC)
 3. **Tertiary:** Reduce CAC from paid search by 30% via SEO lift and n8n community presence
 
 ## Key Contacts
 
 | Role | Name | Email | Phone |
 |---|---|---|---|
-| Primary | [Name] | inquiry@agenticmarketingpro.com | [phone] |
+| Primary | — | inquiry@agenticmarketingpro.com | — |
 
-## Website Manifest
+## Competitive Position
 
-See `website-manifest` tab for full technical details.
+**"High complexity, mid-price" quadrant**
+- More capable than Zapier/Make agencies (self-hosting, custom code)
+- More accessible than enterprise SIs (faster, cheaper)
+- Narrower than full-service digital agencies (automation-focused)
+
+### Top Competitors:
+1. **Synscribe** — AI-agent-driven programmatic SEO for B2B SaaS
+2. **AI Growth Agent** — Autonomous programmatic SEO agent
+3. **Gumloop** — AI-native workflow builder
+4. **Make/Zapier agencies** — Easier UI, massive connector libraries
+5. **Enterprise SIs** — Deloitte, Accenture AI practices
+
+## Critical Gaps & Opportunities
+
+### Gaps:
+- No public case studies (social proof gap)
+- No transparent pricing page
+- Single-brand risk (n8n-only positioning)
+- Limited team visibility
+
+### Opportunities:
+- AI search explosion (AEO/GEO demand growing 10x)
+- n8n user base growth (200K+ users)
+- Enterprise AI automation pilots
+- White-label partnerships
+- n8n template marketplace monetization
 
 ## KPIs
 
@@ -128,35 +155,32 @@ See `kpis-and-goals` tab for current metrics and targets.
 
 - Client onboarded via AgenticMarketingPro platform on 2026-07-08.
 - Vault auto-generated from OSINT research and website analysis.
-- **Critical Gap:** No public case studies — need to create 3-5 detailed case studies with metrics
-- **Critical Gap:** No transparent pricing page — pricing only in FAQ
-- **Opportunity:** n8n template marketplace for lead generation
-- **Opportunity:** LinkedIn newsletter "The AI Operations Brief"
-- **Competitive Position:** "High complexity, mid-price" quadrant — more capable than Zapier/Make agencies, more accessible than enterprise SIs
+- **OSINT Report:** See `osint-research-report.md` for full competitive intelligence.
+- **Marketing OS Integration:** MiniMax M3 configured as primary AI provider.
 
 ## SWOT Summary
 
 **Strengths:**
 - n8n partnership + deep technical expertise
-- Multi-service bundling (automation + SEO + SaaS + ERP)
-- Self-hosting option (data sovereignty, compliance)
+- Multi-service bundling
+- Self-hosting option
 - AEO/GEO early-mover advantage
-- Real-time ROI calculator on website
+- Real-time ROI calculator
 
 **Weaknesses:**
-- No public case studies (social proof gap)
+- No public case studies
 - No transparent pricing page
-- Single-brand risk (n8n-only positioning)
-- Limited team visibility (perceived as small/founder-led)
+- Single-brand risk
+- Limited team visibility
 
 **Opportunities:**
-- AI search explosion (AEO/GEO demand growing 10x)
-- n8n user base growth (200K+ users, many need help)
+- AI search explosion
+- n8n user base growth
 - Enterprise AI automation pilots
-- White-label partnerships with SaaS vendors
+- White-label partnerships
 
 **Threats:**
 - Zapier/Make adding AI features
 - Freelancers undercutting on price
 - n8n releasing managed services
-- Economic downturn reducing SME tech budgets
+- Economic downturn
