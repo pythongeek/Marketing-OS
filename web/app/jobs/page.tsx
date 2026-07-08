@@ -108,7 +108,7 @@ export default function JobsPage() {
                     <td className="px-4 py-3 text-muted text-xs">{new Date(job.created_at).toLocaleString()}</td>
                     <td className="px-4 py-3 text-muted text-xs">${job.cost_usd || 0}</td>
                     <td className="px-4 py-3">
-                      {(job.status === "completed" || job.status === "failed") && job.result ? (
+                      {job.result ? (
                         <button
                           onClick={() => setSelectedJob(job)}
                           className="flex items-center gap-1 bg-accent/20 hover:bg-accent/30 text-accent px-2 py-1 rounded text-xs transition-colors"
