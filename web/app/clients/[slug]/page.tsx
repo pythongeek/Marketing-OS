@@ -46,13 +46,29 @@ export default function ClientDetailPage() {
 
   async function loadData() {
     try {
-      const [clientRes, skillsRes] = await Promise.all([
+      const [clientRes, skillsRes, vaultRes] = await Promise.all([
         fetch(`/api/clients/${slug}`),
         fetch("/api/skills"),
+        fetch(`/api/clients/${slug}/vault`).catch(() => ({ ok: false, json: async () => ({}) })),
       ]);
       const clientData = await clientRes.json();
       const skillsData = await skillsRes.json();
-      setClient(clientData.client);
+      
+      // Merge local vault if Supabase vault is empty
+      let mergedClient = clientData.client;
+      if (mergedClient && (!mergedClient.vault_content || Object.keys(mergedClient.vault_content).length === 0)) {
+        if (vaultRes.ok) {
+          const vaultData = await vaultRes.json();
+          if (vaultData.vault && Object.keys(vaultData.vault).length > 0) {
+            mergedClient = {
+              ...mergedClient,
+              vault_content: vaultData.vault,
+            };
+          }
+        }
+      }
+      
+      setClient(mergedClient);
       setSkills(skillsData.skills || []);
     } catch (e) {
       console.error(e);
