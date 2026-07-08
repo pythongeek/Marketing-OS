@@ -47,7 +47,27 @@
         <form id="agent-form" data-skill-slug="aeo-geo-strategist">
             <div class="field" id="field-client">
   <label for="client">Client <span class="required">*</span></label>
-  <input type="text" name="client" id="client" required placeholder="e.g., acme-saas" value="">
+  <select name="client" id="client" required class="client-dropdown">
+    <option value="">-- Select a client --</option>
+</select>
+<script>
+(function() {
+    const select = document.getElementById('client');
+    if (!select) return;
+    fetch('/api/clients')
+        .then(r => r.json())
+        .then(data => {
+            const clients = data.clients || [];
+            clients.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.slug;
+                opt.textContent = c.name + (c.industry ? ' (' + c.industry + ')' : '');
+                select.appendChild(opt);
+            });
+        })
+        .catch(err => console.error('Failed to load clients:', err));
+})();
+</script>
 </div>
 <div class="field" id="field-entity_name">
   <label for="entity_name">Entity Name <span class="required">*</span></label>
