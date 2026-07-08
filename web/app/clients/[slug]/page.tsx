@@ -340,7 +340,7 @@ export default function ClientDetailPage() {
   );
 }
 
-function SkillCard({ skill, clientSlug }: { skill: any; clientSlug: string }) {
+function SkillCard({ skill, clientSlug }: { skill: { id: string; name: string; description: string | null; category: string | null; status: "pending" | "running" | "completed" | "failed" | "cancelled" | "active" | "paused" | "inactive"; slug: string }; clientSlug: string }) {
   return (
     <div className="bg-card border border-border rounded-xl p-4">
       <div className="flex items-start justify-between mb-2">

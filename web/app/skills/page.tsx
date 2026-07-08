@@ -11,7 +11,7 @@ interface Skill {
   name: string;
   description: string | null;
   category: string | null;
-  status: string;
+  status: "pending" | "running" | "completed" | "failed" | "cancelled" | "active" | "paused" | "inactive";
   instructions: string | null;
   config: Record<string, unknown>;
   last_updated: string;
