@@ -10,7 +10,6 @@ project_id = "pusttdxrtmgvhdzdyvbd"
 enabled = true
 port = 54321
 schemas = ["public", "storage", "graphql_public"]
-exposed_schemas = ["public", "storage", "graphql_public"]
 
 [db]
 port = 54322
@@ -29,7 +28,7 @@ enabled = true
 port = 54323
 api_url = "http://127.0.0.1"
 
-[inbucket]
+[local_smtp]
 enabled = true
 port = 54324
 
@@ -47,8 +46,7 @@ inspector_port = 8083
 
 [functions.execute-jobs]
 verify_jwt = false
-# Increase timeout from default 8s to 150s (the Supabase maximum).
-# This is needed because agent jobs typically take 15-45s for LLM calls,
-# plus GSC/GA4/Bing API calls, QA gates, and logging.
-# See: https://supabase.com/docs/guides/functions#function-configuration
-timeout = 150
+# Note: Per-function timeout is configured at the Supabase dashboard:
+#   Dashboard > Edge Functions > execute-jobs > Settings > "Function timeout"
+# Default is 8s; maximum is 150s. Recommended: 150s for LLM-driven jobs.
+# (Setting `timeout` here is rejected by newer Supabase CLI versions.)

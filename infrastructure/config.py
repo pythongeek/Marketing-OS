@@ -83,6 +83,12 @@ class Config:
     BING_TENANT: str = os.getenv("BING_TENANT", "common")
     BING_REDIRECT_URI: Optional[str] = os.getenv("BING_REDIRECT_URI")
 
+    # ── WordPress (CMS) ───────────────────────────────────────────────
+    WORDPRESS_SITE_URL: Optional[str] = os.getenv("WORDPRESS_SITE_URL")
+    WORDPRESS_USERNAME: Optional[str] = os.getenv("WORDPRESS_USERNAME")
+    WORDPRESS_APP_PASSWORD: Optional[str] = os.getenv("WORDPRESS_APP_PASSWORD")
+    WORDPRESS_SEO_PLUGIN: str = os.getenv("WORDPRESS_SEO_PLUGIN", "None")
+
     # ── Paid Ads APIs ─────────────────────────────────────────────────
     GOOGLE_ADS_DEVELOPER_TOKEN: Optional[str] = os.getenv("GOOGLE_ADS_DEVELOPER_TOKEN")
     GOOGLE_ADS_CLIENT_ID: Optional[str] = os.getenv("GOOGLE_ADS_CLIENT_ID")

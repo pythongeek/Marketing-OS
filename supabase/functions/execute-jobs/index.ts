@@ -677,6 +677,29 @@ Deno.serve(async (req) => {
             }
           }
           results.push({ job_id: job.id, status: "qa_completed", blocked: qaResult.blocked });
+
+        } else if (
+          job.type === "wp_publish" ||
+          job.type === "wp_update" ||
+          job.type === "wp_delete" ||
+          job.type === "wp_from_vault"
+        ) {
+          // WordPress job — re-enqueue for local poller
+          await logEvent(job.id, "info", `WordPress job ${job.type} queued for local execution`, { skill_slug: job.skill_slug });
+          await supabase.from("jobs").insert({
+            type: "agent_run",
+            skill_slug: "wordpress-publisher",
+            client_slug: job.client_slug,
+            payload: job.payload,
+            status: "pending",
+          });
+          await supabase.from("jobs").update({
+            status: "completed",
+            result: { delegated: true, to: "agent_run:wordpress-publisher" },
+            completed_at: new Date().toISOString(),
+          }).eq("id", job.id);
+          results.push({ job_id: job.id, status: "delegated", to: "wordpress-publisher" });
+
         } else {
           const execResult = await executeJob(job);
           results.push({ job_id: job.id, status: "completed", skill: job.skill_slug });
