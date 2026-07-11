@@ -1,6 +1,6 @@
 # AgenticMarketingPro
 
-> A complete AI-native marketing agency operating system. 31 specialized agents, interactive HTML forms, a visual Next.js admin dashboard, and a Supabase-backed job queue — all orchestrated by Kimi Work.
+> A complete AI-native marketing agency operating system. 31 specialized agents, interactive HTML forms, a visual Next.js admin dashboard, and a Supabase-backed job queue — all orchestrated by Hermes Agent Desktop.
 
 ---
 
@@ -41,9 +41,9 @@ Get these from your [Supabase project](https://supabase.com) → Settings → AP
 4. Click **Run**
 5. Seed the skills table: paste the SQL from `DEPLOYMENT.md` Section 1.5
 
-### 4. Set Up Kimi Work Poller (Local Machine)
+### 4. Set Up Hermes Agent Desktop Poller (Local Machine)
 
-On the machine where Kimi Work runs:
+On the machine where Hermes Agent Desktop runs:
 
 ```bash
 # Clone this repo
@@ -79,7 +79,7 @@ Marketing-OS/
 │   ├── package.json
 │   └── .env.example
 │
-├── skills/                       ← 31 agent skill definitions (Kimi Work runtime)
+├── skills/                       ← 31 agent skill definitions (Hermes Agent Desktop runtime)
 │   ├── agentic-marketing-os/     ← Atlas orchestrator (master)
 │   ├── onboarding-agent/
 │   ├── content-strategist/
@@ -101,7 +101,7 @@ Marketing-OS/
 │   ├── api_client/             ← GSC, GA4, Ahrefs, Semrush, Bing, WordPress
 │   ├── rag/                    ← ChromaDB + LlamaIndex pipeline
 │   ├── ui/                     ← Form engine + response processors
-│   ├── webhooks/             ← Kimi Work poller (polls Supabase jobs)
+│   ├── webhooks/             ← Hermes Agent Desktop poller (polls Supabase jobs)
 │   ├── scripts/                ← ingest_vault, health_check, cost_tracker, generate_dashboard
 │   ├── config.py               ← Central config (50+ env vars)
 │   └── requirements.txt
@@ -116,7 +116,7 @@ Marketing-OS/
 ├── supabase/
 │   └── schema.sql              ← Database schema (6 tables, indexes, RLS, triggers, realtime)
 │
-├── .env.example                ← Root .env template (Kimi Work machine)
+├── .env.example                ← Root .env template (Hermes Agent Desktop machine)
 ├── web/.env.example            ← Vercel admin .env template
 ├── DEPLOYMENT.md               ← Full production deployment guide (29.7 KB)
 └── README.md                   ← This file
@@ -172,7 +172,7 @@ Every skill is **form-first interactive**: when data is missing, the agent gener
 
 ```
 ┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
-│      Vercel         │     │     Supabase        │     │     Kimi Work       │
+│      Vercel         │     │     Supabase        │     │     Hermes Agent Desktop │
 │   (Next.js Admin)   │ ←→  │   (PostgreSQL DB)   │ ←→  │   (Local Poller)    │
 │                     │     │   + Realtime        │     │   + Skills + Vault    │
 │  • Dashboard        │     │                     │     │                     │
@@ -181,7 +181,7 @@ Every skill is **form-first interactive**: when data is missing, the agent gener
 │  • Form launcher    │     │  • jobs table ←     │     │  • Writes results     │
 │  • Brain map iframe │     │  • agent_logs       │     │  • Updates vault      │
 │                     │     │  • form_responses   │     │                     │
-│  /api/webhook       │     │  • kpis             │     │   ~/.kimi/daimon/     │
+│  /api/webhook       │     │  • kpis             │     │   ~/.hermes/skills/   │
 │  (POST receiver)    │     │                     │     │   skills/             │
 └─────────────────────┘     └─────────────────────┘     └─────────────────────┘
          ↑                          ↑                          ↑
@@ -194,8 +194,8 @@ Every skill is **form-first interactive**: when data is missing, the agent gener
 ### Data Flow: End to End
 
 1. **User clicks "Run Agent"** in Vercel admin → Vercel writes `job` row to Supabase (`status: pending`)
-2. **Kimi Work poller** (running on your local machine) polls every 5 min → picks up `pending` job
-3. **Poller marks job `running`** → loads the skill from `~/.kimi/daimon/skills/` → executes it
+2. **Hermes Agent Desktop poller** (running on your local machine) polls every 5 min → picks up `pending` job
+3. **Poller marks job `running`** → loads the skill from `~/.hermes/skills/` → executes it
 4. **Skill reads vault** (local `.md` files), calls APIs via wrappers, writes outputs to vault
 5. **Poller writes result back** to Supabase (`status: completed`, `result: {...}`, `cost_usd: ...`)
 6. **Vercel admin** refreshes via polling → UI shows "Done" with result
@@ -234,7 +234,7 @@ python infrastructure/ui/processors.py client forms/client-onboarding-response.j
 ### Prerequisites
 
 - Node.js 18+ (for Vercel admin)
-- Python 3.9+ (for Kimi Work infrastructure)
+- Python 3.9+ (for Hermes Agent Desktop infrastructure)
 - Git
 
 ### Run the Admin Locally
@@ -272,7 +272,7 @@ python -c "from infrastructure.ui.form_engine import FormEngine; from infrastruc
 | [`DEPLOYMENT.md`](DEPLOYMENT.md) | Full production deployment guide: Supabase → Vercel → Poller → Cron |
 | [`infrastructure/README.md`](infrastructure/README.md) | Python infrastructure: API clients, RAG, scripts, form engine |
 | [`web/.env.example`](web/.env.example) | Vercel admin environment variables |
-| [`.env.example`](.env.example) | Kimi Work / local machine environment variables |
+| [`.env.example`](.env.example) | Hermes Agent Desktop / local machine environment variables |
 
 ---
 
@@ -283,7 +283,7 @@ python -c "from infrastructure.ui.form_engine import FormEngine; from infrastruc
 | **Admin UI** | Next.js 14, TypeScript, Tailwind CSS, App Router |
 | **Database** | Supabase PostgreSQL + Realtime |
 | **API** | Next.js API Routes, REST |
-| **Agent Runtime** | Kimi Work (local) |
+| **Agent Runtime** | Hermes Agent Desktop (local) |
 | **Skills** | Markdown SKILL.md files (31 agents) |
 | **Forms** | Self-contained HTML with vanilla JS |
 | **RAG** | ChromaDB + LlamaIndex + OpenAI embeddings |
@@ -336,5 +336,5 @@ Private / Proprietary. Built for your agency's internal use.
 
 ---
 
-*Built with Kimi Work + Next.js + Supabase + ChromaDB + 31 specialized agents.*
+*Built with Hermes Agent Desktop + Next.js + Supabase + ChromaDB + 31 specialized agents.*
 *Last updated: 2025-06-20*

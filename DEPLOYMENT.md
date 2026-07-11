@@ -1,6 +1,6 @@
 # AgenticMarketingPro — Deployment Guide
 
-> Complete production deployment guide for the AgenticMarketingPro operating system: Vercel admin dashboard + Supabase database + Kimi Work poller + cron-job.org triggers.
+> Complete production deployment guide for the AgenticMarketingPro operating system: Vercel admin dashboard + Supabase database + Hermes Agent Desktop poller + cron-job.org triggers.
 
 ---
 
@@ -10,7 +10,7 @@
 - [Architecture Overview](#architecture-overview)
 - [Step 1: Supabase Database](#step-1-supabase-database)
 - [Step 2: Vercel Admin Dashboard](#step-2-vercel-admin-dashboard)
-- [Step 3: Kimi Work Poller](#step-3-kimi-work-poller)
+- [Step 3: Hermes Agent Desktop Poller](#step-3-hermes-agent-desktop-poller)
 - [Step 4: Scheduled Triggers (cron-job.org)](#step-4-scheduled-triggers-cron-jobsorg)
 - [Step 5: Test the Full Loop](#step-5-test-the-full-loop)
 - [Environment Variables Reference](#environment-variables-reference)
@@ -27,7 +27,7 @@
 |------|---------|---------|------|
 | Node.js | 18+ | Vercel admin build | [nodejs.org](https://nodejs.org) |
 | npm or pnpm | 8+ | Package management | [pnpm.io](https://pnpm.io) |
-| Python | 3.9+ | Kimi Work poller + skills | [python.org](https://python.org) |
+| Python | 3.9+ | Hermes Agent Desktop poller + skills | [python.org](https://python.org) |
 | Git | 2.30+ | Source control | [git-scm.com](https://git-scm.com) |
 | Supabase account | — | Database + Realtime | [supabase.com](https://supabase.com) |
 | Vercel account | — | Hosting (free tier) | [vercel.com](https://vercel.com) |
@@ -43,7 +43,7 @@
 
 ```
 ┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
-│      Vercel         │     │     Supabase        │     │     Kimi Work       │
+│      Vercel         │     │     Supabase        │     │     Hermes Agent Desktop │
 │   (Next.js Admin)   │ ←→  │   (PostgreSQL DB)   │ ←→  │   (Local Poller)    │
 │                     │     │   + Realtime        │     │   + Skills          │
 │  • Dashboard        │     │   + Storage         │     │   + Vault           │
@@ -66,8 +66,8 @@
 
 1. **User clicks "Run Agent"** in Vercel admin → Vercel writes `job` row to Supabase (`status: pending`)
 2. **Supabase Realtime** pushes new job to any connected frontend (live UI updates)
-3. **Kimi Work poller** (running on your local machine) polls every 5 min → picks up `pending` job
-4. **Poller marks job `running`** → loads the skill from `~/.kimi/daimon/skills/` → executes it
+3. **Hermes Agent Desktop poller** (running on your local machine) polls every 5 min → picks up `pending` job
+4. **Poller marks job `running`** → loads the skill from `~/.hermes/skills/` → executes it
 5. **Skill reads vault** (local `.md` files), calls APIs via wrappers, writes outputs to vault
 6. **Poller writes result back** to Supabase (`status: completed`, `result: {...}`, `cost_usd: ...`)
 7. **Supabase Realtime** pushes update to Vercel frontend → UI shows "Done" with result
@@ -76,10 +76,10 @@
 
 | Vercel Limitation | Our Workaround |
 |---------------------|---------------|
-| Function timeout: 10s | Vercel only does DB writes (10ms). Heavy work runs on Kimi Work. |
+| Function timeout: 10s | Vercel only does DB writes (10ms). Heavy work runs on Hermes Agent Desktop. |
 | Cron jobs: 1000 hrs/mo | Use cron-job.org (free, unlimited) → hits `/api/webhook` → enqueues DB job. |
-| No persistent filesystem | Vault stays local on Kimi Work. Supabase stores all shared state. |
-| No local file access | Admin shows vault via iframe or static file hosting from Kimi Work machine. |
+| No persistent filesystem | Vault stays local on Hermes Agent Desktop. Supabase stores all shared state. |
+| No local file access | Admin shows vault via iframe or static file hosting from Hermes Agent Desktop machine. |
 
 ---
 
@@ -89,7 +89,7 @@
 
 1. Go to [supabase.com](https://supabase.com) → Sign in → **New Project**
 2. Name: `agentic-marketing-pro`
-3. Region: Choose closest to your Kimi Work machine (e.g., `us-east-1` for US, `eu-west-1` for Europe)
+3. Region: Choose closest to your Hermes Agent Desktop machine (e.g., `us-east-1` for US, `eu-west-1` for Europe)
 4. Database password: Generate a strong one, save in 1Password
 5. Wait ~2 min for provisioning
 
@@ -255,9 +255,9 @@ In Vercel dashboard → Project Settings → Environment Variables:
 
 ---
 
-## Step 3: Kimi Work Poller
+## Step 3: Hermes Agent Desktop Poller
 
-The poller runs on your local machine (where Kimi Work is installed). It connects to Supabase, polls for jobs, and executes agent skills.
+The poller runs on your local machine (where Hermes Agent Desktop is installed). It connects to Supabase, polls for jobs, and executes agent skills.
 
 ### 3.1 Install Python Dependencies
 
@@ -413,7 +413,7 @@ This replaces Vercel's limited cron functionality with a free, unlimited externa
 2. Check Vercel logs: `vercel logs` or Vercel dashboard → Logs
 3. You should see a POST to `/api/webhook` with a 200 response
 4. Check Supabase: `SELECT * FROM jobs WHERE type = 'daily_ops';` — should show a new row with `status: pending`
-5. Check Kimi Work poller logs: should show "Found 1 pending jobs" and process it
+5. Check Hermes Agent Desktop poller logs: should show "Found 1 pending jobs" and process it
 
 ### 4.5 Alternative: Test Webhook Manually
 
@@ -441,7 +441,7 @@ Expected response:
 
 ## Step 5: Test the Full Loop
 
-### 5.1 Test 1: Trigger from Vercel → Execute on Kimi Work → Result in Vercel
+### 5.1 Test 1: Trigger from Vercel → Execute on Hermes Agent Desktop → Result in Vercel
 
 1. **In Vercel admin**, go to `/skills`
 2. Click **Run** on any skill (e.g., `content-strategist`)
@@ -484,7 +484,7 @@ Expected response:
 
 ## Environment Variables Reference
 
-### `.env` (Project Root — Kimi Work Machine)
+### `.env` (Project Root — Hermes Agent Desktop Machine)
 
 ```bash
 # === Supabase (for poller) ===
@@ -494,7 +494,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...  # service_role key (secret!)
 # === LLM / Embeddings ===
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
-KIMI_API_KEY=...
+HERMES_AGENT_API_KEY=...
 MINIMAX_API_KEY=...
 
 # === SEO APIs ===
@@ -614,7 +614,7 @@ If you deployed via Git integration, also set these in Vercel dashboard → Proj
 **Fixes:**
 1. The `execute_job()` in `poller.py` is currently a **stub**. It logs but doesn't actually run skills.
 2. To wire it: edit `poller.py` line ~120, replace the stub with actual skill dispatch
-3. Or: run skills manually via Kimi Work while the poller is still being developed
+3. Or: run skills manually via Hermes Agent Desktop while the poller is still being developed
 
 ### Problem: Cost tracking shows $0
 
@@ -646,15 +646,15 @@ npm run build
 vercel --prod  # or push to Git for auto-deploy
 ```
 
-### Update Kimi Work Skills
+### Update Hermes Agent Desktop Skills
 
 ```bash
-# On your Kimi Work machine:
+# On your Hermes Agent Desktop machine:
 cd "F:\Agentic Marketing Pro\marketing"
 git pull origin main
 
-# Copy updated skills to Kimi managed directory
-cp -r skills/* ~/.kimi/daimon/skills/
+# Copy updated skills to Hermes Agent Desktop managed directory
+cp -r skills/* ~/.hermes/skills/
 
 # Restart poller if running as service
 sudo systemctl restart amp-poller
@@ -717,7 +717,7 @@ After successful deployment, here are the recommended priorities:
 - [ ] Add multi-user support (team members, roles, permissions)
 - [ ] Build an API playground for testing individual skills
 - [ ] Add AI-powered chat interface in the admin (ask questions about any client)
-- [ ] Integrate with Kimi Work's native tools for deeper orchestration
+- [ ] Integrate with Hermes Agent Desktop's native tools for deeper orchestration
 - [ ] Add automated billing/invoicing based on job execution logs
 
 ---
