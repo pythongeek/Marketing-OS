@@ -148,8 +148,8 @@
 
 ## 📝 AI Generation Details
 
-- **Primary AI:** MiniMax M3
-- **Fallback AI:** Kimi (Moonshot)
+- **Primary AI:** Hermes Agent Desktop
+- **Fallback AI:** Hermes Agent Desktop (single provider)
 - **Execution Engine:** Supabase Edge Function (execute-jobs)
 - **Scheduler:** cron-job.org (every 5 minutes)
 - **Total Jobs Executed:** 14

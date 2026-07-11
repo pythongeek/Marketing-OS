@@ -563,7 +563,7 @@ User clicks "Run" on skill
 - `/api/clients/[slug]/generate-vault` — Generate vault content
 
 ### External Services
-- Kimi Code API — for agent execution
+- Hermes Agent Desktop — for agent execution
 - Supabase — database and realtime
 - Vercel — hosting
 - Cron-Job.org — scheduled job triggers

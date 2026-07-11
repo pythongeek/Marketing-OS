@@ -142,9 +142,9 @@ Response: { job: { id, status, result, ... } }
 |----------|-------------|
 | `SUPABASE_URL` | Supabase project URL |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key (bypasses RLS) |
-| `LLM_API_KEY` | OpenAI/Kimi API key |
+| `HERMES_AGENT_API_KEY` | Hermes Agent Desktop API key |
 | `LLM_PROVIDER` | `openai` or `minimax` |
-| `LLM_MODEL` | Model name (e.g., `kimi-latest`) |
+| `HERMES_AGENT_MODEL` | Model name (e.g., `MiniMax-M3`) |
 | `LLM_BASE_URL` | API base URL |
 | `SLACK_WEBHOOK_URL` | For alerts (optional) |
 
