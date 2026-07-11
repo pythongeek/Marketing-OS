@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "technical-seo-auditor",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "AgenticMarketingPro Google & Bing SEO Strategy",
+    "target_audience": "B2B SaaS marketing leaders",
+    "prompt_override": "Create a COMPREHENSIVE SEO strategy document for AgenticMarketingPro. Include: 1) Technical SEO audit checklist (Core Web Vitals, schema markup types, site architecture, crawlability), 2) Keyword universe with 6 topic clusters and pillar pages, 3) Programmatic SEO plan (agent x use-case pages, competitor comparison pages, city-based pages), 4) Schema markup implementation plan (Organization, SoftwareApplication, FAQPage, HowTo, Article, BreadcrumbList, Review), 5) URL structure recommendations, 6) Content velocity plan. Context: AgenticMarketingPro is an AI-powered marketing OS. Target: DR 50 by month 12, 15 new DR 50+ links/month."
+  },
+  "status": "pending"
+}

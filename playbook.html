@@ -1,0 +1,910 @@
+1	<!DOCTYPE html>
+2	<html lang="en">
+3	<head>
+4	<meta charset="UTF-8">
+5	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+6	<title>AgenticMarketingPro — Ongoing SEO Operations & Content Refresh Playbook</title>
+7	<style>
+8	  :root {
+9	    --primary: #1a1a2e;
+10	    --accent: #6c5ce7;
+11	    --accent2: #00b894;
+12	    --accent3: #fd79a8;
+13	    --accent4: #e17055;
+14	    --accent5: #0984e3;
+15	    --surface: #ffffff;
+16	    --surface2: #f8f7ff;
+17	    --surface3: #f0eeff;
+18	    --border: #e0dff8;
+19	    --text: #1a1a2e;
+20	    --muted: #636e72;
+21	    --tag-bg: #ede9ff;
+22	    --tag-text: #5b4fcf;
+23	  }
+24	  * { box-sizing: border-box; margin: 0; padding: 0; }
+25	  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text); background: #fafafa; line-height: 1.65; }
+26	
+27	  .hero { background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%); color: #fff; padding: 52px 48px 40px; }
+28	  .hero-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: .55; margin-bottom: 10px; }
+29	  .hero h1 { font-size: 36px; font-weight: 800; line-height: 1.15; margin-bottom: 12px; }
+30	  .hero h1 span { color: #74b9ff; }
+31	  .hero-sub { font-size: 15px; opacity: .75; max-width: 680px; margin-bottom: 28px; }
+32	  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+33	  .hero-tag { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); border-radius: 20px; padding: 4px 13px; font-size: 12px; font-weight: 500; }
+34	
+35	  .toc { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 24px 48px; }
+36	  .toc-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+37	  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 5px; }
+38	  .toc a { font-size: 13px; color: var(--accent); text-decoration: none; padding: 3px 0; display: block; }
+39	  .toc a:hover { text-decoration: underline; }
+40	
+41	  .content { max-width: 1100px; margin: 0 auto; padding: 0 48px 80px; }
+42	  .section { margin-top: 60px; }
+43	  .section-header { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 2px solid var(--border); }
+44	  .section-number { font-size: 44px; font-weight: 900; color: var(--border); line-height: 1; min-width: 52px; }
+45	  .section-title-group h2 { font-size: 26px; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+46	  .section-title-group p { font-size: 14px; color: var(--muted); }
+47	  .section-badge { display: inline-block; background: var(--tag-bg); color: var(--tag-text); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 12px; margin-bottom: 7px; }
+48	
+49	  h3 { font-size: 18px; font-weight: 700; color: var(--primary); margin: 28px 0 12px; }
+50	  h4 { font-size: 15px; font-weight: 700; color: var(--accent); margin: 18px 0 9px; }
+51	  p { font-size: 15px; color: var(--text); margin-bottom: 11px; }
+52	  ul, ol { padding-left: 22px; margin-bottom: 13px; }
+53	  li { font-size: 15px; margin-bottom: 7px; }
+54	  li strong { color: var(--primary); }
+55	  code { background: var(--surface3); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 13px; font-family: 'Consolas', 'SF Mono', monospace; }
+56	
+57	  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; margin: 20px 0; }
+58	  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+59	  .card h4 { font-size: 15px; font-weight: 700; color: var(--primary); margin: 0 0 9px; }
+60	  .card p { font-size: 14px; color: var(--muted); margin: 0; }
+61	  .card ul { margin-top: 9px; padding-left: 18px; }
+62	  .card li { font-size: 14px; color: var(--muted); margin-bottom: 5px; }
+63	
+64	  .highlight-box { border-left: 4px solid var(--accent); background: var(--surface3); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 18px 0; }
+65	  .highlight-box.green { border-color: var(--accent2); }
+66	  .highlight-box.orange { border-color: var(--accent4); }
+67	  .highlight-box.blue { border-color: var(--accent5); }
+68	  .highlight-box.red { border-color: #e74c3c; }
+69	  .highlight-box h4 { color: var(--accent); font-size: 14px; font-weight: 700; margin: 0 0 8px; }
+70	  .highlight-box.green h4 { color: #00a381; }
+71	  .highlight-box.orange h4 { color: var(--accent4); }
+72	  .highlight-box.blue h4 { color: var(--accent5); }
+73	  .highlight-box.red h4 { color: #c0392b; }
+74	  .highlight-box p, .highlight-box li { font-size: 14px; }
+75	
+76	  .cadence-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14px; }
+77	  .cadence-table th { background: var(--primary); color: #fff; padding: 9px 13px; text-align: left; font-weight: 600; font-size: 13px; }
+78	  .cadence-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+79	  .cadence-table tr:nth-child(even) td { background: var(--surface2); }
+80	  .cadence-table tr:hover td { background: var(--surface3); }
+81	
+82	  .freq-badge { display: inline-block; border-radius: 6px; padding: 2px 9px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+83	  .freq-daily { background: #ffe5e5; color: #c0392b; }
+84	  .freq-weekly { background: #fff3cd; color: #856404; }
+85	  .freq-monthly { background: #d4f8e8; color: #00875a; }
+86	  .freq-quarterly { background: #e8eeff; color: #2d69d6; }
+87	
+88	  .checklist-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; margin: 16px 0; }
+89	  .checklist-block h4 { font-size: 16px; font-weight: 700; color: var(--primary); margin: 0 0 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+90	  .check-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--surface2); }
+91	  .check-row:last-child { border-bottom: none; }
+92	  .check-box { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+93	  .check-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+94	  .check-text em { font-size: 12px; color: var(--muted); display: block; margin-top: 2px; font-style: normal; }
+95	
+96	  .phase-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin: 14px 0; position: relative; overflow: hidden; }
+97	  .phase-block::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--accent); }
+98	  .phase-block.p2::before { background: var(--accent2); }
+99	  .phase-block.p3::before { background: var(--accent4); }
+100	  .phase-block.p4::before { background: var(--accent5); }
+101	  .phase-block.pdanger::before { background: #e74c3c; }
+102	  .phase-label { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 5px; }
+103	  .phase-block.p2 .phase-label { color: var(--accent2); }
+104	  .phase-block.p3 .phase-label { color: var(--accent4); }
+105	  .phase-block.p4 .phase-label { color: var(--accent5); }
+106	  .phase-block.pdanger .phase-label { color: #e74c3c; }
+107	  .phase-block h4 { font-size: 16px; font-weight: 700; margin-bottom: 9px; color: var(--primary); }
+108	  .twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 18px 0; }
+109	  .twoCol .card { margin: 0; }
+110	  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+111	  .metric-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 18px 0; }
+112	  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 14px; text-align: center; }
+113	  .metric-num { font-size: 26px; font-weight: 900; color: var(--accent); }
+114	  .metric-label { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+115	  .signal-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--surface2); }
+116	  .signal-row:last-child { border-bottom: none; }
+117	  .signal-icon { font-size: 18px; flex-shrink: 0; width: 28px; }
+118	  .signal-text { font-size: 14px; color: var(--text); }
+119	  .signal-action { font-size: 13px; color: var(--muted); }
+120	  .gsc-section { background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 14px; padding: 22px 26px; margin: 14px 0; }
+121	  .gsc-section h4 { color: #2e7d32; margin: 0 0 10px; font-size: 15px; font-weight: 700; }
+122	  .bsc-section { background: #e3f2fd; border: 1px solid #90caf9; border-radius: 14px; padding: 22px 26px; margin: 14px 0; }
+123	  .bsc-section h4 { color: #1565c0; margin: 0 0 10px; font-size: 15px; font-weight: 700; }
+124	  @media (max-width: 720px) { .twoCol { grid-template-columns: 1fr; } .card-grid { grid-template-columns: 1fr; } .hero, .toc, .content { padding-left: 20px; padding-right: 20px; } .hero h1 { font-size: 24px; } }
+125	</style>
+126	</head>
+127	<body>
+128	
+129	<div class="hero">
+130	  <div class="hero-label">Ongoing Operations · Supplementary Module</div>
+131	  <h1>Content Refresh, <span>Search Console Mastery</span><br>& Lesser-Known SEO Operations</h1>
+132	  <p class="hero-sub">The living engine behind sustained rankings: systematic content decay prevention, weekly GSC/BSC diagnosis routines, and the underrated technical practices most competitors skip entirely.</p>
+133	  <div class="hero-tags">
+134	    <span class="hero-tag">Content Refresh System</span>
+135	    <span class="hero-tag">GSC Deep Audit</span>
+136	    <span class="hero-tag">Bing WMT Mastery</span>
+137	    <span class="hero-tag">Technical Health</span>
+138	    <span class="hero-tag">Decay Prevention</span>
+139	    <span class="hero-tag">Core Web Vitals</span>
+140	    <span class="hero-tag">Index Management</span>
+141	    <span class="hero-tag">Lesser-Known Wins</span>
+142	  </div>
+143	</div>
+144	
+145	<div class="toc">
+146	  <div class="toc-title">Contents</div>
+147	  <div class="toc-grid">
+148	    <a href="#content-refresh">1. Content Refresh System</a>
+149	    <a href="#decay-signals">2. Decay Detection Signals</a>
+150	    <a href="#gsc-weekly">3. GSC Weekly Audit Routine</a>
+151	    <a href="#gsc-deep">4. GSC Deep-Dive Checklist</a>
+152	    <a href="#bsc">5. Bing Search Console Routine</a>
+153	    <a href="#technical-health">6. Technical Health — Ongoing</a>
+154	    <a href="#lesser-known">7. Lesser-Known SEO Practices</a>
+155	    <a href="#cadence">8. Master Cadence Calendar</a>
+156	  </div>
+157	</div>
+158	
+159	<div class="content">
+160	
+161	<!-- SECTION 1: CONTENT REFRESH -->
+162	<div class="section" id="content-refresh">
+163	  <div class="section-header">
+164	    <div class="section-number">01</div>
+165	    <div class="section-title-group">
+166	      <div class="section-badge">Content Operations</div>
+167	      <h2>The Content Refresh System</h2>
+168	      <p>Systematic process for preventing content decay and compounding existing rankings</p>
+169	    </div>
+170	  </div>
+171	
+172	  <div class="highlight-box">
+173	    <h4>Why content refresh beats new content for ROI</h4>
+174	    <p>A page that already ranks position 4–15 has domain authority, indexed content, and existing backlinks. Refreshing it to position 1–3 takes a fraction of the effort of building a new page from zero. For most sites, 40–60% of organic traffic growth comes from refreshing existing content rather than publishing net-new pages.</p>
+175	  </div>
+176	
+177	  <h3>Step 1 — Build Your Refresh Inventory</h3>
+178	  <p>Every 30 days, run this query in Google Search Console → Performance → Pages, filtered to the past 16 months:</p>
+179	  <ul>
+180	    <li>Export all pages with at least 100 impressions in the past 90 days</li>
+181	    <li>Sort by average position — flag all pages ranked 4–15 (lowest-hanging fruit)</li>
+182	    <li>Cross-reference with Ahrefs to find pages with declining organic traffic over 3–6 months</li>
+183	    <li>Flag pages with CTR below 2% (good position, bad snippet — title/description problem)</li>
+184	    <li>Flag pages with position above 10 but high impression volume (quick wins with refresh)</li>
+185	  </ul>
+186	
+187	  <h3>Step 2 — Prioritize What to Refresh</h3>
+188	
+189	  <div class="checklist-block">
+190	    <h4>Refresh Priority Matrix — Score each post and refresh highest scorers first</h4>
+191	    <div class="check-row"><div class="check-box"></div><div class="check-text">+3 pts: Page ranks position 4–10 (close to top 3, high ROI)
+192	      <em>Most valuable — a small refresh can unlock significant traffic</em></div></div>
+193	    <div class="check-row"><div class="check-box"></div><div class="check-text">+2 pts: Traffic declined 20%+ vs same period last year
+194	      <em>Decay already started — refreshing now prevents further loss</em></div></div>
+195	    <div class="check-row"><div class="check-box"></div><div class="check-text">+2 pts: Content was published more than 12 months ago
+196	      <em>Time-sensitive AI marketing space means older content becomes stale fast</em></div></div>
+197	    <div class="check-row"><div class="check-box"></div><div class="check-text">+2 pts: Top 3 ranking competitors have published updated versions recently
+198	      <em>If they refreshed and you didn't, you'll lose the position</em></div></div>
+199	    <div class="check-row"><div class="check-box"></div><div class="check-text">+1 pt: High impression count, low CTR (&lt;2%)
+200	      <em>Opportunity: fix title/meta without full content rewrite</em></div></div>
+201	    <div class="check-row"><div class="check-box"></div><div class="check-text">+1 pt: Keyword has increased in search volume since publish date
+202	      <em>Rising topic = refresh with expanded coverage captures more volume</em></div></div>
+203	    <div class="check-row"><div class="check-box"></div><div class="check-text">+1 pt: Page receives internal links but few external backlinks
+204	      <em>Good foundation for ranking — content quality refresh can accelerate</em></div></div>
+205	  </div>
+206	
+207	  <h3>Step 3 — The Refresh Execution Protocol</h3>
+208	  <p>Not every page needs the same depth of refresh. Match the refresh type to the decay signal:</p>
+209	
+210	  <div class="phase-block">
+211	    <div class="phase-label">Refresh Type A — Snippet Fix (30 mins)</div>
+212	    <h4>Use when: CTR is low but position is decent (4–10)</h4>
+213	    <ul>
+214	      <li>Rewrite the title tag — test adding current year, power words ("complete," "proven," "real"), or a specific number</li>
+215	      <li>Rewrite the meta description — include a benefit + CTA ("See the 12 workflows →")</li>
+216	      <li>Check if the H1 matches search intent — sometimes H1 optimization alone moves position</li>
+217	      <li>Add a TL;DR box at the top of the article (3–5 bullet summary) — reduces pogo-sticking and can trigger featured snippet</li>
+218	      <li>Update the publish date to reflect the refresh (only if you've made real changes)</li>
+219	    </ul>
+220	  </div>
+221	
+222	  <div class="phase-block p2">
+223	    <div class="phase-label">Refresh Type B — Content Update (2–4 hours)</div>
+224	    <h4>Use when: Ranking slipped 3–5 positions or traffic declined 15–30%</h4>
+225	    <ul>
+226	      <li>Google "target keyword" and read the current top 3 results — identify what they cover that you don't</li>
+227	      <li>Add new sections addressing topics competitors cover that you missed</li>
+228	      <li>Update all statistics, tool mentions, pricing references, and examples to current year</li>
+229	      <li>Add 3–5 new internal links to recently published pages (improves crawl efficiency + topical relevance)</li>
+230	      <li>Check if there are new related keywords to weave in (use "People Also Ask" on Google for ideas)</li>
+231	      <li>Add or update images, diagrams, or screenshots — visual freshness signals quality</li>
+232	      <li>Expand the FAQ section based on current PAA questions (these also feed AEO)</li>
+233	      <li>Embed a relevant YouTube video if you have one — boosts dwell time</li>
+234	    </ul>
+235	  </div>
+236	
+237	  <div class="phase-block p3">
+238	    <div class="phase-label">Refresh Type C — Full Rewrite (4–8 hours)</div>
+239	    <h4>Use when: Traffic dropped 40%+ or page fell below position 20</h4>
+240	    <ul>
+241	      <li>Full competitive analysis: read the top 5 ranking pages, identify every angle, format, and question they answer</li>
+242	      <li>Interview an internal or external expert to add original perspective (fresh expert quotes = powerful E-E-A-T signal)</li>
+243	      <li>Rebuild the content structure entirely if needed — new H2/H3 hierarchy based on current search intent</li>
+244	      <li>Add original data, a mini-study, or original chart from your own platform data</li>
+245	      <li>Ensure content length is competitive — if top 3 average 3,200 words, you need at least 3,000</li>
+246	      <li>Consolidate with weaker related pages if appropriate (301 redirect the weaker page to the refreshed one)</li>
+247	      <li>Re-submit to Google Search Console for reindexing after publish</li>
+248	      <li>Actively promote: share on LinkedIn, email the newsletter list, post in relevant subreddits</li>
+249	    </ul>
+250	  </div>
+251	
+252	  <div class="phase-block p4">
+253	    <div class="phase-label">Refresh Type D — Consolidation (Strategic)</div>
+254	    <h4>Use when: Multiple thin or cannibalizing pages compete for the same keyword</h4>
+255	    <ul>
+256	      <li>Identify keyword cannibalization using GSC: same keyword triggering multiple pages in the same position range</li>
+257	      <li>Choose the stronger URL (better backlinks, older, more relevant domain path) as the "winner"</li>
+258	      <li>Merge content from all weaker pages into the winner page</li>
+259	      <li>301 redirect all weak URLs to the winner</li>
+260	      <li>Update all internal links pointing to the old URLs</li>
+261	      <li>Wait 30–45 days and monitor position of the consolidated page</li>
+262	    </ul>
+263	  </div>
+264	
+265	  <h3>Step 4 — Track Refresh Outcomes</h3>
+266	  <p>Log every refresh in your vault's <code>content-retrospectives.md</code>:</p>
+267	  <ul>
+268	    <li>Page URL, refresh date, refresh type used</li>
+269	    <li>Position before vs. 30 days after vs. 90 days after</li>
+270	    <li>Organic clicks before vs. after</li>
+271	    <li>What changed (this builds a repeatable knowledge base over time)</li>
+272	  </ul>
+273	
+274	  <h3>Refresh Cadence by Content Priority</h3>
+275	  <table class="cadence-table">
+276	    <tr><th>Content Type</th><th>Refresh Frequency</th><th>Trigger Check</th></tr>
+277	    <tr><td>Top 10 traffic-driving pages</td><td><span class="freq-badge freq-monthly">Every 60 days</span></td><td>GSC position movement, traffic delta</td></tr>
+278	    <tr><td>Pages ranked 4–10</td><td><span class="freq-badge freq-monthly">Every 90 days</span></td><td>Competitor ranking above you</td></tr>
+279	    <tr><td>Pillar / cluster hub pages</td><td><span class="freq-badge freq-quarterly">Every 90 days</span></td><td>New cluster sub-pages need linking</td></tr>
+280	    <tr><td>Comparison / competitor pages</td><td><span class="freq-badge freq-monthly">Every 60 days</span></td><td>Competitor changes pricing/features</td></tr>
+281	    <tr><td>Statistics / data posts</td><td><span class="freq-badge freq-quarterly">Every 6 months</span></td><td>New industry data published</td></tr>
+282	    <tr><td>Tutorial / how-to posts</td><td><span class="freq-badge freq-quarterly">Every 6 months</span></td><td>Tool UI changes, workflow updates</td></tr>
+283	    <tr><td>Programmatic pages</td><td><span class="freq-badge freq-quarterly">Quarterly batch refresh</span></td><td>Quality score drops, thin content flags</td></tr>
+284	    <tr><td>News/trend posts</td><td><span class="freq-badge freq-badge" style="background:#f3f3f3;color:#555">Do not refresh — archive</span></td><td>Once stale, deindex or repurpose</td></tr>
+285	  </table>
+286	</div>
+287	
+288	<hr class="divider">
+289	
+290	<!-- SECTION 2: DECAY SIGNALS -->
+291	<div class="section" id="decay-signals">
+292	  <div class="section-header">
+293	    <div class="section-number">02</div>
+294	    <div class="section-title-group">
+295	      <div class="section-badge">Early Warning System</div>
+296	      <h2>Content Decay Detection — Early Signals</h2>
+297	      <p>Catch ranking decline weeks before it becomes a traffic problem</p>
+298	    </div>
+299	  </div>
+300	
+301	  <h3>Weekly Decay Monitoring Routine (20 minutes)</h3>
+302	
+303	  <div class="checklist-block">
+304	    <h4>Run these checks every Monday morning</h4>
+305	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+306	      GSC Performance → Compare: Last 28 days vs previous 28 days. Sort by clicks descending. Any page down 20%+ clicks = immediate investigation.
+307	      <em>Tool: Google Search Console → Performance → Compare dates</em>
+308	    </div></div>
+309	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+310	      Check average position for your top 20 keywords week-over-week. Any keyword that dropped 3+ positions = check the SERP manually.
+311	      <em>Tool: GSC + Ahrefs Rank Tracker for daily position data</em>
+312	    </div></div>
+313	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+314	      Run a quick SERP check on your 5 most important keywords: did anything change? New featured snippet? New competitor? Google Ads taking more space?
+315	      <em>Tool: Manual Google search + SERP feature tracking in Ahrefs</em>
+316	    </div></div>
+317	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+318	      Check your brand name in Search Console impressions — any unusual drop could signal a brand health issue or a competitor running conquest ads.
+319	      <em>Tool: GSC → Performance → filter by query containing your brand name</em>
+320	    </div></div>
+321	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+322	      Check Google News / Google Trends for any breaking developments in "AI marketing" — if a major event happened, react within 48 hours with content.
+323	      <em>Tool: Google Alerts, your market-signals agent</em>
+324	    </div></div>
+325	  </div>
+326	
+327	  <h3>The 5 Decay Signals and What Each Means</h3>
+328	
+329	  <div class="phase-block">
+330	    <div class="phase-label">Signal 1 — Impression Drop, Position Stable</div>
+331	    <h4>Cause: Search volume for the keyword decreased</h4>
+332	    <p>Not your content's fault — the topic is losing interest. Check Google Trends. If confirmed, consider pivoting the page to a related keyword with rising interest or consolidating it into a more durable pillar page.</p>
+333	  </div>
+334	
+335	  <div class="phase-block p2">
+336	    <div class="phase-label">Signal 2 — Position Drop, Impressions Stable</div>
+337	    <h4>Cause: A competitor published better content or earned more links</h4>
+338	    <p>Check who overtook you on the SERP. Analyze their new content — what did they add? Run a quick Ahrefs backlink check on both pages. If they built links, prioritize outreach for your page. If their content is significantly better, execute a Type C full rewrite.</p>
+339	  </div>
+340	
+341	  <div class="phase-block p3">
+342	    <div class="phase-label">Signal 3 — CTR Drop, Position Unchanged</div>
+343	    <h4>Cause: Title/snippet no longer compelling vs. new SERP neighbors</h4>
+344	    <p>A new featured snippet appeared above you, or a competitor changed their title to something more clickable. Run a Type A Snippet Fix immediately — test 3 title variants using Google's own A/B testing in Search Console Experiments (if available) or just run a manual test for 30 days.</p>
+345	  </div>
+346	
+347	  <div class="phase-block p4">
+348	    <div class="phase-label">Signal 4 — Broad Traffic Drop Across Multiple Pages</div>
+349	    <h4>Cause: Google core algorithm update, technical issue, or manual action</h4>
+350	    <p>Check Google Search Status Dashboard for announced algorithm updates. Check Search Console for Manual Actions or Security Issues. If algorithm update: compare your site to the update's stated focus (helpful content, E-E-A-T, spam) and plan a site-wide response. Do NOT make panic changes — wait 2 weeks to see if it stabilizes.</p>
+351	  </div>
+352	
+353	  <div class="phase-block pdanger">
+354	    <div class="phase-label">Signal 5 — Sudden Complete Deindex</div>
+355	    <h4>Cause: noindex tag accidentally added, robots.txt error, or penalty</h4>
+356	    <p>Check immediately: (1) site:yourdomain.com in Google — should show many results. If showing 0, check robots.txt for accidental crawl block. (2) GSC → Coverage → check for "noindex" warnings. (3) GSC → Manual Actions. If deindexed, this is a P1 incident — fix and request reindexing within hours.</p>
+357	  </div>
+358	</div>
+359	
+360	<hr class="divider">
+361	
+362	<!-- SECTION 3: GSC WEEKLY -->
+363	<div class="section" id="gsc-weekly">
+364	  <div class="section-header">
+365	    <div class="section-number">03</div>
+366	    <div class="section-title-group">
+367	      <div class="section-badge">Google Search Console</div>
+368	      <h2>GSC Weekly Audit Routine</h2>
+369	      <p>A 45-minute weekly check that prevents 90% of SEO problems before they become emergencies</p>
+370	    </div>
+371	  </div>
+372	
+373	  <div class="highlight-box blue">
+374	    <h4>Setup First: Configure These GSC Alerts (One-Time)</h4>
+375	    <ul>
+376	      <li>GSC → Settings → Email preferences: enable all notification emails (coverage issues, manual actions, security)</li>
+377	      <li>Connect GSC to Looker Studio (formerly Google Data Studio) for automated weekly dashboards — your GSC integration file in the vault should already have this planned</li>
+378	      <li>Set up Uptime Robot or StatusCake to alert you within 1 minute of any site downtime (downtime = lost ranking signals)</li>
+379	      <li>Install Google Analytics 4 and link it to GSC for combined session + organic impression data</li>
+380	    </ul>
+381	  </div>
+382	
+383	  <h3>Monday: Performance Audit (20 minutes)</h3>
+384	
+385	  <div class="gsc-section">
+386	    <h4>GSC → Performance → Search Results</h4>
+387	    <ul>
+388	      <li><strong>Date range: Last 28 days vs previous 28 days (comparison mode)</strong></li>
+389	      <li>Check total clicks delta — any drop over 10% needs investigation this week</li>
+390	      <li>Check total impressions delta — if impressions up but clicks down, your CTR is suffering (snippet problem)</li>
+391	      <li>Sort pages by "Clicks difference" (ascending) — bottom of list = biggest decliners to investigate</li>
+392	      <li>Sort queries by "Position difference" (ascending) — keywords that slipped most in position</li>
+393	      <li>Filter by country: check if a drop is US-specific or global (helps identify if it's a Google geo-update)</li>
+394	      <li>Filter by device: check if mobile vs desktop performance diverged (Core Web Vitals issue often shows up here first)</li>
+395	    </ul>
+396	  </div>
+397	
+398	  <div class="gsc-section">
+399	    <h4>GSC → Performance → Discover (if you have cards traffic)</h4>
+400	    <ul>
+401	      <li>Check which posts are appearing in Google Discover — these need to be kept fresh and visually compelling</li>
+402	      <li>Discover traffic spikes often indicate viral potential — capitalize by promoting those posts on LinkedIn/X immediately</li>
+403	      <li>Any image in a Discover-ranking post should be high-resolution (min 1200px wide) and relevant</li>
+404	    </ul>
+405	  </div>
+406	
+407	  <h3>Tuesday: Index Coverage Audit (15 minutes)</h3>
+408	
+409	  <div class="gsc-section">
+410	    <h4>GSC → Indexing → Pages</h4>
+411	    <ul>
+412	      <li><strong>Check "Not indexed" count</strong> — any increase week-over-week is a red flag</li>
+413	      <li>Click into each "Not indexed" reason and address the most common ones:
+414	        <ul>
+415	          <li><em>"Crawled – currently not indexed":</em> Google crawled but didn't index — usually thin content, low quality, or duplicate. Improve or consolidate.</li>
+416	          <li><em>"Discovered – currently not indexed":</em> Not yet crawled. Submit URL directly in GSC URL Inspection. Add internal links pointing to this page.</li>
+417	          <li><em>"Duplicate without user-selected canonical":</em> You have a canonical issue. Add <code>&lt;link rel="canonical"&gt;</code> to the preferred version.</li>
+418	          <li><em>"Page with redirect":</em> Check if redirect chains exist — chains longer than 2 hops lose link equity and slow crawling</li>
+419	          <li><em>"Blocked by robots.txt":</em> Immediately check if this is intentional. Any production page blocked accidentally is an emergency.</li>
+420	          <li><em>"noindex tag":</em> Check if the tag was added intentionally. Development pages accidentally pushed to production get noindex — this happens more than you think.</li>
+421	        </ul>
+422	      </li>
+423	      <li>Check "Valid" pages count — this number should grow week-over-week as you publish and refresh content</li>
+424	      <li>Submit your XML sitemap weekly if you've published new content (GSC → Sitemaps → Resubmit)</li>
+425	    </ul>
+426	  </div>
+427	
+428	  <h3>Wednesday: Core Web Vitals Check (10 minutes)</h3>
+429	
+430	  <div class="gsc-section">
+431	    <h4>GSC → Experience → Core Web Vitals</h4>
+432	    <ul>
+433	      <li>Check "Poor" URLs count for both mobile and desktop — any increase indicates a performance regression</li>
+434	      <li>Click into "Poor" URLs to see which specific metric is failing (LCP, INP, or CLS)</li>
+435	      <li><strong>LCP "Poor" (&gt;4s):</strong> Usually hero image not preloaded, large unoptimized image, or slow server response. Fix: add <code>fetchpriority="high"</code> to hero image, compress images, use Vercel's image optimization.</li>
+436	      <li><strong>INP "Poor" (&gt;500ms):</strong> Heavy JavaScript blocking interaction. Fix: defer non-critical scripts, code-split Next.js pages, remove unused third-party scripts.</li>
+437	      <li><strong>CLS "Poor" (&gt;0.25):</strong> Layout shift from ads, embeds, or images without dimensions. Fix: set explicit width/height on all images, reserve space for embeds.</li>
+438	      <li>Use PageSpeed Insights API (already integrated in your vault) for page-by-page CWV data</li>
+439	    </ul>
+440	  </div>
+441	
+442	  <h3>Thursday: Manual Actions & Security (5 minutes)</h3>
+443	
+444	  <div class="gsc-section">
+445	    <h4>GSC → Security & Manual Actions</h4>
+446	    <ul>
+447	      <li><strong>Manual Actions:</strong> Check weekly — if anything ever appears here, it's a priority 1 emergency. Google has penalized your site for something specific. Read the action carefully, fix the issue, and submit a reconsideration request.</li>
+448	      <li><strong>Security Issues:</strong> Hacked content, social engineering, or malware will appear here. Weekly check ensures you catch any compromise within 7 days maximum.</li>
+449	      <li>Also check your uptime monitor for any 5xx error spikes this week — server errors prevent crawling and cause ranking drops</li>
+450	    </ul>
+451	  </div>
+452	
+453	  <h3>Friday: Link Report & New Opportunities (15 minutes)</h3>
+454	
+455	  <div class="gsc-section">
+456	    <h4>GSC → Links</h4>
+457	    <ul>
+458	      <li><strong>Top linked pages:</strong> Compare month-over-month — which pages are earning new links? Produce more content like those.</li>
+459	      <li><strong>Top linking sites:</strong> Any new DR 50+ domains linking? Reach out to that site's editor to build a relationship for future content collaboration.</li>
+460	      <li><strong>Internal links:</strong> Check if any important pages have very few internal links pointing to them — add more internal links from high-traffic pages</li>
+461	      <li>Export the external links report monthly and import into Ahrefs to cross-check for any toxic links that need disavowing</li>
+462	    </ul>
+463	  </div>
+464	</div>
+465	
+466	<hr class="divider">
+467	
+468	<!-- SECTION 4: GSC DEEP -->
+469	<div class="section" id="gsc-deep">
+470	  <div class="section-header">
+471	    <div class="section-number">04</div>
+472	    <div class="section-title-group">
+473	      <div class="section-badge">Monthly Deep Dive</div>
+474	      <h2>GSC Monthly Deep-Dive Checklist</h2>
+475	      <p>The comprehensive monthly investigation that most SEOs never run — but separates growing sites from plateaued ones</p>
+476	    </div>
+477	  </div>
+478	
+479	  <h3>Monthly GSC Investigation (90 minutes, first Monday of each month)</h3>
+480	
+481	  <div class="checklist-block">
+482	    <h4>🔬 Keyword Opportunity Mining</h4>
+483	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+484	      Filter queries by position 11–30, impressions over 500. These are your "page 2" keywords that are almost breaking through. For each: check if the page is targeting that keyword, if not, add it. If yes, refresh the page to push it over the fold.
+485	      <em>GSC → Performance → Queries → Filter: Position between 11–30</em>
+486	    </div></div>
+487	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+488	      Find "query-page mismatch": queries where GSC shows your page ranking for a keyword, but that keyword isn't in your page's title or H1. These are ranking accidentally — optimize the page deliberately for them to lock in the position.
+489	      <em>Export query data, cross-reference with on-page content</em>
+490	    </div></div>
+491	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+492	      Find new keyword opportunities: queries where you got impressions this month for the first time. These are topics Google thinks you're relevant for — create dedicated content for the best ones.
+493	      <em>Compare last 30 days vs 31–60 days ago, look for new queries</em>
+494	    </div></div>
+495	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+496	      Identify long-tail clusters: export all queries, group by intent in a spreadsheet. Any cluster where you have 5+ queries but no dedicated page = create a new pillar or cluster post.
+497	      <em>Export → Google Sheets → sort/group by topic</em>
+498	    </div></div>
+499	  </div>
+500	
+501	  <div class="checklist-block">
+502	    <h4>📱 Mobile vs Desktop Deep Analysis</h4>
+503	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+504	      Compare mobile vs desktop position for all top 50 keywords. Any keyword where mobile position is 5+ spots worse than desktop = mobile-specific issue (font size, tap target size, content too wide for viewport).
+505	    </div></div>
+506	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+507	      Check mobile usability report: GSC → Experience → Mobile Usability. Fix all "text too small to read" and "clickable elements too close together" issues — these are now ranking factors.
+508	    </div></div>
+509	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+510	      Compare mobile CTR vs desktop CTR for same queries. If mobile CTR is significantly lower, your meta description may be getting cut off on mobile (keep under 120 characters for mobile-safe display).
+511	    </div></div>
+512	  </div>
+513	
+514	  <div class="checklist-block">
+515	    <h4>🗺️ Crawl Budget Analysis</h4>
+516	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+517	      GSC → Settings → Crawl Stats: Check "Total crawl requests" and "Average response time." If Googlebot is crawling fewer pages month-over-month, you have a crawl budget problem.
+518	      <em>Target: Googlebot response time under 300ms, daily crawl rate increasing</em>
+519	    </div></div>
+520	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+521	      Check which file types are consuming crawl budget (GSC Crawl Stats → By file type). JavaScript heavy? Ensure your Next.js SSR is working correctly so Googlebot doesn't have to render everything client-side.
+522	    </div></div>
+523	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+524	      Check for crawl anomalies: huge spike in crawl requests on a specific day = Googlebot found a lot of new content. Huge drop = you may have accidentally blocked crawling.
+525	    </div></div>
+526	  </div>
+527	
+528	  <div class="checklist-block">
+529	    <h4>🌍 Geographic Performance Analysis</h4>
+530	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+531	      Filter GSC by country: check performance in US, UK, Australia, Canada separately. If US traffic is growing but UK is declining, there may be a UK-specific ranking issue (hreflang, content relevance, competitor).
+532	    </div></div>
+533	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+534	      Identify any countries where you're getting unexpected impressions — potential markets you weren't targeting that might be worth localizing content for.
+535	    </div></div>
+536	  </div>
+537	
+538	  <div class="checklist-block">
+539	    <h4>🔗 Structured Data & Rich Results</h4>
+540	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+541	      GSC → Enhancements → check status of all structured data types you've implemented (FAQPage, HowTo, Article, SoftwareApplication). Fix any errors immediately — errors suppress rich results.
+542	    </div></div>
+543	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+544	      GSC → Search Appearance → Rich results: Which pages are getting rich results (FAQ dropdowns, star ratings, sitelinks)? Track this month-over-month. Add schema to more pages using the same format as pages that are already getting rich results.
+545	    </div></div>
+546	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+547	      Check breadcrumb structured data — breadcrumbs appear in SERPs and improve CTR by 5–15%. Every page should have BreadcrumbList schema.
+548	    </div></div>
+549	  </div>
+550	</div>
+551	
+552	<hr class="divider">
+553	
+554	<!-- SECTION 5: BING SEARCH CONSOLE -->
+555	<div class="section" id="bsc">
+556	  <div class="section-header">
+557	    <div class="section-number">05</div>
+558	    <div class="section-title-group">
+559	      <div class="section-badge">Bing Webmaster Tools</div>
+560	      <h2>Bing Search Console Routine</h2>
+561	      <p>Most SEOs ignore Bing — this is your competitive advantage in B2B where Bing has 25–35% market share</p>
+562	    </div>
+563	  </div>
+564	
+565	  <div class="highlight-box orange">
+566	    <h4>Bing's B2B Significance — The Numbers Your Competitors Don't Know</h4>
+567	    <p>Bing powers all Microsoft Edge searches, all Cortana queries, all Teams searches, Yahoo search, and — critically — the commercial search results shown inside Microsoft 365 apps used by millions of enterprise employees. B2B SaaS typically sees 25–35% of enterprise search traffic come through Bing/Microsoft. Ignoring it is leaving real pipeline on the table.</p>
+568	  </div>
+569	
+570	  <h3>Bing Webmaster Tools Weekly Routine (20 minutes)</h3>
+571	
+572	  <div class="bsc-section">
+573	    <h4>🔵 Bing WMT → Reports → Search Performance</h4>
+574	    <ul>
+575	      <li>Check clicks, impressions, and average position week-over-week — any drop over 15% triggers investigation</li>
+576	      <li>Compare top performing pages on Bing vs Google — often different. Bing tends to reward older, more authoritative content. Check if your newer pages are underperforming on Bing vs Google and optimize specifically for Bing's preferences (clearer on-page keyword signals, stronger exact-match in title).</li>
+577	      <li>Filter by query: Find queries you're ranking for on Bing but not Google (or vice versa). These are optimization opportunities unique to each engine.</li>
+578	    </ul>
+579	  </div>
+580	
+581	  <div class="bsc-section">
+582	    <h4>🔵 Bing WMT → Site Explorer → Crawl Information</h4>
+583	    <ul>
+584	      <li>Check "Crawl Errors" weekly — 404s, blocked resources, and server errors on Bing should match what you see on GSC (if they don't, there's an unusual crawl-blocking issue)</li>
+585	      <li>Submit new pages via Bing URL Submission API (your bing-webmaster.md integration should automate this) — Bing indexes submitted URLs 48–72 hours faster than its natural crawl cycle</li>
+586	      <li>Check "Crawl Control" settings — ensure you haven't inadvertently set a crawl rate limit that's slowing Bingbot down</li>
+587	    </ul>
+588	  </div>
+589	
+590	  <div class="bsc-section">
+591	    <h4>🔵 Bing WMT → Diagnostics & Tools</h4>
+592	    <ul>
+593	      <li><strong>SEO Analyzer:</strong> Run Bing's own SEO analyzer on your top 10 pages monthly. Bing's recommendations are different from Google's — fix Bing-specific issues that Google's tools won't show you.</li>
+594	      <li><strong>Keyword Research Tool:</strong> Bing has its own keyword research tool with different data from Google Keyword Planner — cross-reference for keyword opportunities unique to the Bing audience</li>
+595	      <li><strong>Backlinks Tool:</strong> Check which sites Bing sees linking to you — sometimes Bing discovers links that Ahrefs hasn't yet indexed</li>
+596	      <li><strong>Site Scan:</strong> Run monthly — Bing's site scanner checks for structured data errors, page quality issues, and technical problems from Bing's specific perspective</li>
+597	    </ul>
+598	  </div>
+599	
+600	  <div class="bsc-section">
+601	    <h4>🔵 Bing-Specific Optimization Tactics</h4>
+602	    <ul>
+603	      <li><strong>IndexNow protocol:</strong> Bing supports IndexNow for instant index notification — every time you publish or update a page, ping Bing via IndexNow. Your webhook infrastructure can automate this completely. Reduces Bing index lag from days to hours.</li>
+604	      <li><strong>Bing Places:</strong> Even as a digital company, create a Bing Places listing. Bing gives higher trust scores to businesses with verified local presence.</li>
+605	      <li><strong>Social signals matter more on Bing:</strong> Bing explicitly uses LinkedIn activity, Facebook shares, and Twitter signals in its ranking algorithm. Every piece of content you publish should be actively shared on all social platforms within 24 hours of publication — this matters to Bing more than Google.</li>
+606	      <li><strong>Bing Chat / Copilot optimization:</strong> Bing's AI answers prioritize pages with clear author attribution, date of publication, and structured factual content. Add explicit author bylines with author schema to every blog post.</li>
+607	      <li><strong>Bing penalizes excessive ads above the fold more harshly than Google.</strong> Keep ads and banners below the first screen of content on all important pages.</li>
+608	    </ul>
+609	  </div>
+610	
+611	  <h3>Bing vs Google Performance Tracking</h3>
+612	  <p>Maintain a monthly side-by-side comparison in your vault's <code>bing-weekly-log.md</code>:</p>
+613	  <table class="cadence-table">
+614	    <tr><th>Metric</th><th>Google Target</th><th>Bing Target</th><th>Tracking Frequency</th></tr>
+615	    <tr><td>Organic clicks</td><td>Primary metric</td><td>25–35% of Google volume</td><td>Weekly</td></tr>
+616	    <tr><td>Index coverage</td><td>All published pages</td><td>Same as Google within 7 days</td><td>Monthly</td></tr>
+617	    <tr><td>Crawl errors</td><td>0 errors</td><td>0 errors</td><td>Weekly</td></tr>
+618	    <tr><td>Position for top keywords</td><td>Tracked in Ahrefs</td><td>Tracked in Bing WMT</td><td>Weekly</td></tr>
+619	    <tr><td>Rich result appearances</td><td>GSC rich results report</td><td>Bing rich results via Site Scan</td><td>Monthly</td></tr>
+620	  </table>
+621	</div>
+622	
+623	<hr class="divider">
+624	
+625	<!-- SECTION 6: TECHNICAL HEALTH -->
+626	<div class="section" id="technical-health">
+627	  <div class="section-header">
+628	    <div class="section-number">06</div>
+629	    <div class="section-title-group">
+630	      <div class="section-badge">Technical SEO</div>
+631	      <h2>Technical Health — Ongoing Processes</h2>
+632	      <p>The plumbing checks that keep your site structurally sound as it scales</p>
+633	    </div>
+634	  </div>
+635	
+636	  <h3>Weekly Technical Checks (15 minutes)</h3>
+637	
+638	  <div class="checklist-block">
+639	    <h4>Weekly Technical Pulse</h4>
+640	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+641	      <strong>Uptime check:</strong> Review uptime monitor logs for any downtime in the past 7 days. Even 15 minutes of downtime during peak hours can cause Googlebot to note "server errors" and temporarily reduce crawl rate.
+642	      <em>Tool: UptimeRobot (already in your vault)</em>
+643	    </div></div>
+644	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+645	      <strong>404 crawl errors:</strong> Check GSC for any new 404 errors. New 404s on previously indexed pages = a page was deleted or URL changed without a redirect. Fix with 301 redirect immediately.
+646	    </div></div>
+647	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+648	      <strong>robots.txt verification:</strong> After any Next.js deployment, verify your robots.txt is still correct at agenticmarketingpro.com/robots.txt. Deployment bugs that accidentally block Googlebot are more common than you'd think and can wipe rankings overnight.
+649	    </div></div>
+650	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+651	      <strong>Sitemap freshness:</strong> Verify your XML sitemap includes all new pages published in the past 7 days. Automated sitemap generation via Next.js should handle this — but verify manually monthly.
+652	    </div></div>
+653	    <div class="check-row"><div class="check-box"></div><div class="check-text">
+654	      <strong>SSL certificate:</strong> Check certificate expiry monthly. SSL expiry causes a security warning in browsers and immediate ranking drop. Set calendar reminder 30 days before expiry. Vercel usually auto-renews but verify.
+655	    </div></div>
+656	  </div>
+657	
+658	  <h3>Monthly Technical Audit (Screaming Frog / Sitebulb)</h3>
+659	  <p>Run a full site crawl monthly using Screaming Frog or Sitebulb (both in your vault integrations). Check:</p>
+660	
+661	  <div class="twoCol">
+662	    <div class="card">
+663	      <h4>Page-Level Issues</h4>
+664	      <ul>
+665	        <li>Pages with duplicate title tags (flag all, fix top-priority pages immediately)</li>
+666	        <li>Pages with missing or duplicate meta descriptions</li>
+667	        <li>Pages with H1 missing or multiple H1s</li>
+668	        <li>Pages over 3MB in total page size (too heavy, slow to load)</li>
+669	        <li>Pages with broken internal links (404 within internal navigation)</li>
+670	        <li>Pages with thin content under 300 words (review for consolidation)</li>
+671	        <li>Images missing alt text (affects image search and accessibility)</li>
+672	        <li>Images over 200KB that aren't using next/image optimization</li>
+673	      </ul>
+674	    </div>
+675	    <div class="card">
+676	      <h4>Site Architecture Issues</h4>
+677	      <ul>
+678	        <li>Redirect chains longer than 2 hops (A→B→C should be A→C)</li>
+679	        <li>Orphan pages: indexed pages with zero internal links pointing to them</li>
+680	        <li>Pages more than 3 clicks from the homepage (Google rarely crawls deep)</li>
+681	        <li>Inconsistent canonical URLs (self-canonical on every page is best practice)</li>
+682	        <li>hreflang errors (if you ever add localized content)</li>
+683	        <li>Pagination issues: ensure paginated pages use rel="next"/"prev" correctly</li>
+684	        <li>JavaScript rendering issues: pages that look correct in browser but are empty in Screaming Frog's JS-disabled crawl</li>
+685	      </ul>
+686	    </div>
+687	  </div>
+688	
+689	  <h3>Quarterly Technical Deep Audit</h3>
+690	  <ul>
+691	    <li><strong>Log file analysis:</strong> Download your Vercel access logs and analyze Googlebot behavior — what's it crawling most? What's it skipping? Are important pages being crawled frequently enough?</li>
+692	    <li><strong>Core Web Vitals regression testing:</strong> After every major Next.js version update or infrastructure change, run full CWV tests across all page templates (homepage, blog post, landing page, agent page)</li>
+693	    <li><strong>Structured data audit:</strong> Use Google's Rich Results Test on all schema-markup pages to ensure no schema has broken due to page structure changes</li>
+694	    <li><strong>Link velocity audit:</strong> Compare your DR growth curve in Ahrefs month-over-month. Flat DR despite active link building = you might have a high rate of link loss. Check "Lost backlinks" in Ahrefs for any major domains that dropped you.</li>
+695	    <li><strong>Competitor gap refresh:</strong> Re-run Ahrefs Content Gap and Link Intersect quarterly — new competitors emerge, existing ones publish new content. Your strategy should adapt to the current landscape, not the landscape from 6 months ago.</li>
+696	    <li><strong>Site speed profiling in the field:</strong> CrUX (Chrome User Experience Report) data in PageSpeed Insights shows real-user performance, not just lab data. Check your field CWV scores quarterly — they're what Google actually uses for ranking.</li>
+697	  </ul>
+698	</div>
+699	
+700	<hr class="divider">
+701	
+702	<!-- SECTION 7: LESSER-KNOWN -->
+703	<div class="section" id="lesser-known">
+704	  <div class="section-header">
+705	    <div class="section-number">07</div>
+706	    <div class="section-title-group">
+707	      <div class="section-badge">Advanced Tactics</div>
+708	      <h2>Lesser-Known SEO Practices Most Competitors Skip</h2>
+709	      <p>The 20% of SEO work that most practitioners never learn — and where disproportionate gains hide</p>
+710	    </div>
+711	  </div>
+712	
+713	  <h3>Entity & Knowledge Graph Optimization</h3>
+714	  <div class="phase-block">
+715	    <div class="phase-label">Entity SEO — Often Ignored, Extremely Powerful</div>
+716	    <h4>Help Google understand exactly what your brand is</h4>
+717	    <ul>
+718	      <li><strong>Create a Wikidata entity:</strong> Once you have sufficient notability (press mentions, directory listings), create a Wikidata entry for AgenticMarketingPro. Google's Knowledge Graph feeds directly from Wikidata. This generates your Knowledge Panel in search results and dramatically improves brand query results.</li>
+719	      <li><strong>sameAs markup on your homepage Organization schema:</strong> Include links to your Wikidata entity, LinkedIn company page, Twitter/X profile, Crunchbase listing, and all directories. This tells Google all these profiles are the same entity as your website.</li>
+720	      <li><strong>Google Business Profile:</strong> Even as a digital business, create a Google Business Profile. It generates a Knowledge Panel and appears in brand searches. List as "Marketing Software" category.</li>
+721	      <li><strong>Author entities:</strong> Every blog post author should have a dedicated author page on your site with full bio, photo, and links to their social profiles. Mark up with Person schema. Google's "Author Authority" is a real (though unofficial) signal — establishing credible author entities boosts E-E-A-T scoring.</li>
+722	      <li><strong>About page entity signals:</strong> Your /about page should clearly state: what you do, who you serve, where you're based, when you were founded, your team members by name and role, and your contact information. Google uses this page to build its understanding of your entity.</li>
+723	    </ul>
+724	  </div>
+725	
+726	  <h3>SERP Feature Targeting (Often Overlooked Opportunities)</h3>
+727	
+728	  <div class="card-grid">
+729	    <div class="card">
+730	      <h4>Featured Snippets (Position 0)</h4>
+731	      <p>Target questions where you rank position 2–5 and a featured snippet exists. Structure your answer in the first 40–50 words after the question heading. Use a paragraph snippet for definitions, a list snippet for processes, a table snippet for comparisons.</p>
+732	    </div>
+733	    <div class="card">
+734	      <h4>People Also Ask (PAA)</h4>
+735	      <p>Track PAA questions for your top keywords monthly. Each PAA question is a free content brief. Add PAA-matching H2/H3 questions to your existing content. Appearing in PAA generates branded impressions even below position 10.</p>
+736	    </div>
+737	    <div class="card">
+738	      <h4>Image Pack Rankings</h4>
+739	      <p>Create original branded diagrams and infographics for your key topics. Name image files descriptively (ai-marketing-agent-workflow.png). Add detailed alt text. Rank in image packs = additional SERP real estate for same query.</p>
+740	    </div>
+741	    <div class="card">
+742	      <h4>Sitelinks Optimization</h4>
+743	      <p>Google shows sitelinks for brand searches. They're algorithmically chosen but influenced by your site structure. Ensure your main navigation pages (Pricing, Features, Blog, Docs) are clearly linked from your homepage and have distinct, descriptive page titles.</p>
+744	    </div>
+745	    <div class="card">
+746	      <h4>Video Carousels</h4>
+747	      <p>For tutorial queries, Google shows a video carousel above the 10 blue links. If you have YouTube videos, add VideoObject schema to the accompanying blog post. You can rank in both the organic results AND the video carousel for the same query.</p>
+748	    </div>
+749	    <div class="card">
+750	      <h4>AI Overviews (Google SGE)</h4>
+751	      <p>Google's AI Overviews cite specific sources. Optimize for them with the same content strategies as Perplexity: clear definitional opening paragraphs, structured data, factual statements with cited sources, and regularly updated content.</p>
+752	    </div>
+753	  </div>
+754	
+755	  <h3>Internal Linking — The Most Underused Ranking Lever</h3>
+756	  <div class="highlight-box green">
+757	    <h4>Internal linking is free PageRank sculpting — most sites use it randomly</h4>
+758	    <ul>
+759	      <li><strong>Link from high-traffic pages to pages you want to rank:</strong> Your most-visited pages pass the most internal PageRank. Identify them in GA4 and ensure they link strategically to pages you're trying to rank.</li>
+760	      <li><strong>Anchor text diversity:</strong> Use exact-match anchor text for 20–30% of internal links to a page. Use partial-match and semantic variations for the rest. Never use "click here" as internal anchor text — wasted opportunity.</li>
+761	      <li><strong>Fix orphan pages immediately:</strong> Every new piece of content should receive at least 3 internal links on day of publication. Use your content calendar to plan which existing pages will link to each new piece before you publish.</li>
+762	      <li><strong>Contextual links beat navigation links:</strong> An in-text link within relevant content paragraph passes significantly more SEO value than the same link in a sidebar or footer navigation.</li>
+763	      <li><strong>Link to your commercial pages from informational content:</strong> Your pillar blog posts should always include a CTA internal link to your pricing or demo page. This passes authority from high-ranking informational pages to your conversion pages.</li>
+764	    </ul>
+765	  </div>
+766	
+767	  <h3>E-E-A-T Signals (Experience, Expertise, Authoritativeness, Trustworthiness)</h3>
+768	  <p>Google's quality raters use E-E-A-T guidelines to evaluate site quality. For an AI marketing platform in the B2B SaaS space, these signals matter especially:</p>
+769	  <ul>
+770	    <li><strong>Experience signals:</strong> Include real screenshots of your platform in use. Show actual metrics from your clients. Reference your own experience running the system ("after testing 200 blog posts generated by our AI agents, we found…")</li>
+771	    <li><strong>Expertise signals:</strong> Every author page should list credentials, years of experience, and areas of expertise. Reference academic or industry qualifications where relevant. Guest author contributions from recognized industry names significantly boost E-E-A-T.</li>
+772	    <li><strong>Authoritativeness signals:</strong> Get mentioned by name in authoritative publications. Build your founder's personal brand as a recognized voice on AI marketing. Win awards (G2 Leader, Capterra Top Rated, etc.) and display badges prominently.</li>
+773	    <li><strong>Trust signals:</strong> HTTPS everywhere (you have this via Vercel). Clear privacy policy and terms of service. Customer reviews prominently displayed. Contact information visible on every page. Refund/cancellation policy clearly stated on pricing page.</li>
+774	  </ul>
+775	
+776	  <h3>Log File Analysis for Crawl Intelligence</h3>
+777	  <p>Most SEOs never look at their server logs. This is a major missed opportunity:</p>
+778	  <ul>
+779	    <li>Download your Vercel server logs monthly and import into Screaming Frog Log File Analyser or a custom script</li>
+780	    <li>Identify which pages Googlebot visits most frequently — these are your "crawl favorites" and tend to rank well</li>
+781	    <li>Identify pages Googlebot has never visited — these need either more internal links pointing to them or should be excluded via robots.txt if they have no ranking value</li>
+782	    <li>Check if Googlebot is spending time on URLs you don't want indexed (checkout flows, parameter URLs, duplicate content paths) — these waste crawl budget</li>
+783	    <li>Track crawl frequency over time — it should increase as your domain authority grows and you publish more content</li>
+784	  </ul>
+785	
+786	  <h3>Content Syndication & Distribution (Underutilized)</h3>
+787	  <ul>
+788	    <li><strong>Medium:</strong> Republish your best blog posts on Medium with a canonical tag pointing back to your site. Medium has DR 95 and indexes immediately — gets your content in front of a new audience with no SEO risk</li>
+789	    <li><strong>LinkedIn Articles:</strong> Republish blog posts as LinkedIn Articles (with canonical if possible). Not SEO-juice, but they rank in Google for author name queries and reach your LinkedIn audience</li>
+790	    <li><strong>Dev.to / Hashnode:</strong> For any technical content about your API or agent infrastructure — huge developer audience, strong SEO authority on both platforms</li>
+791	    <li><strong>Substack:</strong> Your newsletter content can be published on Substack simultaneously — another DR 90+ domain that gets indexed and can drive referral traffic</li>
+792	    <li><strong>SlideShare / Speakerdeck:</strong> Turn your carousel posts and reports into slide decks. SlideShare (LinkedIn-owned) has DR 91 and slides rank in Google image search</li>
+793	  </ul>
+794	
+795	  <h3>Link Reclamation — Free Links You Already Earned</h3>
+796	  <ul>
+797	    <li><strong>Brand mention monitoring:</strong> Set up Brandwatch or Brandmentions (both in your vault) to track all mentions of "AgenticMarketingPro" and "agentic marketing pro" across the web. Any mention without a link = reach out to add one. These are the easiest link conversions possible — the author already likes you.</li>
+798	    <li><strong>Unlinked image usage:</strong> Use Google Reverse Image Search on your infographics and charts monthly. Anyone using your images without attribution = ask for a credit link back to your site.</li>
+799	    <li><strong>Competitor link stealing:</strong> In Ahrefs, find pages that link to 2+ of your competitors but not you. These sites clearly cover your topic area and link to competitors — pitch them a reason to add you.</li>
+800	    <li><strong>Expired competitor content:</strong> Monitor competitor pages that were linked to heavily but have since gone 404. Create better versions and reach out to the linking sites.</li>
+801	  </ul>
+802	
+803	  <h3>Topical Authority Mapping (Most Practitioners Get This Wrong)</h3>
+804	  <div class="highlight-box">
+805	    <h4>Topical authority requires covering a topic exhaustively, not just broadly</h4>
+806	    <p>Google's topical authority model rewards sites that cover a subject comprehensively. For "AI marketing," this means having content that answers every question a user might have about the topic — from "what is AI marketing" to "how to set up a specific API call in your AI marketing agent." Use your existing topic-clusters.md in the vault to map coverage gaps. For each major topic, ask: have we published content for every stage of user understanding from beginner to expert? Gaps in your coverage map are content opportunities.</p>
+807	  </div>
+808	
+809	  <h3>Seasonal & Event-Based SEO Calendar</h3>
+810	  <p>Many SEO practitioners ignore the annual calendar. These recurring events generate predictable search spikes every year:</p>
+811	  <ul>
+812	    <li><strong>Q1 (Jan–Mar):</strong> "Marketing strategy for [year]," "marketing budget template," "New Year marketing planning" — publish by December, optimize in January</li>
+813	    <li><strong>Google I/O (May):</strong> Any AI announcements become major traffic opportunities — have a content framework ready to publish same-day analysis</li>
+814	    <li><strong>MarTech Conference / MozCon (May–June):</strong> "Marketing technology trends," "MarTech stack" searches spike. Publish summaries and takes quickly.</li>
+815	    <li><strong>Q3 Budget Season (Jul–Aug):</strong> CMOs are planning Q4 and next year budgets — "marketing AI ROI," "marketing budget allocation," "AI marketing cost" spike</li>
+816	    <li><strong>Black Friday / Cyber Monday (Nov):</strong> "Best marketing tools deals," "marketing software Black Friday" — prepare your own deal landing page</li>
+817	    <li><strong>Year-End Reviews (Dec):</strong> "Best marketing tools [year]," "marketing year in review," "marketing predictions [next year]" — publish mid-November to capture early searchers</li>
+818	  </ul>
+819	
+820	  <h3>A/B Testing Your SEO Elements</h3>
+821	  <ul>
+822	    <li><strong>Title tag A/B testing:</strong> Use Google Search Console Experiments (when available) or simply change title tags and monitor CTR change over 30 days. Test: adding current year, changing verb ("Discover" vs "Learn" vs "Master"), adding numbers ("7 Proven Methods" vs "Complete Guide")</li>
+823	    <li><strong>Meta description testing:</strong> Test CTAs in meta descriptions: "→ See the full guide," "Start free today," "Learn how →" — CTR differences of 0.5% matter significantly at scale</li>
+824	    <li><strong>Content format testing:</strong> Does your audience prefer listicles or long-form narratives? Track time-on-page and scroll depth in GA4 by content format to determine what to publish more of</li>
+825	    <li><strong>Featured snippet capture testing:</strong> On pages ranking 2–5 with a featured snippet showing, test restructuring your answer to match the snippet format (paragraph/list/table) — track if you capture the snippet within 30 days</li>
+826	  </ul>
+827	</div>
+828	
+829	<hr class="divider">
+830	
+831	<!-- SECTION 8: MASTER CADENCE -->
+832	<div class="section" id="cadence">
+833	  <div class="section-header">
+834	    <div class="section-number">08</div>
+835	    <div class="section-title-group">
+836	      <div class="section-badge">Operations</div>
+837	      <h2>Master SEO Operations Cadence Calendar</h2>
+838	      <p>Every recurring task, assigned a frequency and owner — the complete operations rhythm</p>
+839	    </div>
+840	  </div>
+841	
+842	  <h3>Daily (15–20 minutes)</h3>
+843	  <table class="cadence-table">
+844	    <tr><th>Task</th><th>Tool</th><th>What to Look For</th></tr>
+845	    <tr><td>Monitor for breaking AI marketing news (newsjack opportunity)</td><td>Google Alerts, market-signals agent</td><td>Publish reactive content within 4 hours</td></tr>
+846	    <tr><td>Check uptime monitor for any overnight downtime</td><td>UptimeRobot</td><td>Any downtime = investigate server logs immediately</td></tr>
+847	    <tr><td>Brand mention sweep</td><td>Brandmentions / Brandwatch</td><td>Unlinked mentions → outreach same day</td></tr>
+848	    <tr><td>Respond to HARO/Connectively queries</td><td>Email + HARO/Connectively dashboard</td><td>Reply within 30 mins of query — first response wins</td></tr>
+849	    <tr><td>LinkedIn engagement (reply to comments, engage with ICP posts)</td><td>LinkedIn</td><td>Build relationship capital for outreach later</td></tr>
+850	  </table>
+851	
+852	  <h3>Weekly (Monday — 60 minutes)</h3>
+853	  <table class="cadence-table">
+854	    <tr><th>Task</th><th>Tool</th><th>Output</th></tr>
+855	    <tr><td>GSC Performance check: clicks/impressions delta</td><td>Google Search Console</td><td>Flag declining pages for refresh queue</td></tr>
+856	    <tr><td>GSC Index Coverage: check not-indexed count</td><td>Google Search Console</td><td>Fix any new indexing errors</td></tr>
+857	    <tr><td>Bing WMT Performance check</td><td>Bing Webmaster Tools</td><td>Log in bing-weekly-log.md</td></tr>
+858	    <tr><td>Top 20 keyword position check</td><td>Ahrefs Rank Tracker</td><td>Any position 3+ drop = prioritize refresh</td></tr>
+859	    <tr><td>Core Web Vitals spot check</td><td>GSC → Experience</td><td>Any new "poor" URLs → fix this week</td></tr>
+860	    <tr><td>Check backlinks gained/lost in past 7 days</td><td>Ahrefs → Backlinks</td><td>Lost links from DR 50+ = reclaim outreach</td></tr>
+861	    <tr><td>GSC: check for manual actions / security issues</td><td>Google Search Console</td><td>Any red flag = immediate action</td></tr>
+862	  </table>
+863	
+864	  <h3>Monthly (First Monday of Each Month — 3 hours)</h3>
+865	  <table class="cadence-table">
+866	    <tr><th>Task</th><th>Tool</th><th>Output</th></tr>
+867	    <tr><td>Full GSC deep audit (all checks from Section 4)</td><td>GSC + GA4</td><td>Content refresh priority list for the month</td></tr>
+868	    <tr><td>Run Screaming Frog full site crawl</td><td>Screaming Frog</td><td>Fix all P1 issues, queue P2 issues</td></tr>
+869	    <tr><td>Content refresh queue: execute top 3 refreshes</td><td>GSC data + content vault</td><td>3 refreshed pages resubmitted to GSC</td></tr>
+870	    <tr><td>Competitor content gap analysis update</td><td>Ahrefs Content Gap</td><td>New content briefs for keywords competitors rank for</td></tr>
+871	    <tr><td>Backlink profile health check</td><td>Ahrefs → Backlink Audit</td><td>Disavow any new toxic links found</td></tr>
+872	    <tr><td>AI citation check: test 20 queries across ChatGPT/Perplexity/Gemini</td><td>Manual + Profound/Otterly</td><td>Track citation rate month-over-month</td></tr>
+873	    <tr><td>Bing SEO Analyzer run on top 10 pages</td><td>Bing Webmaster Tools</td><td>Fix Bing-specific issues</td></tr>
+874	    <tr><td>Internal linking audit: check for orphan pages</td><td>Screaming Frog</td><td>Add internal links to all orphan pages</td></tr>
+875	    <tr><td>Brand mention audit: unlinked mentions to convert</td><td>Brandwatch / Ahrefs Alerts</td><td>List of sites to contact for link additions</td></tr>
+876	    <tr><td>Page speed / CWV regression check after deployments</td><td>PageSpeed Insights + GSC</td><td>No regression from previous month's scores</td></tr>
+877	    <tr><td>Update your content calendar for next 30 days</td><td>vault/04-Content-Production/content-calendar.md</td><td>Confirmed calendar with refresh + new content mix</td></tr>
+878	  </table>
+879	
+880	  <h3>Quarterly (Every 3 Months — Half Day)</h3>
+881	  <table class="cadence-table">
+882	    <tr><th>Task</th><th>Tool</th><th>Output</th></tr>
+883	    <tr><td>Full technical SEO deep audit</td><td>Screaming Frog + log file analysis</td><td>Technical fix priority list</td></tr>
+884	    <tr><td>E-E-A-T audit: review trust, author, and entity signals across site</td><td>Manual review</td><td>E-E-A-T improvement list</td></tr>
+885	    <tr><td>Topic authority gap analysis</td><td>Manual content gap + Ahrefs</td><td>New topic clusters or sub-clusters to build</td></tr>
+886	    <tr><td>Structured data / schema audit</td><td>Rich Results Test + Screaming Frog</td><td>Fix broken schema, add schema to unmarkup'd pages</td></tr>
+887	    <tr><td>Competitor strategy refresh</td><td>Ahrefs + manual SERP review</td><td>Updated comparison pages, new keyword targets</td></tr>
+888	    <tr><td>Publish quarterly data study / research report</td><td>Your platform data + survey tool</td><td>PR asset + AI citation magnet</td></tr>
+889	    <tr><td>GSC historical trend review (12-month view)</td><td>Google Search Console</td><td>Identify seasonal patterns, plan ahead</td></tr>
+890	    <tr><td>Content consolidation review</td><td>GSC + Ahrefs</td><td>List of pages to merge/consolidate for authority</td></tr>
+891	    <tr><td>Link velocity analysis: DR progress vs targets</td><td>Ahrefs</td><td>Adjust link building strategy if behind pace</td></tr>
+892	    <tr><td>ROI analysis per channel: organic vs paid vs social</td><td>GA4 + your analytics agent</td><td>Budget reallocation recommendations</td></tr>
+893	  </table>
+894	
+895	  <div class="highlight-box green" style="margin-top: 32px;">
+896	    <h4>🤖 Automate This With Your Own Platform</h4>
+897	    <p>Every repeating task in this cadence calendar is a candidate for automation via your AI agent infrastructure. Your GSC Expert agent, Tech SEO Auditor agent, Analytics Expert agent, and Reporting agent are already configured for most of these workflows. Build the automation layer on top of this cadence, document the results, and that automation story itself becomes one of your most powerful marketing case studies.</p>
+898	  </div>
+899	
+900	</div>
+901	
+902	</div><!-- /content -->
+903	
+904	<div style="background: #1a1a2e; color: rgba(255,255,255,.5); text-align: center; padding: 22px; font-size: 13px; margin-top: 40px;">
+905	  AgenticMarketingPro.com — Ongoing SEO Operations & Content Refresh Playbook · Supplementary to Master Plan · July 2025
+906	</div>
+907	
+908	</body>
+909	</html>
+<system>909 lines read from file starting from line 1. Total lines in file: 909. End of file reached.</system>

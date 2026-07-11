@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "social-media-manager",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Social Media Strategy - X Twitter YouTube TikTok Instagram Playbooks",
+    "target_audience": "B2B SaaS founders, marketers, and entrepreneurs across social platforms",
+    "prompt_override": "Create a COMPREHENSIVE social media strategy for AgenticMarketingPro covering ALL major platforms. Include: 1) X/Twitter playbook (3-5 posts/day, thread strategy, engagement tactics), 2) YouTube playbook (weekly 8-15 min videos, SEO optimization, thumbnail strategy), 3) TikTok playbook (1x daily short-form, trend-jacking, educational content), 4) Instagram playbook (carousels + Reels, Stories strategy), 5) Content repurposing engine (1 asset → 5 formats), 6) Platform-specific content calendars, 7) Growth hacking tactics per platform, 8) Analytics and KPI tracking. Context: Every piece of content gets repurposed across 5 formats. Founder-led with team support."
+  },
+  "status": "pending"
+}

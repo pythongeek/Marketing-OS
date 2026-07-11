@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "social-media-manager",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Reddit Community Growth Strategy",
+    "target_audience": "Reddit users in marketing, SEO, SaaS, and entrepreneurship communities",
+    "prompt_override": "Create a COMPREHENSIVE Reddit strategy for AgenticMarketingPro. Include: 1) 10 target subreddits (r/SEO, r/marketing, r/entrepreneur, r/SaaS, r/ChatGPT, r/digital_marketing, r/growthhacking, r/smallbusiness, r/webdev, r/artificial), 2) 30-60 day 'contribute first' trust-building protocol, 3) Daily commenting strategy with example comments, 4) Case study post templates (with real results), 5) AMA calendar (quarterly), 6) Free tool drop strategy (2 tools/quarter), 7) Reddit-specific content guidelines (no promotion rules, value-first approach), 8) Karma building roadmap. Context: Reddit is a key channel for authentic community engagement. We must build trust before any promotion."
+  },
+  "status": "pending"
+}

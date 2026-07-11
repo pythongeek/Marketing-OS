@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "social-media-manager",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "LinkedIn Lead Generation Strategy - Founder-Led Content and Outreach",
+    "target_audience": "CMOs, VP Marketing, Growth leaders on LinkedIn",
+    "prompt_override": "Create a COMPREHENSIVE LinkedIn lead generation strategy for AgenticMarketingPro. Include: 1) Founder daily posting schedule (Mon-Sat) with content themes, 2) 5-touch outreach sequence (Connection -> Value -> Discovery -> Demo -> Close), 3) Sales Navigator targeting strategy (CMO/VP Marketing, 50-500 employees, 10%+ growth), 4) LinkedIn Groups strategy (Marketing AI Institute, Digital Marketing, etc.), 5) Content calendar: 3 posts/week minimum, 1 long-form/week, 6) Personal brand positioning for founder, 7) LinkedIn ad retargeting strategy. Context: Founder-led growth is key. Position as the thought leader in agentic marketing."
+  },
+  "status": "pending"
+}

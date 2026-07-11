@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "content-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Content Plan for AI Visibility - AEO/GEO Content Pillars",
+    "target_audience": "AI search users on ChatGPT, Perplexity, Gemini, Claude",
+    "prompt_override": "Create a COMPREHENSIVE content plan for AI visibility (AEO/GEO). Include: 1) 4 content pillars engineered for AI citation (definitional, comparative, statistical, tutorial), 2) Perplexity-specific optimization tactics (3-5 pieces/week), 3) LLM prompt testing protocol (50 variations/week across ChatGPT, Perplexity, Gemini, Copilot), 4) AI citation tracking methodology, 5) Content calendar for AI-optimized content (weekly cadence), 6) Example article outlines for each pillar. Context: We need to OWN the 'agentic marketing' category in AI search results. Target: Get cited by major LLMs as the authority on agentic marketing."
+  },
+  "status": "pending"
+}

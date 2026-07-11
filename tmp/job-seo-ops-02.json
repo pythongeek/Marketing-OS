@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "technical-seo-auditor",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Google Search Console Weekly and Monthly Operations",
+    "target_audience": "SEO operations team",
+    "prompt_override": "Create a COMPREHENSIVE GSC Operations Playbook. Include: 1) DAILY checks (performance anomalies, manual actions), 2) WEEKLY routine: Monday Performance Review, Tuesday Index Coverage, Wednesday Core Web Vitals, Thursday Manual Actions, Friday Link Report, 3) MONTHLY deep dive: Keyword opportunity mining (position 11-30), Query-page mismatch analysis, Mobile vs Desktop analysis, Crawl budget analysis, Geographic performance, Structured data audit, 4) Specific GSC metrics to track with thresholds for action, 5) How to interpret each report type. Make this actionable with exact steps and screenshots descriptions."
+  },
+  "status": "pending"
+}

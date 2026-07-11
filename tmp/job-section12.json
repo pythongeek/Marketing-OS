@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "content-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Unique Marketing Methods - Unconventional Growth Tactics",
+    "target_audience": "Growth hackers and unconventional marketers",
+    "prompt_override": "Create a COMPREHENSIVE unique marketing methods playbook for AgenticMarketingPro. Include: 1) 10 unconventional growth tactics (product-led growth, viral loops, referral programs, community-led growth, strategic partnerships, co-marketing, event marketing, podcast tour, newsletter swaps, guerrilla marketing), 2) Free tool marketing strategy (calculators, audits, graders), 3) Data-driven PR strategy (4 research studies/year), 4) Strategic partnership framework, 5) Ambassador/influencer program, 6) Conference and event strategy, 7) Newsletter and community building, 8) Viral loop mechanics. Context: We need to stand out in a crowded AI marketing space. Be memorable and shareable."
+  },
+  "status": "pending"
+}

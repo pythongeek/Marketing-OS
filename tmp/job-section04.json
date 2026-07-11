@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "link-building-outreach",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "AgenticMarketingPro Backlink Generation Strategy",
+    "target_audience": "SEO professionals and link builders",
+    "prompt_override": "Create a COMPREHENSIVE backlink generation strategy for AgenticMarketingPro. Include: 1) 4-tier link building strategy (Digital PR, link-worthy assets, relationship building, community links), 2) Link building KPIs and targets (15 new DR 50+ links/month, DR 50 by month 12), 3) Digital PR campaign ideas (4 campaigns/quarter), 4) Free tool launch plan (2 tools/quarter for link attraction), 5) Guest post strategy (4 posts/month), 6) Podcast appearance strategy (20/year), 7) Outreach email templates for each tier. Context: We need authoritative backlinks to compete with Jasper, SurferSEO, HubSpot."
+  },
+  "status": "pending"
+}

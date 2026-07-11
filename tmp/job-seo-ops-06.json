@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "content-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Master SEO Operations Cadence Calendar",
+    "target_audience": "SEO operations team and leadership",
+    "prompt_override": "Create a COMPREHENSIVE Master SEO Operations Cadence Calendar. Include: 1) DAILY tasks (15-20 min): news monitoring, uptime check, brand mention sweep, HARO responses, LinkedIn engagement, 2) WEEKLY tasks (Monday 60 min): GSC performance, index coverage, Bing WMT, keyword positions, CWV spot check, backlinks gained/lost, manual actions, 3) MONTHLY tasks (First Monday, 3 hours): Full GSC deep audit, Screaming Frog crawl, content refresh execution, competitor gap analysis, backlink health check, AI citation check, Bing SEO Analyzer, internal linking audit, brand mention audit, page speed check, content calendar update, 4) QUARTERLY tasks (Half day): Full technical audit, E-E-A-T audit, topic authority gap, schema audit, competitor strategy refresh, data study publication, GSC historical review, content consolidation, link velocity analysis, ROI per channel. Include specific tools, time estimates, and output formats for each task."
+  },
+  "status": "pending"
+}

@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "content-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "SEO Ops Content Refresh Queue System",
+    "target_audience": "SEO team and content managers",
+    "prompt_override": "Create a COMPREHENSIVE Content Refresh Queue System for ongoing SEO operations. Include: 1) Content decay identification methodology (traffic drop >15%, position drop >3 spots, CTR decline), 2) Refresh priority scoring matrix (traffic value x decay severity / effort required), 3) 6 types of content refresh (update stats, expand sections, add media, improve CWV, merge thin content, redirect obsolete), 4) Refresh workflow: identify → audit → plan → execute → measure, 5) Content refresh calendar template, 6) Before/after tracking methodology. Context: This is for AgenticMarketingPro, an AI marketing OS with blog content about AI marketing, SEO, and automation."
+  },
+  "status": "pending"
+}

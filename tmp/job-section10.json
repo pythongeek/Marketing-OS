@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "paid-ads-manager",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Search Ads Strategy - Google Ads and Bing Ads Campaign Structure",
+    "target_audience": "B2B SaaS buyers searching for marketing automation solutions",
+    "prompt_override": "Create a COMPREHENSIVE search ads strategy for AgenticMarketingPro. Include: 1) Google Ads campaign structure (Search, Display, Remarketing), 2) Bing Ads campaign structure, 3) Keyword bidding strategy (brand, competitor, category, long-tail), 4) Landing page recommendations for each ad group, 5) Budget allocation framework, 6) A/B testing protocol for ads and landing pages, 7) Conversion tracking setup, 8) ROAS targets and optimization playbook. Context: Target CMOs, VP Marketing, Growth leaders at 50-500 employee B2B SaaS companies."
+  },
+  "status": "pending"
+}

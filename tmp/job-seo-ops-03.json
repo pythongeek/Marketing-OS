@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "technical-seo-auditor",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Bing Webmaster Tools Operations and IndexNow Implementation",
+    "target_audience": "SEO team focusing on Bing/Microsoft search",
+    "prompt_override": "Create a COMPREHENSIVE Bing Webmaster Tools Operations Playbook. Include: 1) Weekly Bing WMT routine (Search Performance, Crawl Information, Diagnostics), 2) Bing-specific optimization tactics: IndexNow protocol implementation, Bing Places, social signals, Bing Chat/Copilot optimization, 3) Bing SEO Analyzer monthly run, 4) Bing vs Google performance comparison tracking, 5) IndexNow setup guide (generate key, upload to site, API integration), 6) Bing-specific ranking factors that differ from Google. Context: Bing powers 25-35% of B2B enterprise search through Edge, Cortana, Teams, and Microsoft 365."
+  },
+  "status": "pending"
+}

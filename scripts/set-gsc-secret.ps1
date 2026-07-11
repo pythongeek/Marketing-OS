@@ -1,26 +1,35 @@
-# Supabase Secrets Setup — PowerShell Commands
-# ============================================
-# Run these commands in PowerShell to set the GSC service account secret
+# Set GSC Service Account JSON Secret in Supabase
+# This script handles the JSON escaping properly using a temp env file
 
-# Step 1: Read the JSON file and store as a variable
-$gscJson = Get-Content "C:\Users\Administrator\Downloads\pageforge-466314-75b94d613b1d.json" -Raw
+$ErrorActionPreference = "Stop"
 
-# Step 2: Set the secret using the variable (correct syntax)
-npx supabase secrets set GSC_SERVICE_ACCOUNT_JSON="$gscJson"
+# Paths
+$jsonPath = "C:\Users\Administrator\Downloads\pageforge-466314-75b94d613b1d.json"
+$envFile = "$env:TEMP\gsc-env-$(Get-Random).txt"
 
-# Alternative if the above fails — use a temp file approach:
-# $gscJson | Out-File -FilePath "$env:TEMP\gsc-secret.txt" -Encoding utf8
-# npx supabase secrets set --env-file "$env:TEMP\gsc-secret.txt"
-# Remove-Item "$env:TEMP\gsc-secret.txt"
+# Validate JSON file exists
+if (-not (Test-Path $jsonPath)) {
+    Write-Error "JSON file not found at: $jsonPath"
+    exit 1
+}
 
-# Step 3: Verify the secret was set
-npx supabase secrets list
+# Read JSON content
+$json = Get-Content $jsonPath -Raw
 
-# Step 4: Also set the property reference
-npx supabase secrets set GSC_PROPERTY="sc-domain:agenticmarketingpro.com"
+# Write to temp env file (no newlines in the value)
+"GSC_SERVICE_ACCOUNT_JSON=$json" | Out-File -FilePath $envFile -Encoding utf8 -NoNewline
 
-# Step 5: Deploy the Edge Function with the new secrets
-npx supabase functions deploy execute-jobs
+Write-Host "Temp env file created: $envFile"
+Write-Host "Setting secret via Supabase CLI..."
 
-# Step 6: Test the function
-# curl https://pusttdxrtmgvhdzdyvbd.supabase.co/functions/v1/execute-jobs/health -H "Authorization: Bearer YOUR_ANON_KEY"
+# Set the secret using the env file
+npx supabase secrets set --env-file $envFile
+
+# Clean up temp file
+Remove-Item $envFile -Force
+Write-Host "Cleaned up temp file"
+
+Write-Host "`n✅ GSC_SERVICE_ACCOUNT_JSON secret set successfully!"
+Write-Host "`nNext steps:"
+Write-Host "  1. Set GSC_PROPERTY: npx supabase secrets set GSC_PROPERTY=sc-domain:agenticmarketingpro.com"
+Write-Host "  2. Deploy Edge Function: npx supabase functions deploy execute-jobs"

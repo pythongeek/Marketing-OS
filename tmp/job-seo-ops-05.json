@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "aeo-geo-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Lesser-Known SEO Practices and Advanced Tactics",
+    "target_audience": "Advanced SEO practitioners",
+    "prompt_override": "Create a COMPREHENSIVE Advanced SEO Tactics Playbook covering practices most competitors skip. Include: 1) Entity & Knowledge Graph Optimization: Wikidata, sameAs markup, Google Business Profile, Author entities, 2) SERP Feature Targeting: Featured Snippets, People Also Ask, Image Pack, Sitelinks, Video Carousels, AI Overviews, 3) Internal Linking Strategy: PageRank sculpting, anchor text diversity, contextual links, orphan page prevention, 4) E-E-A-T Signals: Experience, Expertise, Authoritativeness, Trustworthiness implementation, 5) Log File Analysis for crawl intelligence, 6) Content Syndication: Medium, LinkedIn Articles, Dev.to, Substack, SlideShare, 7) Link Reclamation: brand mentions, unlinked images, competitor link stealing, 8) Topical Authority Mapping, 9) Seasonal SEO Calendar, 10) SEO A/B Testing methodology. Make each tactic actionable with step-by-step instructions."
+  },
+  "status": "pending"
+}

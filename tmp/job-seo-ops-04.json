@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "technical-seo-auditor",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Technical Health Ongoing Processes and Site Audits",
+    "target_audience": "Technical SEO team and developers",
+    "prompt_override": "Create a COMPREHENSIVE Technical Health Operations Playbook. Include: 1) WEEKLY checks: uptime monitoring, 404 crawl errors, robots.txt verification, sitemap freshness, SSL certificate expiry, 2) MONTHLY Screaming Frog/Sitebulb audit: page-level issues (duplicates, thin content, missing alt text), site architecture issues (redirect chains, orphan pages, deep pages), 3) QUARTERLY deep audit: log file analysis, CWV regression testing, structured data audit, link velocity analysis, competitor gap refresh, CrUX field data review, 4) Specific tools and how to use them: Screaming Frog, Sitebulb, PageSpeed Insights API, 5) Emergency response procedures for critical issues. Context: Site is built on Next.js hosted on Vercel."
+  },
+  "status": "pending"
+}

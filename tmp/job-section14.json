@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "content-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "90-Day Launch Timeline - Phased Execution Roadmap",
+    "target_audience": "AgenticMarketingPro leadership and execution team",
+    "prompt_override": "Create a COMPREHENSIVE 90-day launch timeline for AgenticMarketingPro. Include: 1) Phase 1 (Days 1-30): Foundation - positioning, website, core content, initial SEO, 2) Phase 2 (Days 31-60): Acceleration - content velocity, social presence, first ads, link building launch, 3) Phase 3 (Days 61-90): Scale - programmatic SEO, paid scaling, partnerships, PR launch, 4) Weekly milestones and deliverables, 5) Resource allocation (team, budget, tools), 6) Success metrics and KPIs per phase, 7) Risk mitigation strategies, 8) Post-launch sustainability plan. Context: This is the execution roadmap that ties together all 13 previous sections into a cohesive launch plan."
+  },
+  "status": "pending"
+}

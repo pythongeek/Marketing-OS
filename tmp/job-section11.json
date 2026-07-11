@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "paid-ads-manager",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Other Channel Ads - Meta LinkedIn Reddit Ad Playbooks",
+    "target_audience": "B2B SaaS decision makers on social platforms",
+    "prompt_override": "Create COMPREHENSIVE ad playbooks for Meta, LinkedIn, and Reddit. Include: 1) Meta Ads playbook (Facebook + Instagram, B2B targeting, creative formats, retargeting), 2) LinkedIn Ads playbook (Sponsored Content, Message Ads, Lead Gen Forms, targeting CMO/VP Marketing), 3) Reddit Ads playbook (subreddit targeting, promoted posts, community guidelines), 4) Budget allocation across channels, 5) Creative brief templates for each platform, 6) Audience segmentation strategy, 7) Conversion tracking and attribution, 8) Monthly optimization checklist. Context: Multi-channel paid acquisition to complement organic SEO and content efforts."
+  },
+  "status": "pending"
+}

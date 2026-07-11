@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "aeo-geo-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "AgenticMarketingPro AI Search Visibility (AEO/GEO)",
+    "target_audience": "AI search users on ChatGPT, Perplexity, Gemini, Claude",
+    "prompt_override": "Create a COMPREHENSIVE AEO/GEO strategy for AgenticMarketingPro. Include: 1) Entity authority framework (Wikipedia/Wikidata presence, knowledge graph optimization), 2) LLM citation strategy (how to get cited by ChatGPT, Perplexity, Gemini, Claude, Copilot), 3) 4 content pillars for AI visibility (definitional, comparative, statistical, tutorial), 4) Perplexity-specific optimization tactics, 5) LLM prompt testing protocol (50 variations/week), 6) AI citation tracking methodology. Context: We need to OWN the 'agentic marketing' category in AI search results."
+  },
+  "status": "pending"
+}

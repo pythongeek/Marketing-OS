@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "competitor-intelligence",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Competitor Outranking Strategy - Beat Jasper SurferSEO HubSpot",
+    "target_audience": "SEO and competitive intelligence teams",
+    "prompt_override": "Create a COMPREHENSIVE competitor outranking strategy for AgenticMarketingPro. Include: 1) Competitor analysis matrix (Jasper, SurferSEO, HubSpot, Copy.ai, Clearscope, MarketMuse, Frase), 2) Content gap analysis (what they rank for that we don't), 3) Keyword stealing strategy (target their high-value keywords), 4) Backlink gap analysis (where they get links from), 5) Feature comparison and differentiation, 6) Pricing and positioning warfare, 7) Review and reputation strategy (G2, Capterra, Product Hunt), 8) SERP domination tactics. Context: We need to systematically outrank established players in the AI marketing space."
+  },
+  "status": "pending"
+}

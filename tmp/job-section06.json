@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "content-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "Content Plan for Traditional Search - Topic Clusters and Editorial Calendar",
+    "target_audience": "B2B SaaS marketing leaders searching for marketing automation solutions",
+    "prompt_override": "Create a COMPREHENSIVE content plan for traditional search (Google/Bing). Include: 1) 6 major topic clusters with pillar pages (AI Marketing Automation, Programmatic SEO, AI Content Production, AI SEO Agents, Marketing Analytics AI, Agency Alternatives), 2) Editorial calendar: 1 pillar page/month, 8-12 cluster posts/month, 50-100 programmatic pages/month, 1 case study/month, 3) Keyword mapping for each cluster (primary, secondary, long-tail), 4) Content brief templates for each content type, 5) Publishing cadence and resource allocation, 6) Content distribution strategy. Context: AgenticMarketingPro is an AI marketing OS. We need to dominate organic search for agentic marketing terms."
+  },
+  "status": "pending"
+}

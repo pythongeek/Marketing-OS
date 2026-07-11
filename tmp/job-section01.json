@@ -1,0 +1,11 @@
+{
+  "type": "skill_execution",
+  "skill_slug": "content-strategist",
+  "client_slug": "agenticmarketingpro",
+  "payload": {
+    "topic": "AgenticMarketingPro Niche Positioning and Ideal Customer Profile",
+    "target_audience": "Growth-stage B2B SaaS, digital agencies, e-commerce brands, fractional CMOs",
+    "prompt_override": "Create a COMPREHENSIVE niche positioning document for AgenticMarketingPro. Include: 1) Category of One positioning statement, 2) 4 detailed ICP profiles with psychographics, pain points, and triggers, 3) Key messaging themes with pain-first and outcome-first headlines, 4) Competitive differentiation matrix, 5) Pricing and packaging recommendations, 6) Unfair advantage analysis. Context: AgenticMarketingPro is an AI-powered marketing OS that replaces a 10-person marketing team with coordinated AI agents delivering SEO, content, ads, and analytics at agency quality, SaaS cost."
+  },
+  "status": "pending"
+}
