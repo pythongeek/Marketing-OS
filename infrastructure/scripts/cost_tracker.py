@@ -37,9 +37,7 @@ MODEL_COSTS = {
     "gpt-3.5-turbo": {"input": 0.0005, "output": 0.0015},
     "text-embedding-3-small": {"input": 0.00002, "output": 0.0},
     "text-embedding-3-large": {"input": 0.00013, "output": 0.0},
-    # Kimi
-    "kimi-moonshot-v1-8k": {"input": 0.003, "output": 0.003},
-    "kimi-moonshot-v1-32k": {"input": 0.006, "output": 0.006},
+    # Hermes Agent Desktop (default model)
     # Legacy Minimax
     "minimax-abab5.5": {"input": 0.0015, "output": 0.0015},
 }
@@ -50,7 +48,7 @@ class CostEntry:
     """A single cost log entry."""
     timestamp: str  # ISO format
     agent_name: str
-    provider: str  # openai, anthropic, kimi, minimax, etc.
+    provider: str  # openai, anthropic, hermes_agent, etc.
     model: str
     tokens_in: int
     tokens_out: int

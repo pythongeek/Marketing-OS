@@ -1,6 +1,6 @@
 """
 """
-AgenticMarketingPro — Kimi Work Job Poller  (Phase 4: Local Fallback)
+AgenticMarketingPro — Hermes Agent Desktop Job Poller  (Phase 4: Local Fallback)
 ======================================================================
 ⚠️  DEPRECATION NOTICE: The primary job executor is now the Supabase Edge
     Function at supabase/functions/execute-jobs/index.ts. This local poller
@@ -10,7 +10,7 @@ AgenticMarketingPro — Kimi Work Job Poller  (Phase 4: Local Fallback)
     To use the hosted worker (recommended):
       1. Deploy the Edge Function: supabase functions deploy execute-jobs
       2. Set pg_cron to trigger it every 5 minutes (see migration 003)
-      3. Disable the local Kimi Work cron job
+      3. Disable the local Hermes Agent Desktop cron job
 
     To use this local fallback:
       python infrastructure/webhooks/poller.py --once
@@ -520,7 +520,7 @@ def build_user_prompt(skill_slug: str, payload: Dict) -> str:
 
 @with_retry(max_retries=1, base_delay=30.0, max_delay=300.0)
 def execute_job(client, job: Dict[str, Any]) -> Dict[str, Any]:
-    """Execute a job by calling the appropriate agent skill via Minimax M3."""
+    """Execute a job by calling the appropriate agent skill via Hermes Agent Desktop."""
     job_type = job.get("type", "")
     skill_slug = job.get("skill_slug", "")
     client_slug = job.get("client_slug", "")
@@ -532,17 +532,17 @@ def execute_job(client, job: Dict[str, Any]) -> Dict[str, Any]:
     system_prompt = build_system_prompt(client, skill_slug, client_slug, payload)
     user_prompt = build_user_prompt(skill_slug, payload)
 
-    from api_client.minimax import generate_with_minimax
+    from hermes_agent.tools.llm_tool import generate_llm_response
     from scripts.cost_tracker import CostTracker
 
     cost_tracker = CostTracker()
 
-    result = generate_with_minimax(
+    result = generate_llm_response(
         system_prompt=system_prompt,
         user_prompt=user_prompt,
         temperature=payload.get("temperature", 1.0),
         max_tokens=payload.get("max_tokens", 4096),
-        model=Config.DEFAULT_LLM_MODEL,
+        model=Config.DEFAULT_HERMES_AGENT_MODEL,
     )
 
     content = result["content"]
@@ -551,8 +551,8 @@ def execute_job(client, job: Dict[str, Any]) -> Dict[str, Any]:
 
     cost_tracker.log_call(
         agent_name=skill_slug or job_type,
-        provider="minimax",
-        model=Config.DEFAULT_LLM_MODEL,
+        provider="hermes_agent",
+        model=Config.DEFAULT_HERMES_AGENT_MODEL,
         tokens_in=tokens_in,
         tokens_out=tokens_out,
         call_type="completion",
@@ -567,8 +567,8 @@ def execute_job(client, job: Dict[str, Any]) -> Dict[str, Any]:
         "content": content,
         "tokens_in": tokens_in,
         "tokens_out": tokens_out,
-        "model": Config.DEFAULT_LLM_MODEL,
-        "provider": "minimax",
+        "model": Config.DEFAULT_HERMES_AGENT_MODEL,
+        "provider": "hermes_agent",
         "message": f"Job {job_type} executed for {client_slug or 'agency'} via {skill_slug or 'manual'}",
     }
 
@@ -623,6 +623,28 @@ def run_once(client):
                             job_id=parent_id,
                             metadata=result,
                         )
+
+            elif job_type == "gsc_pull":
+                # GSC data pull (weekly report or raw analytics)
+                from webhooks.gsc_handler import execute_gsc_job
+                log_event(client, job_id, "info", f"GSC job started: {job_type}", {"skill_slug": skill_slug})
+                gsc_result = execute_gsc_job(job.get("payload", {}))
+                final_status = "completed" if gsc_result.get("ok") else "failed"
+                update_job_status(client, job_id, final_status, result=gsc_result)
+                if gsc_result.get("ok"):
+                    msg = f"GSC {gsc_result.get('mode', 'job')} done"
+                    if "vault_path" in gsc_result:
+                        msg += f" → {gsc_result['vault_path']}"
+                    log_event(client, job_id, "success", msg, gsc_result)
+                else:
+                    log_event(client, job_id, "error", f"GSC job failed: {gsc_result.get('error')}", gsc_result)
+                    send_slack_alert(
+                        message=f"GSC job {job_id} failed: {gsc_result.get('error')}",
+                        level="error",
+                        job_id=job_id,
+                        metadata=gsc_result,
+                    )
+
             else:
                 result = execute_job(client, job)
 

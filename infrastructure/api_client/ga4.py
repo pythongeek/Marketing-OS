@@ -38,24 +38,63 @@ class GA4Client:
         self._init_auth()
 
     def _init_auth(self):
-        """Initialize Google auth."""
+        """Initialize Google auth.
+
+        Credential resolution order (mirrors GSC):
+          1. GSC_SERVICE_ACCOUNT_FILE (explicit path)
+          2. GSC_SERVICE_ACCOUNT_JSON (raw JSON string)
+          3. GOOGLE_APPLICATION_CREDENTIALS (standard GCP env var)
+          4. ./service_account.json (local fallback)
+          5. Default credentials (ADC, requires `gcloud auth`)
+        """
         try:
             from google.oauth2 import service_account
             from google.analytics.data_v1beta import BetaAnalyticsDataClient
-            from google.analytics.data_v1beta.types import RunReportRequest
 
-            creds_path = Path("service_account.json")
-            if creds_path.exists():
-                credentials = service_account.Credentials.from_service_account_file(
-                    str(creds_path)
+            SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
+            creds = None
+            source = None
+
+            # ── 1. Explicit service account file path ─────────────────
+            if Config.GSC_SERVICE_ACCOUNT_FILE and Path(Config.GSC_SERVICE_ACCOUNT_FILE).exists():
+                creds = service_account.Credentials.from_service_account_file(
+                    Config.GSC_SERVICE_ACCOUNT_FILE, scopes=SCOPES
                 )
-                self._client = BetaAnalyticsDataClient(credentials=credentials)
-                logger.info("GA4 auth: service account")
+                source = f"GSC_SERVICE_ACCOUNT_FILE={Config.GSC_SERVICE_ACCOUNT_FILE}"
+
+            # ── 2. Service account JSON string ─────────────────────────
+            elif Config.GSC_SERVICE_ACCOUNT_JSON:
+                import json as _json
+                sa_info = _json.loads(Config.GSC_SERVICE_ACCOUNT_JSON)
+                creds = service_account.Credentials.from_service_account_info(
+                    sa_info, scopes=SCOPES
+                )
+                source = "GSC_SERVICE_ACCOUNT_JSON env"
+
+            # ── 3. Standard GCP env var ─────────────────────────────────
+            elif Config.GOOGLE_APPLICATION_CREDENTIALS and Path(Config.GOOGLE_APPLICATION_CREDENTIALS).exists():
+                creds = service_account.Credentials.from_service_account_file(
+                    Config.GOOGLE_APPLICATION_CREDENTIALS, scopes=SCOPES
+                )
+                source = f"GOOGLE_APPLICATION_CREDENTIALS={Config.GOOGLE_APPLICATION_CREDENTIALS}"
+
+            # ── 4. Local fallback ───────────────────────────────────────
+            else:
+                creds_path = Path("service_account.json")
+                if creds_path.exists():
+                    creds = service_account.Credentials.from_service_account_file(
+                        str(creds_path), scopes=SCOPES
+                    )
+                    source = "./service_account.json"
+
+            if creds:
+                self._client = BetaAnalyticsDataClient(credentials=creds)
+                logger.info(f"GA4 auth: service account ({source})")
                 return
 
-            # Try default credentials (ADC)
+            # ── 5. Default credentials (last resort) ──────────────────
             self._client = BetaAnalyticsDataClient()
-            logger.info("GA4 auth: default credentials")
+            logger.info("GA4 auth: default credentials (ADC)")
 
         except ImportError:
             logger.warning("google-analytics-data not installed. Run: pip install google-analytics-data")

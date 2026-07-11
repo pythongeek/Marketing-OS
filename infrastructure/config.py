@@ -47,7 +47,8 @@ class Config:
     # Fallback LLMs (optional)
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")
     ANTHROPIC_API_KEY: Optional[str] = os.getenv("ANTHROPIC_API_KEY")
-    KIMI_API_KEY: Optional[str] = os.getenv("KIMI_API_KEY")
+    HERMES_AGENT_API_KEY: Optional[str] = os.getenv("HERMES_AGENT_API_KEY")
+    DEFAULT_HERMES_AGENT_MODEL: str = os.getenv("DEFAULT_HERMES_AGENT_MODEL", "MiniMax-M3")
 
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
     EMBEDDING_DIMENSION: int = int(os.getenv("EMBEDDING_DIMENSION", "1536"))
@@ -68,9 +69,19 @@ class Config:
 
     # ── Google APIs ───────────────────────────────────────────────────
     GOOGLE_CLIENT_SECRETS_FILE: Optional[str] = os.getenv("GOOGLE_CLIENT_SECRETS_FILE")
+    GOOGLE_APPLICATION_CREDENTIALS: Optional[str] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    # GSC service account JSON — can be a file path OR the JSON string itself
+    # (file path takes precedence; useful for secrets injected via env vars)
+    GSC_SERVICE_ACCOUNT_FILE: Optional[str] = os.getenv("GSC_SERVICE_ACCOUNT_FILE")
+    GSC_SERVICE_ACCOUNT_JSON: Optional[str] = os.getenv("GSC_SERVICE_ACCOUNT_JSON")
     GA4_PROPERTY_ID: Optional[str] = os.getenv("GA4_PROPERTY_ID")
     GSC_PROPERTY: Optional[str] = os.getenv("GSC_PROPERTY")
     BING_API_KEY: Optional[str] = os.getenv("BING_API_KEY")
+    # OAuth 2.0 (replaces deprecated API key)
+    BING_CLIENT_ID: Optional[str] = os.getenv("BING_CLIENT_ID")
+    BING_CLIENT_SECRET: Optional[str] = os.getenv("BING_CLIENT_SECRET")
+    BING_TENANT: str = os.getenv("BING_TENANT", "common")
+    BING_REDIRECT_URI: Optional[str] = os.getenv("BING_REDIRECT_URI")
 
     # ── Paid Ads APIs ─────────────────────────────────────────────────
     GOOGLE_ADS_DEVELOPER_TOKEN: Optional[str] = os.getenv("GOOGLE_ADS_DEVELOPER_TOKEN")
@@ -133,7 +144,7 @@ class Config:
             "minimax": cls.MINIMAX_API_KEY is not None,
             "openai": cls.OPENAI_API_KEY is not None,
             "anthropic": cls.ANTHROPIC_API_KEY is not None,
-            "kimi": cls.KIMI_API_KEY is not None,
+            "hermes_agent": cls.HERMES_AGENT_API_KEY is not None,
             "chroma": True,  # local, always available if installed
             "pinecone": cls.PINECONE_API_KEY is not None and cls.PINECONE_INDEX_NAME is not None,
             "ahrefs": cls.AHREFS_API_KEY is not None,
@@ -141,7 +152,11 @@ class Config:
             "dataforseo": cls.DATAFORSEO_LOGIN is not None and cls.DATAFORSEO_PASSWORD is not None,
             "serpapi": cls.SERPAPI_KEY is not None,
             "ga4": cls.GA4_PROPERTY_ID is not None,
-            "gsc": cls.GSC_PROPERTY is not None,
+            "gsc": cls.GSC_PROPERTY is not None and (
+                cls.GSC_SERVICE_ACCOUNT_FILE is not None
+                or cls.GSC_SERVICE_ACCOUNT_JSON is not None
+                or cls.GOOGLE_APPLICATION_CREDENTIALS is not None
+            ),
             "bing": cls.BING_API_KEY is not None,
             "google_ads": cls.GOOGLE_ADS_DEVELOPER_TOKEN is not None,
             "meta_ads": cls.META_ACCESS_TOKEN is not None,

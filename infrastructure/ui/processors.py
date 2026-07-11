@@ -298,7 +298,7 @@ def process_api_credentials(response_path: str) -> Dict[str, Any]:
     # Map form fields to env vars
     env_map = {
         "openai_api_key": "OPENAI_API_KEY",
-        "kimi_api_key": "KIMI_API_KEY",
+        "hermes_agent_api_key": "HERMES_AGENT_API_KEY",
         "minimax_api_key": "MINIMAX_API_KEY",
         "ahrefs_api_key": "AHREFS_API_KEY",
         "semrush_api_key": "SEMRUSH_API_KEY",

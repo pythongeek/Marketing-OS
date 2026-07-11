@@ -9,7 +9,8 @@ Docs: https://www.bing.com/webmaster/help/webmaster-api-8c5b4b77
 
 import json
 import logging
-from datetime import datetime, timedelta
+import os
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Optional, Any
 
 from config import Config
@@ -19,7 +20,17 @@ logger = logging.getLogger("amp.bing")
 
 
 class BingWMTClient:
-    """Bing Webmaster Tools API client."""
+    """Bing Webmaster Tools API client.
+
+    Auth: API key sent in the `apikey` HTTP HEADER (not query string).
+    The query-string format documented at Microsoft Learn is no longer
+    accepted (returns 404); only the header-based auth works.
+
+    Error codes from Bing:
+        0 = Success
+        3 = InvalidApiKey (key revoked, wrong account, or wrong IP)
+        4 = InvalidSiteUrl
+    """
 
     BASE_URL = "https://ssl.bing.com/webmaster/api.svc/json"
 
@@ -28,10 +39,12 @@ class BingWMTClient:
         if not self.api_key:
             raise ValueError("Bing API key not configured. Set BING_API_KEY env var.")
 
+        # Custom APIClient config — Bing requires apikey as HEADER, not query param
+        # (the query-string format documented in Microsoft Learn returns 404)
         self.client = APIClient(
             base_url=self.BASE_URL,
-            api_key_param="apikey",
-            api_key_value=self.api_key,
+            auth_header="apikey",
+            auth_value=self.api_key,
             rate_limit_rps=1.0,
             name="bing_wmt",
         )

@@ -377,7 +377,7 @@ class FormEngine:
             output_filename="api-credentials-response.json",
             fields=[
                 FormField("openai_api_key", "password", label="OpenAI API Key", placeholder="sk-...", help_text="Required for embeddings and LLM fallback. Get from platform.openai.com"),
-                FormField("kimi_api_key", "password", label="Kimi API Key", placeholder="Optional — for Kimi Moonshot fallback"),
+                FormField("hermes_agent_api_key", "password", label="Hermes Agent Desktop API Key", placeholder="Required for Hermes Agent Desktop runtime"),
                 FormField("minimax_api_key", "password", label="Minimax API Key", placeholder="Optional — for Minimax fallback"),
                 FormField("ahrefs_api_key", "password", label="Ahrefs API Key", placeholder="Get from ahrefs.com/api"),
                 FormField("semrush_api_key", "password", label="Semrush API Key", placeholder="Get from semrush.com/api"),
