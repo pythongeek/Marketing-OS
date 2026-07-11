@@ -32,7 +32,7 @@ When asked to set up or configure integrations, the agent does NOT assume `.env`
 | Field | Integration | Purpose |
 |---|---|---|
 | OpenAI API Key | LLM / Embeddings | RAG pipeline + all LLM calls |
-| Kimi API Key | LLM fallback | Alternative to OpenAI |
+| Hermes Agent Desktop API Key | LLM primary | Required for skill execution |
 | Minimax API Key | LLM fallback | Alternative to OpenAI |
 | Ahrefs API Key | SEO data | Backlinks, keywords, site overview |
 | Semrush API Key | SEO data | Domain overview, SERP features |

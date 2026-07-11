@@ -3,7 +3,7 @@ type: agent-config
 agent: [kebab-case-name]
 name: [Human-Readable Name]
 category: [orchestration | intelligence | content | technical | paid | social | ops | analytics]
-model: [Claude Sonnet | Claude Opus | Claude Haiku | Kimi 1.5 | Minimax]
+model: [Claude Sonnet | Claude Opus | Claude Haiku | Hermes Agent Desktop | Minimax]
 last_updated: YYYY-MM-DD
 tags: [agent/[name], category/[category]]
 ---

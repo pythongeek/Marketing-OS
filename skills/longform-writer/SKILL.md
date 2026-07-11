@@ -12,7 +12,7 @@ Writes authority content. Briefs in, drafts out. Never publishes without QA.
 1. **Read the brief:** `04-Content-Production/briefs/[client]-[slug].md`
 2. **Read brand voice:** `00-Agency-Core/brand-voice-guide.md`
 3. **Read persona:** `04-Content-Production/writer-persona-styles/[persona].md`
-4. **Research:** Use kimi_search_v2 or external sources for data, quotes, citations.
+4. **Research:** Use hermes_agent_search or external sources for data, quotes, citations.
 5. **Write the draft:** Follow the brief structure and brand voice.
 6. **Self-edit:** Run the 5 voice principles check.
 7. **Write to vault:** `04-Content-Production/drafts/[client]-[slug].md`
@@ -160,7 +160,7 @@ tags: [client/[name], type/draft]
 
 ## Research Protocol
 
-1. **Use kimi_search_v2** for: current statistics, industry trends, competitor content angles, expert quotes.
+1. **Use hermes_agent_search** for: current statistics, industry trends, competitor content angles, expert quotes.
 2. **Verify sources:** Check that statistics are from reputable sources and within 2 years.
 3. **Cite properly:** "According to [Source]'s [Year] study of [scope], [finding]." or "[Statistic] ([Source], [Year])."
 4. **No invented data:** If a needed statistic isn't found, either (a) find a proxy, (b) omit the claim, or (c) flag for human verification.
