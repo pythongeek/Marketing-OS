@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Webhook receiver — called by cron-job.org, external systems, or the admin UI.
- * Enqueues a job in Supabase. Kimi Work polls for pending jobs and executes them.
+ * Enqueues a job in Supabase. Hermes Agent Desktop polls for pending jobs and executes them.
  */
 export async function POST(request: Request) {
   try {

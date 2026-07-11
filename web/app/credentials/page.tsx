@@ -196,13 +196,13 @@ const SERVICE_DEFINITIONS: ServiceDef[] = [
     ],
   },
   {
-    key: "kimi",
-    label: "Kimi (Moonshot)",
+    key: "hermes_agent",
+    label: "Hermes Agent Desktop",
     icon: Code,
     category: "AI",
     configFields: [
-      { key: "model", label: "Model", type: "text", placeholder: "kimi-latest" },
-      { key: "base_url", label: "Base URL", type: "url", placeholder: "https://api.moonshot.cn/v1" },
+      { key: "model", label: "Model", type: "text", placeholder: "MiniMax-M3" },
+      { key: "base_url", label: "Base URL", type: "url", placeholder: "https://hermes-agent.local/api" },
     ],
     secretFields: [
       { key: "api_key", label: "API Key", type: "password", placeholder: "sk-..." },
@@ -423,7 +423,20 @@ export default function CredentialsPage() {
             <h1 className="text-2xl font-bold text-text">Credentials</h1>
             <p className="text-muted text-sm mt-1">{credentials.length} API keys & service accounts</p>
           </div>
+          <a
+            href="/api/bing-auth/start"
+            className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition"
+          >
+            Connect Bing WMT (OAuth)
+          </a>
         </div>
+
+        {/* Bing OAuth status banner */}
+        {typeof window !== "undefined" && new URLSearchParams(window.location.search).get("bing_oauth") === "success" && (
+          <div className="mb-6 p-4 rounded bg-green-900/30 border border-green-700 text-green-200">
+            Bing Webmaster OAuth authorization successful! Tokens are stored and the API is now connected.
+          </div>
+        )}
 
         {/* Filters */}
         <div className="flex gap-3 mb-6">

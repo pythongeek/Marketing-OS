@@ -47,3 +47,8 @@ inspector_port = 8083
 
 [functions.execute-jobs]
 verify_jwt = false
+# Increase timeout from default 8s to 150s (the Supabase maximum).
+# This is needed because agent jobs typically take 15-45s for LLM calls,
+# plus GSC/GA4/Bing API calls, QA gates, and logging.
+# See: https://supabase.com/docs/guides/functions#function-configuration
+timeout = 150

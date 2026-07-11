@@ -2,7 +2,7 @@
  * Supabase Edge Function: execute-jobs
  * ====================================
  * Hosted worker that polls Supabase for pending jobs, executes them via
- * AI APIs (MiniMax M3 primary, with OpenAI/Kimi fallback), and writes results back.
+ * Hermes Agent Desktop (primary), and writes results back.
  *
  * Trigger: HTTP (from cron-job.org) or manual
  * Runtime: Deno (Supabase Edge Functions)
@@ -13,28 +13,17 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-// ── AI Provider Configuration ──────────────────────────────────────
-// Priority: MINIMAX → OPENAI → KIMI (fallback chain)
-const MINIMAX_API_KEY = Deno.env.get("MINIMAX_API_KEY");
-const MINIMAX_BASE_URL = Deno.env.get("MINIMAX_BASE_URL") || "https://api.minimax.io/v1";
-const MINIMAX_MODEL = Deno.env.get("MINIMAX_MODEL") || "MiniMax-M3";
-
-const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-const OPENAI_BASE_URL = Deno.env.get("OPENAI_BASE_URL") || "https://api.openai.com/v1";
-const OPENAI_MODEL = Deno.env.get("OPENAI_MODEL") || "gpt-4o";
-
-const KIMI_API_KEY = Deno.env.get("KIMI_API_KEY");
-const KIMI_BASE_URL = Deno.env.get("KIMI_BASE_URL") || "https://api.moonshot.cn/v1";
-const KIMI_MODEL = Deno.env.get("KIMI_MODEL") || "kimi-latest";
+// ── Hermes Agent Desktop Configuration ────────────────────────────
+const HERMES_AGENT_API_KEY = Deno.env.get("HERMES_AGENT_API_KEY");
+const HERMES_AGENT_BASE_URL = Deno.env.get("HERMES_AGENT_BASE_URL") || "https://hermes-agent.local/api";
+const HERMES_AGENT_MODEL = Deno.env.get("HERMES_AGENT_MODEL") || "MiniMax-M3";
 
 const LLM_TEMPERATURE = Number(Deno.env.get("LLM_TEMPERATURE") || "0.7");
 const LLM_MAX_TOKENS = Number(Deno.env.get("LLM_MAX_TOKENS") || "4096");
 
 // Cost tracking (approximate per 1K tokens)
 const COST_RATES: Record<string, { input: number; output: number }> = {
-  minimax: { input: 0.0015, output: 0.006 },
-  openai: { input: 0.005, output: 0.015 },
-  kimi: { input: 0.003, output: 0.009 },
+  hermes_agent: { input: 0.0015, output: 0.006 },
 };
 
 const SLACK_WEBHOOK_URL = Deno.env.get("SLACK_WEBHOOK_URL");
@@ -125,7 +114,7 @@ async function sendSlackAlert(
           { type: "mrkdwn", text: `*Message:*\n${message}` },
           { type: "mrkdwn", text: `*Job ID:*\n${jobId ?? "N/A"}` },
           { type: "mrkdwn", text: `*Time:*\n${new Date().toISOString()}` },
-          { type: "mrkdwn", text: `*AI Provider:*\nMulti-provider fallback` },
+          { type: "mrkdwn", text: `*AI Provider:*\nHermes Agent Desktop` },
         ],
       },
     ],
@@ -219,31 +208,13 @@ async function checkProviderHealth(provider: string, apiKey: string | undefined,
 }
 
 async function getAvailableProvider(): Promise<{ name: string; apiKey: string; baseUrl: string; model: string } | null> {
-  // Check MiniMax first
-  if (MINIMAX_API_KEY) {
-    const health = await checkProviderHealth("minimax", MINIMAX_API_KEY, MINIMAX_BASE_URL);
+  // Hermes Agent Desktop is the only provider
+  if (HERMES_AGENT_API_KEY) {
+    const health = await checkProviderHealth("hermes_agent", HERMES_AGENT_API_KEY, HERMES_AGENT_BASE_URL);
     if (health.available) {
-      return { name: "minimax", apiKey: MINIMAX_API_KEY, baseUrl: MINIMAX_BASE_URL, model: MINIMAX_MODEL };
+      return { name: "hermes_agent", apiKey: HERMES_AGENT_API_KEY, baseUrl: HERMES_AGENT_BASE_URL, model: HERMES_AGENT_MODEL };
     }
-    console.warn(`MiniMax unavailable: ${health.error}`);
-  }
-
-  // Fall back to OpenAI
-  if (OPENAI_API_KEY) {
-    const health = await checkProviderHealth("openai", OPENAI_API_KEY, OPENAI_BASE_URL);
-    if (health.available) {
-      return { name: "openai", apiKey: OPENAI_API_KEY, baseUrl: OPENAI_BASE_URL, model: OPENAI_MODEL };
-    }
-    console.warn(`OpenAI unavailable: ${health.error}`);
-  }
-
-  // Fall back to Kimi
-  if (KIMI_API_KEY) {
-    const health = await checkProviderHealth("kimi", KIMI_API_KEY, KIMI_BASE_URL);
-    if (health.available) {
-      return { name: "kimi", apiKey: KIMI_API_KEY, baseUrl: KIMI_BASE_URL, model: KIMI_MODEL };
-    }
-    console.warn(`Kimi unavailable: ${health.error}`);
+    console.warn(`Hermes Agent Desktop unavailable: ${health.error}`);
   }
 
   return null;
@@ -309,8 +280,8 @@ async function callLLM(
       temperature: LLM_TEMPERATURE,
       max_tokens: LLM_MAX_TOKENS,
       top_p: 1.0,
-      // MiniMax-specific: reasoning split
-      ...(provider.name === "minimax" ? { reasoning_split: true } : {}),
+      // Hermes Agent Desktop: reasoning split (if supported)
+      ...(provider.name === "hermes_agent" ? { reasoning_split: true } : {}),
     }),
   });
 
@@ -491,7 +462,7 @@ async function executeJob(job: Record<string, unknown>) {
   // Get available AI provider
   const provider = await getAvailableProvider();
   if (!provider) {
-    const errorMsg = "No AI provider available. Please configure MINIMAX_API_KEY, OPENAI_API_KEY, or KIMI_API_KEY in Supabase secrets.";
+    const errorMsg = "No AI provider available. Please configure HERMES_AGENT_API_KEY in Supabase secrets.";
     await supabase.from("jobs").update({
       status: "failed",
       result: { error: errorMsg, provider_status: "none_available" },
@@ -587,9 +558,7 @@ async function executeJob(job: Record<string, unknown>) {
 // ── Health check endpoint ─────────────────────────────────────────
 async function handleHealthCheck(): Promise<Response> {
   const checks = await Promise.all([
-    checkProviderHealth("minimax", MINIMAX_API_KEY, MINIMAX_BASE_URL),
-    checkProviderHealth("openai", OPENAI_API_KEY, OPENAI_BASE_URL),
-    checkProviderHealth("kimi", KIMI_API_KEY, KIMI_BASE_URL),
+    checkProviderHealth("hermes_agent", HERMES_AGENT_API_KEY, HERMES_AGENT_BASE_URL),
   ]);
 
   const available = checks.filter((c) => c.available);
@@ -609,23 +578,67 @@ async function handleHealthCheck(): Promise<Response> {
 // ── Main handler ──────────────────────────────────────────────────
 Deno.serve(async (req) => {
   const url = new URL(req.url);
+  const params = url.searchParams;
 
-  // Health check endpoint
+  // ── Endpoint modes ────────────────────────────────────────────
+  // GET /                       → batch mode (default 5 jobs)
+  // GET /?mode=single           → ONE job per call (cron-job.org default)
+  // GET /?mode=batch&limit=N    → up to N jobs (default 5, max 10)
+  // GET /?mode=single&skill=xyz → next pending job for a specific skill
+  // GET /?mode=single&job_id=X  → run a specific job (admin UI triggered)
+  // GET /health                 → health check
+  // GET /stats                  → queue stats (no execution)
+
   if (url.pathname === "/health" || url.pathname === "/healthz") {
     return handleHealthCheck();
   }
 
-  console.log("=== AMP Edge Function: execute-jobs (Multi-provider) ===");
+  if (url.pathname === "/stats") {
+    const { count: pending } = await supabase
+      .from("jobs")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "pending");
+    const { count: running } = await supabase
+      .from("jobs")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "running");
+    const { count: completed_today } = await supabase
+      .from("jobs")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "completed")
+      .gte("completed_at", new Date(Date.now() - 86400000).toISOString());
+    return new Response(JSON.stringify({
+      pending: pending ?? 0,
+      running: running ?? 0,
+      completed_last_24h: completed_today ?? 0,
+      timestamp: new Date().toISOString(),
+    }), { headers: { "Content-Type": "application/json" } });
+  }
+
+  const mode = params.get("mode") ?? "single";
+  const skillFilter = params.get("skill");
+  const jobId = params.get("job_id");
+  const limitParam = parseInt(params.get("limit") ?? "5", 10);
+  // CRITICAL: in single mode, limit is ALWAYS 1 (safe under 8s timeout)
+  const limit = mode === "single" ? 1 : Math.min(Math.max(limitParam, 1), 10);
+
+  console.log(`=== AMP Edge Function: execute-jobs (mode=${mode}, limit=${limit}) ===`);
   const startTime = Date.now();
 
   try {
-    // Fetch pending jobs
-    const { data: jobs, error } = await supabase
+    let query = supabase
       .from("jobs")
       .select("*")
       .eq("status", "pending")
-      .order("created_at", { ascending: true })
-      .limit(5);
+      .order("created_at", { ascending: true });
+
+    if (jobId) {
+      query = query.eq("id", jobId);
+    } else if (skillFilter) {
+      query = query.eq("skill_slug", skillFilter);
+    }
+
+    const { data: jobs, error } = await query.limit(limit);
 
     if (error) {
       throw new Error(`Failed to fetch jobs: ${error.message}`);
@@ -675,7 +688,15 @@ Deno.serve(async (req) => {
 
     const elapsed = Date.now() - startTime;
     return new Response(
-      JSON.stringify({ status: "ok", processed: jobs.length, results, elapsed_ms: elapsed }),
+      JSON.stringify({
+        status: "ok",
+        mode,
+        processed: jobs.length,
+        requeued: jobsReEnqueued,
+        results,
+        elapsed_ms: elapsed,
+        remaining_budget_ms: remainingBudgetMs(),
+      }),
       { headers: { "Content-Type": "application/json" } },
     );
 
