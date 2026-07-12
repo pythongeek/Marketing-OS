@@ -27,31 +27,49 @@ CREATE INDEX IF NOT EXISTS idx_credentials_active ON public.credentials(is_activ
 ALTER TABLE public.credentials ENABLE ROW LEVEL SECURITY;
 
 -- Policy: authenticated users can read all credentials
-CREATE POLICY "Users can read credentials"
-    ON public.credentials
-    FOR SELECT
-    TO authenticated
-    USING (true);
+-- Idempotent: skip if policy already exists (Postgres has no CREATE POLICY IF NOT EXISTS)
+DO $create_policies$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE schemaname = 'public'
+        AND tablename = 'credentials'
+        AND policyname = 'Users can read credentials'
+    ) THEN
+        CREATE POLICY "Users can read credentials"
+            ON public.credentials
+            FOR SELECT
+            TO authenticated
+            USING (true);
+    END IF;
 
--- Policy: only admins and editors can insert/update/delete
-CREATE POLICY "Editors can manage credentials"
-    ON public.credentials
-    FOR ALL
-    TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE public.users.id = auth.uid()
-            AND public.users.role IN ('admin', 'editor')
-        )
-    )
-    WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE public.users.id = auth.uid()
-            AND public.users.role IN ('admin', 'editor')
-        )
-    );
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE schemaname = 'public'
+        AND tablename = 'credentials'
+        AND policyname = 'Editors can manage credentials'
+    ) THEN
+        CREATE POLICY "Editors can manage credentials"
+            ON public.credentials
+            FOR ALL
+            TO authenticated
+            USING (
+                EXISTS (
+                    SELECT 1 FROM public.users
+                    WHERE public.users.id = auth.uid()
+                    AND public.users.role IN ('admin', 'editor')
+                )
+            )
+            WITH CHECK (
+                EXISTS (
+                    SELECT 1 FROM public.users
+                    WHERE public.users.id = auth.uid()
+                    AND public.users.role IN ('admin', 'editor')
+                )
+            );
+    END IF;
+END
+$create_policies$;
 
 -- Comments
 COMMENT ON TABLE public.credentials IS 'Encrypted API credentials and service accounts for client integrations';
