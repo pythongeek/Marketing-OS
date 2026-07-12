@@ -16,6 +16,12 @@ from typing import List, Dict, Optional, Any
 from config import Config
 from api_client.base import APIClient
 
+try:
+    from supabase_api import SupabaseAPI
+    _SUPABASE_AVAILABLE = True
+except ImportError:
+    _SUPABASE_AVAILABLE = False
+
 logger = logging.getLogger("amp.bing")
 
 
@@ -34,20 +40,142 @@ class BingWMTClient:
 
     BASE_URL = "https://ssl.bing.com/webmaster/api.svc/json"
 
-    def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or Config.BING_API_KEY
-        if not self.api_key:
-            raise ValueError("Bing API key not configured. Set BING_API_KEY env var.")
+    def _sb(self):
+        """Get a SupabaseAPI instance (cached for connection reuse)."""
+        if not hasattr(self, "_sb_instance") or self._sb_instance is None:
+            self._sb_instance = SupabaseAPI()
+        return self._sb_instance
 
-        # Custom APIClient config — Bing requires apikey as HEADER, not query param
-        # (the query-string format documented in Microsoft Learn returns 404)
-        self.client = APIClient(
-            base_url=self.BASE_URL,
-            auth_header="apikey",
-            auth_value=self.api_key,
-            rate_limit_rps=1.0,
-            name="bing_wmt",
-        )
+    def _get_bing_oauth_tokens(self):
+        """Retrieve Bing OAuth tokens from Supabase bing_tokens table."""
+        if not _SUPABASE_AVAILABLE:
+            return None, None
+        try:
+            resp = self._sb().select(
+                table="bing_tokens",
+                columns="access_token,refresh_token,expires_at",
+                limit=1,
+            )
+            if not resp.is_success:
+                logger.warning(f"Could not read bing_tokens table: {resp.status_code} {resp.error}")
+                return None, None
+            if not resp.body:
+                logger.info("bing_tokens table empty -- complete OAuth flow at /credentials")
+                return None, None
+            row = resp.body[0]
+            return row.get("access_token"), row.get("refresh_token")
+        except Exception as e:
+            logger.error(f"OAuth token retrieval failed: {e}")
+            return None, None
+
+    def _refresh_access_token(self):
+        """Refresh the Bing OAuth access token using the stored refresh_token."""
+        if not _SUPABASE_AVAILABLE or not self.refresh_token:
+            return None
+        try:
+            import requests
+            from datetime import datetime, timedelta, timezone
+            token_url = f"https://login.microsoftonline.com/{Config.BING_TENANT}/oauth2/v2.0/token"
+            data = {
+                "client_id": Config.BING_CLIENT_ID,
+                "client_secret": Config.BING_CLIENT_SECRET,
+                "refresh_token": self.refresh_token,
+                "grant_type": "refresh_token",
+                "scope": "https://api.bing.microsoft.com/.default offline_access",
+            }
+            r = requests.post(token_url, data=data, timeout=30)
+            if r.status_code == 200:
+                payload = r.json()
+                new_access = payload.get("access_token")
+                new_refresh = payload.get("refresh_token", self.refresh_token)
+                expires_at = datetime.now(timezone.utc) + timedelta(seconds=payload.get("expires_in", 3600))
+                try:
+                    self._sb().update(
+                        table="bing_tokens",
+                        filters={"id": "default"},
+                        updates={
+                            "access_token": new_access,
+                            "refresh_token": new_refresh,
+                            "expires_at": expires_at.isoformat(),
+                        },
+                    )
+                except Exception as e:
+                    logger.warning(f"Failed to persist refreshed token: {e}")
+                self.access_token = new_access
+                self.refresh_token = new_refresh
+                logger.info("Refreshed Bing access token")
+                return new_access
+            logger.warning(f"Token refresh failed: HTTP {r.status_code}")
+            return None
+        except Exception as e:
+            logger.error(f"Token refresh exception: {e}")
+            return None
+
+    def _ensure_valid_token(self):
+        """Check expiry and refresh if needed."""
+        if not _SUPABASE_AVAILABLE or not self.access_token:
+            return
+        try:
+            resp = self._sb().select(
+                table="bing_tokens",
+                columns="expires_at",
+                limit=1,
+            )
+            if not resp.is_success or not resp.body:
+                return
+            expires_at = resp.body[0].get("expires_at")
+            if not expires_at:
+                return
+            from datetime import datetime, timezone
+            # Handle ISO format with or without timezone
+            if expires_at.endswith("Z"):
+                expires_at = expires_at[:-1] + "+00:00"
+            exp = datetime.fromisoformat(expires_at)
+            if exp.tzinfo is None:
+                exp = exp.replace(tzinfo=timezone.utc)
+            now = datetime.now(timezone.utc)
+            if (exp - now).total_seconds() < 300:
+                logger.info("Access token expiring soon -- refreshing")
+                self._refresh_access_token()
+        except Exception as e:
+            logger.warning(f"Token expiry check failed: {e}")
+
+    def __init__(self):
+        # Prioritize OAuth tokens if available
+        self.access_token, self.refresh_token = self._get_bing_oauth_tokens()
+        if self.access_token:
+            self.client = APIClient(
+                base_url=self.BASE_URL,
+                auth_header="Authorization",
+                auth_value=f"Bearer {self.access_token}",
+                rate_limit_rps=1.0,
+                name="bing_wmt",
+            )
+            logger.info("Initialized BingWMTClient with OAuth.")
+            # Verify token is still valid; refresh if expiring within 5 minutes
+            self._ensure_valid_token()
+            # Update auth_value in case _ensure_valid_token refreshed it
+            self.client.auth_value = f"Bearer {self.access_token}"
+        else:
+            # Fallback to API Key only if explicitly provided
+            self.api_key = Config.BING_API_KEY
+            if self.api_key:
+                self.client = APIClient(
+                    base_url=self.BASE_URL,
+                    auth_header="apikey",
+                    auth_value=self.api_key,
+                    rate_limit_rps=1.0,
+                    name="bing_wmt",
+                )
+                logger.warning(
+                    "Initialized BingWMTClient with API key fallback. "
+                    "Complete the OAuth flow at /credentials for full functionality."
+                )
+            else:
+                raise ValueError(
+                    "Bing not configured. Complete OAuth flow at /credentials page, "
+                    "or set BING_API_KEY env var as fallback."
+                )
 
     # ── Site Management ─────────────────────────────────────────────────
 

@@ -124,7 +124,12 @@ class Config:
     PAGESPEED_API_KEY: Optional[str] = os.getenv("PAGESPEED_API_KEY")
 
     # ── GEO / AI Citation Tracking ────────────────────────────────────
-    PROFOUND_API_KEY: Optional[str] = os.getenv("PROFOUND_API_KEY")
+    # ── Supabase ─────────────────────────────────────────────────────
+    SUPABASE_URL: Optional[str] = os.getenv("SUPABASE_URL")
+    SUPABASE_SERVICE_ROLE_KEY: Optional[str] = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+    SUPACKAGE_SERVICE_ROLE_KEY: Optional[str] = os.getenv("SUPACKAGE_SERVICE_ROLE_KEY")
+
+    # ── Supabase ─────────────────────────────────────────────────────
     OTTERLY_API_KEY: Optional[str] = os.getenv("OTTERLY_API_KEY")
     BRANDWATCH_API_KEY: Optional[str] = os.getenv("BRANDWATCH_API_KEY")
 
@@ -173,6 +178,7 @@ class Config:
             "slack": cls.SLACK_WEBHOOK_URL is not None,
             "cloudflare": cls.CLOUDFLARE_API_TOKEN is not None,
             "pagespeed": cls.PAGESPEED_API_KEY is not None,
+            "supabase": cls.SUPABASE_URL is not None and cls.SUPABASE_SERVICE_ROLE_KEY is not None,
         }
 
 
