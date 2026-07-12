@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "AgenticMarketingPro Admin",
@@ -15,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-background text-text min-h-screen">
         <div className="flex">
-          {children}
+          <AuthProvider>{children}</AuthProvider>
         </div>
       </body>
     </html>
