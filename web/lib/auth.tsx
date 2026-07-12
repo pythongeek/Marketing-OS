@@ -82,6 +82,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRole(null);
   }
 
+  // Expose supabase client on window so non-context code can fetch session token
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as any).__supabase = supabase;
+    }
+  }, []);
+
   return (
     <AuthContext.Provider value={{ user, role, loading, signIn, signOut }}>
       {children}

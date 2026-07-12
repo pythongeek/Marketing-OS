@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Nav } from "@/components/nav";
 import { StatusBadge } from "@/components/status-badge";
+import { useAuth } from "@/lib/auth";
 import {
   Key, Plus, Trash2, Edit3, Save, X, ChevronDown, Check, AlertCircle,
   Globe, BarChart3, Search, FileText, MessageSquare, Megaphone,
@@ -262,6 +264,29 @@ interface Client {
 }
 
 export default function CredentialsPage() {
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login?redirect=/credentials");
+    }
+  }, [authLoading, user, router]);
+
+  // Helper to build Authorization header for fetch calls
+  const authedFetch = async (url: string, init: RequestInit = {}) => {
+    if (!user) throw new Error("Not authenticated");
+    const session = await (window as any).__supabase?.auth?.getSession?.();
+    const token = session?.data?.session?.access_token;
+    return fetch(url, {
+      ...init,
+      headers: {
+        ...(init.headers || {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+  };
   const [credentials, setCredentials] = useState<Credential[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
@@ -288,9 +313,9 @@ export default function CredentialsPage() {
   async function loadData() {
     try {
       const [credsRes, clientsRes] = await Promise.all([
-        fetch("/api/credentials"),
-        fetch("/api/clients"),
-      ]);
+              authedFetch("/api/credentials"),
+              authedFetch("/api/clients"),
+            ]);
       const credsData = await credsRes.json();
       const clientsData = await clientsRes.json();
       setCredentials(credsData.credentials || []);
@@ -359,11 +384,11 @@ export default function CredentialsPage() {
       const url = editingId ? `/api/credentials/${editingId}` : "/api/credentials";
       const method = editingId ? "PATCH" : "POST";
 
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await authedFetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
 
       if (res.ok) {
         setShowModal(false);
@@ -382,7 +407,7 @@ export default function CredentialsPage() {
   async function deleteCredential(id: string) {
     if (!confirm("Delete this credential? This cannot be undone.")) return;
     try {
-      const res = await fetch(`/api/credentials/${id}`, { method: "DELETE" });
+      const res = await authedFetch(`/api/credentials/${id}`, { method: "DELETE" });
       if (res.ok) {
         await loadData();
       } else {
