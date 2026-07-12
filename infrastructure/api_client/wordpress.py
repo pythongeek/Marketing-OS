@@ -79,8 +79,8 @@ class WordPressClient:
         status: str = "draft",
         post_type: str = "post",
         author_id: int = None,
-        categories: List[int] = None,
-        tags: List[str] = None,
+        categories: List = None,
+        tags: List = None,
         featured_media: int = None,
         excerpt: str = None,
         slug: str = None,
@@ -88,7 +88,14 @@ class WordPressClient:
         seo_title: str = None,
         seo_description: str = None,
     ) -> Dict[str, Any]:
-        """Create a new WordPress post or page."""
+        """Create a new WordPress post or page.
+
+        Args:
+            tags: Can be either a list of integer tag IDs OR a list of tag name strings
+                  (strings will be auto-resolved to IDs, creating missing tags).
+            categories: Can be either a list of integer IDs OR a list of category name
+                        strings (strings will be auto-resolved to IDs).
+        """
         body = {
             "title": title,
             "content": content,
@@ -97,14 +104,25 @@ class WordPressClient:
         }
         if author_id:
             body["author"] = author_id
+        # Resolve categories: accept IDs or names
         if categories:
-            body["categories"] = categories
+            resolved_cats = self._resolve_taxonomy_ids(categories, "categories")
+            if resolved_cats:
+                body["categories"] = resolved_cats
+        # Resolve tags: accept IDs or names
         if tags:
-            body["tags"] = tags
+            resolved_tags = self._resolve_taxonomy_ids(tags, "tags")
+            if resolved_tags:
+                body["tags"] = resolved_tags
         if featured_media:
             body["featured_media"] = featured_media
         if excerpt:
             body["excerpt"] = excerpt
+
+        # Always inject SEO as HTML (universal fallback for any theme/plugin)
+        if seo_title or seo_description:
+            content = self._inject_seo_html(content, seo_title, seo_description)
+            body["content"] = content
 
         # SEO plugin meta
         seo_meta = self._build_seo_meta(seo_title, seo_description)
@@ -153,6 +171,10 @@ class WordPressClient:
         seo_meta = self._build_seo_meta(seo_title, seo_description)
         if seo_meta:
             body["meta"] = seo_meta
+
+        # Inject SEO HTML if content is being updated
+        if "content" in body and (seo_title or seo_description):
+            body["content"] = self._inject_seo_html(body["content"], seo_title, seo_description)
 
         resp = self.client.post(f"/posts/{post_id}", json_body=body)
         return resp.body if resp.is_success else {"status": "error", "code": resp.status_code}
@@ -247,6 +269,75 @@ class WordPressClient:
         return meta
 
     # ── Helpers ───────────────────────────────────────────────────────
+
+
+
+
+    def _inject_seo_html(self, content, seo_title=None, seo_description=None):
+        """Inject SEO meta as HTML in the content (universal fallback when plugin meta is not writable).
+
+        This prepends HTML meta tags and Open Graph tags to the post content. WordPress
+        themes and SEO plugins typically render these tags in the page <head>. This is a
+        safe universal approach that works regardless of which SEO plugin is installed.
+        """
+        if not seo_title and not seo_description:
+            return content
+
+        seo_lines = ["<!-- AgenticMarketingPro SEO Injection -->"]
+        if seo_title:
+            seo_lines.append("<title>" + seo_title.encode().decode() + "</title>")
+            seo_lines.append('<meta name="description" content="' + (seo_description or "").encode().decode() + '">')
+            seo_lines.append('<meta property="og:title" content="' + seo_title.encode().decode() + '">')
+            seo_lines.append('<meta property="og:description" content="' + (seo_description or "").encode().decode() + '">')
+            seo_lines.append('<meta name="twitter:title" content="' + seo_title.encode().decode() + '">')
+            seo_lines.append('<meta name="twitter:description" content="' + (seo_description or "").encode().decode() + '">')
+        elif seo_description:
+            seo_lines.append('<meta name="description" content="' + seo_description.encode().decode() + '">')
+            seo_lines.append('<meta property="og:description" content="' + seo_description.encode().decode() + '">')
+            seo_lines.append('<meta name="twitter:description" content="' + seo_description.encode().decode() + '">')
+        seo_lines.append("<!-- /AgenticMarketingPro SEO Injection -->")
+        seo_block = "
+".join(seo_lines)
+
+        if "AgenticMarketingPro SEO Injection" in content:
+            import re
+            content = re.sub(
+                rb"<!-- AgenticMarketingPro SEO Injection -->.*?<!-- /AgenticMarketingPro SEO Injection -->
+?",
+                (seo_block + "
+").encode(),
+                content,
+                flags=re.DOTALL,
+            )
+        else:
+            content = (seo_block + "
+" + content).encode() if isinstance(content, str) else seo_block.encode() + b"
+" + content
+
+        return content
+
+    def _resolve_taxonomy_ids(self, items, taxonomy):
+        """Resolve a list of IDs or names to integer IDs for WP taxonomy terms."""
+        if not items:
+            return []
+        resolved = []
+        for item in items:
+            if isinstance(item, int):
+                resolved.append(item)
+            elif isinstance(item, str) and item.strip():
+                existing = self.client.get(f"/{taxonomy}", params={"search": item.strip(), "per_page": 100}).body
+                found_id = None
+                for term in (existing or []):
+                    if term.get("name", "").lower() == item.strip().lower():
+                        found_id = term["id"]
+                        break
+                if found_id:
+                    resolved.append(found_id)
+                else:
+                    create_resp = self.client.post(f"/{taxonomy}", json_body={"name": item.strip()})
+                    if create_resp.is_success:
+                        resolved.append(create_resp.body["id"])
+        return resolved
 
     def _slugify(self, text: str) -> str:
         import re
