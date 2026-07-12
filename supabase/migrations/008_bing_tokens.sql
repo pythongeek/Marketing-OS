@@ -21,11 +21,23 @@ ALTER TABLE public.bing_tokens ENABLE ROW LEVEL SECURITY;
 
 -- Only service role can read/write tokens (never expose to client)
 -- The anon/authenticated roles get NO access — only Edge Functions with service role can use these.
-CREATE POLICY "Service role only" ON public.bing_tokens
-    FOR ALL
-    TO service_role
-    USING (true)
-    WITH CHECK (true);
+-- Idempotent: skip if policy already exists
+DO $bing_tokens_policy$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE schemaname = 'public'
+        AND tablename = 'bing_tokens'
+        AND policyname = 'Service role only'
+    ) THEN
+        CREATE POLICY "Service role only" ON public.bing_tokens
+            FOR ALL
+            TO service_role
+            USING (true)
+            WITH CHECK (true);
+    END IF;
+END
+$bing_tokens_policy$;
 
 -- Trigger for updated_at
 CREATE OR REPLACE FUNCTION update_bing_tokens_updated_at()

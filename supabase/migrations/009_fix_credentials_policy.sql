@@ -1,52 +1,28 @@
--- Migration 009: Fix duplicate policy on credentials table
+-- Migration 009: Fix duplicate policies from partial runs
 -- ===========================================================
--- The "Users can read credentials" policy was created in a previous
--- failed run. Drop it before recreating to make migration idempotent.
+-- Previous failed runs of migrations 007 and 008 left orphaned
+-- policies. Drop them so the migrations can complete cleanly.
+-- Also makes future re-runs of 007 and 008 safe (idempotent).
 
 DROP POLICY IF EXISTS "Users can read credentials" ON public.credentials;
 DROP POLICY IF EXISTS "Editors can manage credentials" ON public.credentials;
+DROP POLICY IF EXISTS "Service role only" ON public.bing_tokens;
 
--- Now safe to re-run migration 007 policies
--- (CREATE POLICY statements will be added below if they don't exist)
-
-DO $$
+-- Verify drops succeeded
+DO $verify_drops$
 BEGIN
-    IF NOT EXISTS (
+    IF EXISTS (
         SELECT 1 FROM pg_policies
         WHERE schemaname = 'public'
-        AND tablename = 'credentials'
-        AND policyname = 'Users can read credentials'
+        AND tablename IN ('credentials', 'bing_tokens')
     ) THEN
-        CREATE POLICY "Users can read credentials"
-            ON public.credentials
-            FOR SELECT
-            TO authenticated
-            USING (true);
+        RAISE NOTICE 'Some policies remain — check manually: %',
+            (SELECT string_agg(tablename || '.' || policyname, ', ')
+             FROM pg_policies
+             WHERE schemaname = 'public'
+             AND tablename IN ('credentials', 'bing_tokens'));
+    ELSE
+        RAISE NOTICE 'All orphaned policies dropped. Safe to re-run 007 and 008.';
     END IF;
-
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_policies
-        WHERE schemaname = 'public'
-        AND tablename = 'credentials'
-        AND policyname = 'Editors can manage credentials'
-    ) THEN
-        CREATE POLICY "Editors can manage credentials"
-            ON public.credentials
-            FOR ALL
-            TO authenticated
-            USING (
-                EXISTS (
-                    SELECT 1 FROM public.users
-                    WHERE public.users.id = auth.uid()
-                    AND public.users.role IN ('admin', 'editor')
-                )
-            )
-            WITH CHECK (
-                EXISTS (
-                    SELECT 1 FROM public.users
-                    WHERE public.users.id = auth.uid()
-                    AND public.users.role IN ('admin', 'editor')
-                )
-            );
-    END IF;
-END $$;
+END
+$verify_drops$;
