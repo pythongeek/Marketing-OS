@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
-import type { User } from "@supabase/supabase-js";
 
 interface AuthContextValue {
   user: User | null;
@@ -26,25 +26,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     // Check existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchRole(session.user.id);
-      } else {
-        setLoading(false);
-      }
-    });
+        supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
+          setUser(session?.user ?? null);
+          if (session?.user) {
+            fetchRole(session.user.id);
+          } else {
+            setLoading(false);
+          }
+        });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchRole(session.user.id);
-      } else {
-        setRole(null);
-        setLoading(false);
-      }
-    });
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
+          setUser(session?.user ?? null);
+          if (session?.user) {
+            fetchRole(session.user.id);
+          } else {
+            setRole(null);
+            setLoading(false);
+          }
+        });
 
     return () => subscription.unsubscribe();
   }, []);

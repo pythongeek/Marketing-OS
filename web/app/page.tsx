@@ -88,7 +88,7 @@ export default function DashboardPage() {
       });
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase!.removeChannel(channel);
     };
   }, []);
 

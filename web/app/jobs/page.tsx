@@ -46,7 +46,7 @@ export default function JobsPage() {
         if (status === "SUBSCRIBED") setLiveStatus("🟢 Live");
       });
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { supabase!.removeChannel(channel); };
   }, []);
 
   const filtered = filter === "all" ? jobs : jobs.filter((j: any) => j.status === filter);
