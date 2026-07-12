@@ -267,12 +267,46 @@ export default function CredentialsPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push("/login?redirect=/credentials");
+  // Show inline login form if not authenticated (no separate /login route required)
+    // Use state instead of redirect to avoid Vercel routing issues
+    const [showLoginForm, setShowLoginForm] = useState(false);
+    const [loginEmail, setLoginEmail] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
+    const [loginError, setLoginError] = useState<string | null>(null);
+    const [loginLoading, setLoginLoading] = useState(false);
+
+    useEffect(() => {
+      if (!authLoading && !user) {
+        setShowLoginForm(true);
+      } else {
+        setShowLoginForm(false);
+      }
+    }, [authLoading, user]);
+
+    async function handleInlineLogin(e: React.FormEvent) {
+      e.preventDefault();
+      setLoginLoading(true);
+      setLoginError(null);
+      // Use the supabase client directly to avoid context stale-closure issues
+      if (typeof window === "undefined") return;
+      const sb = (window as any).__supabase;
+      if (!sb) {
+        setLoginError("Supabase client not ready");
+        setLoginLoading(false);
+        return;
+      }
+      const { error } = await sb.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPassword,
+      });
+      setLoginLoading(false);
+      if (error) {
+        setLoginError(error.message);
+      } else {
+        setShowLoginForm(false);
+        window.location.reload(); // Refresh to pick up authenticated state
+      }
     }
-  }, [authLoading, user, router]);
 
   // Helper to build Authorization header for fetch calls
   const authedFetch = async (url: string, init: RequestInit = {}) => {
@@ -435,6 +469,102 @@ export default function CredentialsPage() {
     acc[s.category].push(s);
     return acc;
   }, {} as Record<string, ServiceDef[]>);
+
+  // Show inline login modal if not authenticated
+  if (showLoginForm && !user) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+        padding: "20px",
+      }}>
+        <div style={{
+          background: "white",
+          borderRadius: "16px",
+          padding: "40px",
+          maxWidth: "420px",
+          width: "100%",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+        }}>
+          <h1 style={{ margin: "0 0 8px", fontSize: "24px", fontWeight: 800, color: "#1a1a2e" }}>
+            AgenticMarketingPro
+          </h1>
+          <p style={{ margin: "0 0 32px", fontSize: "14px", color: "#636e72" }}>
+            Sign in to manage credentials.
+          </p>
+
+          <form onSubmit={handleInlineLogin}>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={{ display: "block", marginBottom: "6px", fontSize: "13px", fontWeight: 600, color: "#1a1a2e" }}>
+                Email
+              </label>
+              <input
+                type="email"
+                required
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                autoComplete="email"
+                style={{ width: "100%", padding: "10px 12px", fontSize: "15px", border: "1px solid #e0dff8", borderRadius: "8px", outline: "none" }}
+              />
+            </div>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "6px", fontSize: "13px", fontWeight: 600, color: "#1a1a2e" }}>
+                Password
+              </label>
+              <input
+                type="password"
+                required
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                autoComplete="current-password"
+                style={{ width: "100%", padding: "10px 12px", fontSize: "15px", border: "1px solid #e0dff8", borderRadius: "8px", outline: "none" }}
+              />
+            </div>
+
+            {loginError && (
+              <div style={{
+                background: "#ffe5e5",
+                border: "1px solid #ff7675",
+                borderRadius: "8px",
+                padding: "10px 12px",
+                marginBottom: "16px",
+                fontSize: "13px",
+                color: "#c0392b",
+              }}>
+                {loginError}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loginLoading}
+              style={{
+                width: "100%",
+                padding: "12px",
+                fontSize: "15px",
+                fontWeight: 700,
+                color: "white",
+                background: loginLoading ? "#a29bfe" : "#6c5ce7",
+                border: "none",
+                borderRadius: "8px",
+                cursor: loginLoading ? "wait" : "pointer",
+              }}
+            >
+              {loginLoading ? "Signing in..." : "Sign In"}
+            </button>
+          </form>
+
+          <p style={{ marginTop: "20px", fontSize: "12px", color: "#636e72", textAlign: "center" }}>
+            Don't have an account? Contact your administrator.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) return <div className="p-8 text-muted">Loading...</div>;
 
