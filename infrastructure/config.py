@@ -79,14 +79,16 @@ class Config:
     BING_API_KEY: Optional[str] = os.getenv("BING_API_KEY")
     # OAuth 2.0 (replaces deprecated API key)
     _raw_bing_client_id = os.getenv("BING_CLIENT_ID")
+    if _raw_bing_client_id:
+        _raw_bing_client_id = _raw_bing_client_id.strip()
     BING_CLIENT_ID: Optional[str] = (
         f"{_raw_bing_client_id[:8]}-{_raw_bing_client_id[8:12]}-{_raw_bing_client_id[12:16]}-{_raw_bing_client_id[16:20]}-{_raw_bing_client_id[20:]}"
         if _raw_bing_client_id and len(_raw_bing_client_id) == 32 and "-" not in _raw_bing_client_id
         else _raw_bing_client_id
     )
-    BING_CLIENT_SECRET: Optional[str] = os.getenv("BING_CLIENT_SECRET")
-    BING_TENANT: str = os.getenv("BING_TENANT", "common")
-    BING_REDIRECT_URI: Optional[str] = os.getenv("BING_REDIRECT_URI")
+    BING_CLIENT_SECRET: Optional[str] = os.getenv("BING_CLIENT_SECRET").strip() if os.getenv("BING_CLIENT_SECRET") else None
+    BING_TENANT: str = os.getenv("BING_TENANT", "common").strip()
+    BING_REDIRECT_URI: Optional[str] = os.getenv("BING_REDIRECT_URI").strip() if os.getenv("BING_REDIRECT_URI") else None
 
     # ── WordPress (CMS) ───────────────────────────────────────────────
     WORDPRESS_SITE_URL: Optional[str] = os.getenv("WORDPRESS_SITE_URL")

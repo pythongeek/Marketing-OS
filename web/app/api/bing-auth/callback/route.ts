@@ -16,13 +16,13 @@ export async function GET(request: Request) {
   const state = url.searchParams.get("state");
   const error = url.searchParams.get("error");
 
-  let clientId = process.env.BING_CLIENT_ID;
+  let clientId = process.env.BING_CLIENT_ID?.trim();
   if (clientId && clientId.length === 32 && !clientId.includes("-")) {
     clientId = `${clientId.slice(0, 8)}-${clientId.slice(8, 12)}-${clientId.slice(12, 16)}-${clientId.slice(16, 20)}-${clientId.slice(20)}`;
   }
-  const clientSecret = process.env.BING_CLIENT_SECRET;
-  const redirectUri = process.env.BING_REDIRECT_URI;
-  const tenant = process.env.BING_TENANT || "common";
+  const clientSecret = process.env.BING_CLIENT_SECRET?.trim();
+  const redirectUri = process.env.BING_REDIRECT_URI?.trim();
+  const tenant = (process.env.BING_TENANT || "common").trim();
 
   if (error) {
     return NextResponse.json(

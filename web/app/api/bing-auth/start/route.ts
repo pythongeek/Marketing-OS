@@ -8,12 +8,12 @@ import { randomBytes } from "crypto";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  let clientId = process.env.BING_CLIENT_ID;
+  let clientId = process.env.BING_CLIENT_ID?.trim();
   if (clientId && clientId.length === 32 && !clientId.includes("-")) {
     clientId = `${clientId.slice(0, 8)}-${clientId.slice(8, 12)}-${clientId.slice(12, 16)}-${clientId.slice(16, 20)}-${clientId.slice(20)}`;
   }
-  const redirectUri = process.env.BING_REDIRECT_URI;
-  const tenant = process.env.BING_TENANT || "common";
+  const redirectUri = process.env.BING_REDIRECT_URI?.trim();
+  const tenant = (process.env.BING_TENANT || "common").trim();
 
   if (!clientId || !redirectUri) {
     return NextResponse.json(
