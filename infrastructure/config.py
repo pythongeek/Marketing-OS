@@ -78,7 +78,12 @@ class Config:
     GSC_PROPERTY: Optional[str] = os.getenv("GSC_PROPERTY")
     BING_API_KEY: Optional[str] = os.getenv("BING_API_KEY")
     # OAuth 2.0 (replaces deprecated API key)
-    BING_CLIENT_ID: Optional[str] = os.getenv("BING_CLIENT_ID")
+    _raw_bing_client_id = os.getenv("BING_CLIENT_ID")
+    BING_CLIENT_ID: Optional[str] = (
+        f"{_raw_bing_client_id[:8]}-{_raw_bing_client_id[8:12]}-{_raw_bing_client_id[12:16]}-{_raw_bing_client_id[16:20]}-{_raw_bing_client_id[20:]}"
+        if _raw_bing_client_id and len(_raw_bing_client_id) == 32 and "-" not in _raw_bing_client_id
+        else _raw_bing_client_id
+    )
     BING_CLIENT_SECRET: Optional[str] = os.getenv("BING_CLIENT_SECRET")
     BING_TENANT: str = os.getenv("BING_TENANT", "common")
     BING_REDIRECT_URI: Optional[str] = os.getenv("BING_REDIRECT_URI")

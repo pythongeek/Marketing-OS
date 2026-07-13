@@ -8,7 +8,10 @@ import { createClient } from "@supabase/supabase-js";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const clientId = process.env.BING_CLIENT_ID;
+  let clientId = process.env.BING_CLIENT_ID;
+  if (clientId && clientId.length === 32 && !clientId.includes("-")) {
+    clientId = `${clientId.slice(0, 8)}-${clientId.slice(8, 12)}-${clientId.slice(12, 16)}-${clientId.slice(16, 20)}-${clientId.slice(20)}`;
+  }
   const clientSecret = process.env.BING_CLIENT_SECRET;
   const tenant = process.env.BING_TENANT || "common";
 
