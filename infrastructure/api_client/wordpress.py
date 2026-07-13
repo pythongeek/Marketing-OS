@@ -50,7 +50,7 @@ class WordPressClient:
             name="wordpress",
         )
 
-    # ── Connection Test ───────────────────────────────────────────────
+    # -- Connection Test -----------------------------------------------------
 
     def test_connection(self) -> Dict[str, Any]:
         """Test WordPress REST API connectivity."""
@@ -70,7 +70,7 @@ class WordPressClient:
         except Exception as e:
             return {"status": "exception", "error": str(e)}
 
-    # ── Posts ───────────────────────────────────────────────────────────
+    # -- Posts ---------------------------------------------------------------
 
     def create_post(
         self,
@@ -189,7 +189,7 @@ class WordPressClient:
         resp = self.client.get("/posts", params={"per_page": per_page, "status": status})
         return resp.body if isinstance(resp.body, list) else []
 
-    # ── Media ─────────────────────────────────────────────────────────
+    # -- Media ---------------------------------------------------------------
 
     def upload_media(self, file_path: str, title: str = None) -> Dict[str, Any]:
         """Upload an image or media file."""
@@ -231,7 +231,7 @@ class WordPressClient:
         except Exception as e:
             return {"status": "exception", "error": str(e)}
 
-    # ── Taxonomies ────────────────────────────────────────────────────
+    # -- Taxonomies ----------------------------------------------------------
 
     def get_categories(self) -> List[Dict]:
         """Get all categories."""
@@ -243,7 +243,7 @@ class WordPressClient:
         resp = self.client.get("/tags", params={"per_page": 100})
         return resp.body if isinstance(resp.body, list) else []
 
-    # ── SEO Meta ──────────────────────────────────────────────────────
+    # -- SEO Meta ------------------------------------------------------------
 
     def _build_seo_meta(self, title: str = None, description: str = None) -> Dict:
         """Build SEO meta fields based on configured plugin."""
@@ -268,9 +268,7 @@ class WordPressClient:
                 meta["_aioseop_description"] = description
         return meta
 
-    # ── Helpers ───────────────────────────────────────────────────────
-
-
+    # -- Helpers -------------------------------------------------------------
 
 
     def _inject_seo_html(self, content, seo_title=None, seo_description=None):
@@ -296,23 +294,18 @@ class WordPressClient:
             seo_lines.append('<meta property="og:description" content="' + seo_description.encode().decode() + '">')
             seo_lines.append('<meta name="twitter:description" content="' + seo_description.encode().decode() + '">')
         seo_lines.append("<!-- /AgenticMarketingPro SEO Injection -->")
-        seo_block = "
-".join(seo_lines)
+        seo_block = "\n".join(seo_lines)
 
         if "AgenticMarketingPro SEO Injection" in content:
             import re
             content = re.sub(
-                rb"<!-- AgenticMarketingPro SEO Injection -->.*?<!-- /AgenticMarketingPro SEO Injection -->
-?",
-                (seo_block + "
-").encode(),
+                r"<!-- AgenticMarketingPro SEO Injection -->.*?<!-- /AgenticMarketingPro SEO Injection -->\n?",
+                (seo_block + "\n"),
                 content,
                 flags=re.DOTALL,
             )
         else:
-            content = (seo_block + "
-" + content).encode() if isinstance(content, str) else seo_block.encode() + b"
-" + content
+            content = (seo_block + "\n" + content).encode() if isinstance(content, str) else seo_block.encode() + b"\n" + content
 
         return content
 
@@ -343,7 +336,7 @@ class WordPressClient:
         import re
         return re.sub(r'[^a-z0-9]+', '-', text.lower().strip()).strip('-')
 
-    # ── Vault Write-Back ────────────────────────────────────────────────
+    # -- Vault Write-Back ----------------------------------------------------
 
     def publish_from_vault(self, vault_file_path: str, client: str) -> Dict[str, Any]:
         """Publish a content piece from the vault to WordPress."""
@@ -406,21 +399,21 @@ class WordPressClient:
         import re
         html = markdown
         # Headers
-        html = re.sub(r'^###\s+(.+)$', r'<h3>\1</h3>', html, flags=re.MULTILINE)
-        html = re.sub(r'^##\s+(.+)$', r'<h2>\1</h2>', html, flags=re.MULTILINE)
-        html = re.sub(r'^#\s+(.+)$', r'<h1>\1</h1>', html, flags=re.MULTILINE)
+        html = re.sub(r'^###\s+(.+)$', r'<h3>\\1</h3>', html, flags=re.MULTILINE)
+        html = re.sub(r'^##\s+(.+)$', r'<h2>\\1</h2>', html, flags=re.MULTILINE)
+        html = re.sub(r'^#\s+(.+)$', r'<h1>\\1</h1>', html, flags=re.MULTILINE)
         # Bold/italic
-        html = re.sub(r'\*\*\*(.+?)\*\*\*', r'<strong><em>\1</em></strong>', html)
-        html = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', html)
-        html = re.sub(r'\*(.+?)\*', r'<em>\1</em>', html)
+        html = re.sub(r'\*\*\*(.+?)\*\*\*', r'<strong><em>\\1</em></strong>', html)
+        html = re.sub(r'\*\*(.+?)\*\*', r'<strong>\\1</strong>', html)
+        html = re.sub(r'\*(.+?)\*', r'<em>\\1</em>', html)
         # Links
-        html = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', r'<a href="\2">\1</a>', html)
+        html = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href=\"\\2\">\\1</a>', html)
         # Paragraphs
-        paragraphs = html.split('\n\n')
-        html = '\n'.join(f'<p>{p}</p>' if not p.startswith('<') else p for p in paragraphs)
+        paragraphs = html.split('\\n\\n')
+        html = '\\n'.join(f'<p>{p}</p>' if not p.startswith('<') else p for p in paragraphs)
         # Lists
-        html = re.sub(r'(?m)^-\s+(.+)$', r'<li>\1</li>', html)
-        html = re.sub(r'(<li>.+</li>\n)+', r'<ul>\g<0></ul>', html)
+        html = re.sub(r'(?m)^-\\s+(.+)$', r'<li>\\1</li>', html)
+        html = re.sub(r'(<li>.+</li>\\n)+', r'<ul>\\g<0></ul>', html)
         return html
 
 
