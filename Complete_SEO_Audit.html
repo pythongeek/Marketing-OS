@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgenticMarketingPro - Complete SEO Audit</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; color: #1e293b; background: #f8fafc; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    
+    /* Header */
+    .header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 50px 40px; border-radius: 20px; margin-bottom: 30px; text-align: center; }
+    .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+    .header .subtitle { font-size: 1.2em; opacity: 0.9; }
+    
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+    .stat { background: white; padding: 24px; border-radius: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .stat .num { font-size: 2.5em; font-weight: bold; }
+    .stat.green .num { color: #10b981; }
+    .stat.red .num { color: #ef4444; }
+    .stat.blue .num { color: #3b82f6; }
+    .stat.orange .num { color: #f97316; }
+    
+    /* Sections */
+    .section { background: white; border-radius: 16px; padding: 30px; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .section h2 { color: #1e293b; font-size: 1.5em; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #1e3a8a; color: white; padding: 14px; text-align: left; font-weight: 600; }
+    td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+    tr:hover { background: #f8fafc; }
+    
+    /* Links */
+    .post-link { color: #3b82f6; text-decoration: none; font-weight: 500; }
+    .post-link:hover { text-decoration: underline; }
+    .edit-link { color: #10b981; text-decoration: none; font-size: 0.85em; }
+    .edit-link:hover { text-decoration: underline; }
+    
+    /* Tags */
+    .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75em; font-weight: bold; }
+    .tag.crit { background: #fef2f2; color: #dc2626; }
+    .tag.warn { background: #fff7ed; color: #ea580c; }
+    .tag.good { background: #f0fdf4; color: #16a34a; }
+    
+    /* Issue Cards */
+    .issue-card { background: #fef2f2; border-left: 4px solid #dc2626; padding: 20px; margin-bottom: 16px; border-radius: 0 12px 12px 0; }
+    .issue-card .title { font-weight: 600; color: #1e293b; margin-bottom: 8px; }
+    .issue-card .issue { color: #dc2626; font-size: 0.9em; }
+    .issue-card .fix { color: #16a34a; font-size: 0.9em; margin-top: 8px; }
+    
+    /* GSC Data */
+    .gsc-card { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 20px; margin-bottom: 16px; border-radius: 0 12px 12px 0; }
+    .gsc-card .page { font-weight: 600; color: #1e3a8a; }
+    .gsc-card .metrics { color: #64748b; font-size: 0.9em; margin-top: 4px; }
+    
+    /* Navigation */
+    .nav { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .nav-btn { background: #e2e8f0; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9em; }
+    .nav-btn.active { background: #3b82f6; color: white; }
+    
+    /* Filter */
+    .filter { display: flex; gap: 12px; margin-bottom: 20px; align-items: center; }
+    .filter input { padding: 10px 16px; border: 1px solid #e2e8f0; border-radius: 8px; width: 300px; }
+    .filter select { padding: 10px 16px; border: 1px solid #e2e8f0; border-radius: 8px; }
+    
+    @media(max-width: 768px) {
+        .stats { grid-template-columns: repeat(2, 1fr); }
+        .filter input { width: 100%; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+    <h1>🔍 Complete SEO Audit Report</h1>
+    <p class="subtitle">AgenticMarketingPro.com | 214 Posts Analyzed</p>
+    <p style="margin-top: 10px; opacity: 0.8;">Generated: July 17, 2026</p>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+    <div class="stat">
+        <div class="num blue">214</div>
+        <div>Total Posts</div>
+    </div>
+    <div class="stat green">
+        <div class="num green">195</div>
+        <div>Healthy Posts</div>
+    </div>
+    <div class="stat red">
+        <div class="num red">19</div>
+        <div>Need Optimization</div>
+    </div>
+    <div class="stat orange">
+        <div class="num orange">23</div>
+        <div>Quick Wins (GSC)</div>
+    </div>
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav">
+    <button class="nav-btn active" onclick="showSection('overview')">📊 Overview</button>
+    <button class="nav-btn" onclick="showSection('issues')">⚠️ Posts Needing Fix</button>
+    <button class="nav-btn" onclick="showSection('gsc')">🎯 Quick Wins</button>
+    <button class="nav-btn" onclick="showSection('all')">📝 All Posts</button>
+</div>
+
+<!-- OVERVIEW SECTION -->
+<div id="overview" class="section">
+    <h2>📊 Audit Summary</h2>
+    <table>
+        <tr><th>Status</th><th>Count</th><th>Action Required</th></tr>
+        <tr>
+            <td><span class="tag good">✅ Healthy</span></td>
+            <td>195 posts</td>
+            <td>Continue monitoring</td>
+        </tr>
+        <tr>
+            <td><span class="tag warn">⚠️ Generic Meta Description</span></td>
+            <td>19 posts</td>
+            <td>Rewrite descriptions (see below)</td>
+        </tr>
+        <tr>
+            <td><span class="tag warn">⚠️ Short Description</span></td>
+            <td>8 posts</td>
+            <td>Expand to 150-160 chars</td>
+        </tr>
+    </table>
+</div>
+
+<!-- ISSUES SECTION -->
+<div id="issues" class="section" style="display:none;">
+    <h2>⚠️ Posts Needing Optimization (19)</h2>
+    <p style="color: #64748b; margin-bottom: 20px;">These posts have generic meta descriptions starting with "Learn everything about..." - this hurts CTR. Click the edit link to fix each one.</p>
+    
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2587" target="_blank" class="post-link">Agentic Marketing Examples: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2587&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about agentic marketing examples. Expert insights and actionabl...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master agentic marketing examples with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2590" target="_blank" class="post-link">Agentic Marketing Vs Marketing Automation: Your Complete Guide...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2590&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about agentic marketing vs marketing automation. Expert insight...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master agentic marketing vs marketing automation with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2593" target="_blank" class="post-link">Ai Business Automation: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2593&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about AI business automation. Expert insights and actionable st...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master AI business automation with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2595" target="_blank" class="post-link">Business Automation With Ai: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2595&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about business automation with AI. Expert insights and actionab...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master business automation with AI with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2598" target="_blank" class="post-link">Ai Automation in Marketing: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2598&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about AI automation in marketing. Expert insights and actionabl...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master AI automation in marketing with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2603" target="_blank" class="post-link">Autonomous Marketing Campaigns: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2603&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about autonomous marketing campaigns. Expert insights and actio...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master autonomous marketing campaigns with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2605" target="_blank" class="post-link">Ai Workflow Automation: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2605&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about AI workflow automation. Expert insights and actionable st...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master AI workflow automation with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2607" target="_blank" class="post-link">Intelligent Automation: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2607&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about intelligent automation. Expert insights and actionable st...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master intelligent automation with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2609" target="_blank" class="post-link">Ai Orchestration for Marketing: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2609&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about AI orchestration for marketing. Expert insights and actio...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master AI orchestration for marketing with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2611" target="_blank" class="post-link">How to Design Ai Agent Workflows: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2611&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about how to design AI agent workflows. Expert insights and act...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master how to design AI agent workflows with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2613" target="_blank" class="post-link">Multi-agent Marketing System: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2613&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about multi-agent marketing system. Expert insights and actiona...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master multi-agent marketing system with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2627" target="_blank" class="post-link">Human in the Loop Ai Marketing: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2627&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about human in the loop AI marketing. Expert insights and actio...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master human in the loop AI marketing with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2630" target="_blank" class="post-link">Ai Agent Orchestration: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2630&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about AI agent orchestration. Expert insights and actionable st...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master AI agent orchestration with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2633" target="_blank" class="post-link">Content Repurposing Automation: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2633&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about content repurposing automation. Expert insights and actio...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master content repurposing automation with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2636" target="_blank" class="post-link">Email Automation With Ai: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2636&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about email automation with AI. Expert insights and actionable ...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master email automation with AI with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2639" target="_blank" class="post-link">Lead Qualification Automation: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2639&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about lead qualification automation. Expert insights and action...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master lead qualification automation with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2641" target="_blank" class="post-link">Workflow Automation for Marketing: the Complete Guide (2026)...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2641&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about workflow automation for marketing. Expert insights and ac...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master workflow automation for marketing with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2650" target="_blank" class="post-link">Marketing Automation With Ai Agents — What Actually Works in 2026...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2650&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about marketing automation with AI agents. Expert insights and ...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master marketing automation with AI agents with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+    <div class="issue-card">
+        <div class="title">
+            <a href="https://agenticmarketingpro.com/?p=2661" target="_blank" class="post-link">Agentic Seo — What Actually Works in 2026...</a>
+            <a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2661&action=edit" target="_blank" class="edit-link">[Edit in WordPress]</a>
+        </div>
+        <div class="issue">
+            <strong>Current:</strong> Learn everything about agentic SEO. Expert insights and actionable steps. (73 ch...
+        </div>
+        <div class="fix">
+            <strong>Suggested:</strong> Master agentic SEO with this comprehensive guide. Step-by-step tutorials, expert tips, and proven strategies to boost your results.
+        </div>
+    </div>
+</div>
+
+<!-- GSC QUICK WINS SECTION -->
+<div id="gsc" class="section" style="display:none;">
+    <h2>🎯 Quick Wins from GSC (Positions 4-15)</h2>
+    <p style="color: #64748b; margin-bottom: 20px;">These pages are ranking on page 2. Small fixes can push them to page 1 within days.</p>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-webhook-timeouts/" target="_blank" class="post-link">n8n-webhook-timeouts/</a>
+            <a href="https://agenticmarketingpro.com/n8n-webhook-timeouts/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>10.2</strong> | 
+            Impressions: <strong>485</strong> | 
+            Clicks: <strong>0</strong> | 
+            CTR: <strong>0%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/odoo-json-rpc/" target="_blank" class="post-link">odoo-json-rpc/</a>
+            <a href="https://agenticmarketingpro.com/odoo-json-rpc/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>8.7</strong> | 
+            Impressions: <strong>462</strong> | 
+            Clicks: <strong>2</strong> | 
+            CTR: <strong>0.43%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-retry-logic/" target="_blank" class="post-link">n8n-retry-logic/</a>
+            <a href="https://agenticmarketingpro.com/n8n-retry-logic/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>11.2</strong> | 
+            Impressions: <strong>459</strong> | 
+            Clicks: <strong>1</strong> | 
+            CTR: <strong>0.22%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/aeo-roi-measurement/" target="_blank" class="post-link">aeo-roi-measurement/</a>
+            <a href="https://agenticmarketingpro.com/aeo-roi-measurement/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>12.8</strong> | 
+            Impressions: <strong>337</strong> | 
+            Clicks: <strong>0</strong> | 
+            CTR: <strong>0%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/odoo-xml-rpc/" target="_blank" class="post-link">odoo-xml-rpc/</a>
+            <a href="https://agenticmarketingpro.com/odoo-xml-rpc/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>10.8</strong> | 
+            Impressions: <strong>320</strong> | 
+            Clicks: <strong>0</strong> | 
+            CTR: <strong>0%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-vector-database-integration/" target="_blank" class="post-link">n8n-vector-database-integration/</a>
+            <a href="https://agenticmarketingpro.com/n8n-vector-database-integration/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>10.9</strong> | 
+            Impressions: <strong>317</strong> | 
+            Clicks: <strong>2</strong> | 
+            CTR: <strong>0.63%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/content-repurposing-automation/" target="_blank" class="post-link">content-repurposing-automation/</a>
+            <a href="https://agenticmarketingpro.com/content-repurposing-automation/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>14.1</strong> | 
+            Impressions: <strong>270</strong> | 
+            Clicks: <strong>2</strong> | 
+            CTR: <strong>0.74%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-sub-workflows/" target="_blank" class="post-link">n8n-sub-workflows/</a>
+            <a href="https://agenticmarketingpro.com/n8n-sub-workflows/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>12.8</strong> | 
+            Impressions: <strong>245</strong> | 
+            Clicks: <strong>1</strong> | 
+            CTR: <strong>0.41%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/odoo-webhook-integration/" target="_blank" class="post-link">odoo-webhook-integration/</a>
+            <a href="https://agenticmarketingpro.com/odoo-webhook-integration/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>7.8</strong> | 
+            Impressions: <strong>183</strong> | 
+            Clicks: <strong>2</strong> | 
+            CTR: <strong>1.09%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/content-brief-automation/" target="_blank" class="post-link">content-brief-automation/</a>
+            <a href="https://agenticmarketingpro.com/content-brief-automation/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>14.2</strong> | 
+            Impressions: <strong>140</strong> | 
+            Clicks: <strong>0</strong> | 
+            CTR: <strong>0%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-websocket-streaming/" target="_blank" class="post-link">n8n-websocket-streaming/</a>
+            <a href="https://agenticmarketingpro.com/n8n-websocket-streaming/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>10.9</strong> | 
+            Impressions: <strong>118</strong> | 
+            Clicks: <strong>1</strong> | 
+            CTR: <strong>0.85%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-custom-node-development/" target="_blank" class="post-link">n8n-custom-node-development/</a>
+            <a href="https://agenticmarketingpro.com/n8n-custom-node-development/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>9.8</strong> | 
+            Impressions: <strong>106</strong> | 
+            Clicks: <strong>0</strong> | 
+            CTR: <strong>0%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-openai-errors/" target="_blank" class="post-link">n8n-openai-errors/</a>
+            <a href="https://agenticmarketingpro.com/n8n-openai-errors/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>12.4</strong> | 
+            Impressions: <strong>99</strong> | 
+            Clicks: <strong>1</strong> | 
+            CTR: <strong>1.01%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/ai-business-process-automation/" target="_blank" class="post-link">ai-business-process-automation/</a>
+            <a href="https://agenticmarketingpro.com/ai-business-process-automation/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>15.0</strong> | 
+            Impressions: <strong>95</strong> | 
+            Clicks: <strong>1</strong> | 
+            CTR: <strong>1.05%</strong>
+        </div>
+    </div>
+    <div class="gsc-card">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/custom-ai-models-n8n/" target="_blank" class="post-link">custom-ai-models-n8n/</a>
+            <a href="https://agenticmarketingpro.com/custom-ai-models-n8n/" target="_blank" class="edit-link">[Edit]</a>
+        </div>
+        <div class="metrics">
+            Position: <strong>10.5</strong> | 
+            Impressions: <strong>91</strong> | 
+            Clicks: <strong>0</strong> | 
+            CTR: <strong>0%</strong>
+        </div>
+    </div>
+
+    <h3 style="margin-top:30px;">⚡ High Impressions, Low CTR (Fix Meta)</h3>
+    <div class="gsc-card" style="border-color: #f97316;">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/aeo-geo-optimization/" target="_blank" class="post-link">aeo-geo-optimization/</a>
+        </div>
+        <div class="metrics">
+            Impressions: <strong>1121</strong> | 
+            CTR: <strong style="color:#dc2626">0%</strong> - Needs better title/description!
+        </div>
+    </div>
+    <div class="gsc-card" style="border-color: #f97316;">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-cloud-vs-self-hosted/" target="_blank" class="post-link">n8n-cloud-vs-self-hosted/</a>
+        </div>
+        <div class="metrics">
+            Impressions: <strong>493</strong> | 
+            CTR: <strong style="color:#dc2626">0%</strong> - Needs better title/description!
+        </div>
+    </div>
+    <div class="gsc-card" style="border-color: #f97316;">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/human-loop-ai-marketing/" target="_blank" class="post-link">human-loop-ai-marketing/</a>
+        </div>
+        <div class="metrics">
+            Impressions: <strong>475</strong> | 
+            CTR: <strong style="color:#dc2626">0.21%</strong> - Needs better title/description!
+        </div>
+    </div>
+    <div class="gsc-card" style="border-color: #f97316;">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/api-integrations-system-automation/" target="_blank" class="post-link">api-integrations-system-automation/</a>
+        </div>
+        <div class="metrics">
+            Impressions: <strong>386</strong> | 
+            CTR: <strong style="color:#dc2626">0.26%</strong> - Needs better title/description!
+        </div>
+    </div>
+    <div class="gsc-card" style="border-color: #f97316;">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-git-integration/" target="_blank" class="post-link">n8n-git-integration/</a>
+        </div>
+        <div class="metrics">
+            Impressions: <strong>377</strong> | 
+            CTR: <strong style="color:#dc2626">0.8%</strong> - Needs better title/description!
+        </div>
+    </div>
+    <div class="gsc-card" style="border-color: #f97316;">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/local-seo-optimization/" target="_blank" class="post-link">local-seo-optimization/</a>
+        </div>
+        <div class="metrics">
+            Impressions: <strong>352</strong> | 
+            CTR: <strong style="color:#dc2626">0%</strong> - Needs better title/description!
+        </div>
+    </div>
+    <div class="gsc-card" style="border-color: #f97316;">
+        <div class="page">
+            <a href="https://agenticmarketingpro.com/n8n-ai-nodes-comparison/" target="_blank" class="post-link">n8n-ai-nodes-comparison/</a>
+        </div>
+        <div class="metrics">
+            Impressions: <strong>314</strong> | 
+            CTR: <strong style="color:#dc2626">0%</strong> - Needs better title/description!
+        </div>
+    </div>
+
+</div>
+
+<!-- ALL POSTS SECTION -->
+<div id="all" class="section" style="display:none;">
+    <h2>📝 All 214 Posts</h2>
+    <input type="text" id="search" placeholder="Search posts..." onkeyup="filterTable()" style="padding:10px;width:300px;border:1px solid #e2e8f0;border-radius:8px;">
+    
+    <table id="posts-table">
+        <thead>
+            <tr>
+                <th>Post Title</th>
+                <th>Focus Keyword</th>
+                <th>Words</th>
+                <th>Meta Description</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2665" target="_blank" class="post-link">Answer Engine Optimization: What Top Performers Ac...</a></td>
+                <td>answer engine optimization</td>
+                <td>6165</td>
+                <td>Discover proven answer engine optimization strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2665&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2668" target="_blank" class="post-link">Geo Marketing — a Practitioner's Honest Breakdown...</a></td>
+                <td>GEO marketing</td>
+                <td>5618</td>
+                <td>Discover proven GEO marketing strategies used by t...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2668&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2671" target="_blank" class="post-link">The Seo for Ai Search Methods That Consistently Ou...</a></td>
+                <td>SEO for AI search</td>
+                <td>7132</td>
+                <td>Discover proven SEO for AI search strategies used ...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2671&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2674" target="_blank" class="post-link">Semantic Seo for Ai Agents: What Top Performers Ac...</a></td>
+                <td>semantic SEO for AI agents</td>
+                <td>7667</td>
+                <td>Discover proven semantic SEO for AI agents strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2674&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2676" target="_blank" class="post-link">Topical Authority Strategy: What Top Performers Ac...</a></td>
+                <td>topical authority strategy</td>
+                <td>5742</td>
+                <td>Discover proven topical authority strategy strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2676&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2679" target="_blank" class="post-link">Internal Linking Strategy: Tactics That Move Metri...</a></td>
+                <td>internal linking strategy</td>
+                <td>6356</td>
+                <td>Discover proven internal linking strategy strategi...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2679&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2683" target="_blank" class="post-link">Why Your Programmatic Seo for Ai Tools Approach Ma...</a></td>
+                <td>programmatic SEO for AI tools</td>
+                <td>6916</td>
+                <td>Discover proven programmatic SEO for AI tools stra...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2683&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2687" target="_blank" class="post-link">Why Your Ai Content Strategy Approach May Be Holdi...</a></td>
+                <td>AI content strategy</td>
+                <td>7588</td>
+                <td>Discover proven AI content strategy strategies use...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2687&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2700" target="_blank" class="post-link">Why Your Content Brief Automation Approach May Be ...</a></td>
+                <td>content brief automation</td>
+                <td>6440</td>
+                <td>Discover proven content brief automation strategie...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2700&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2724" target="_blank" class="post-link">Modern Entity-based Content Planning: Moving the N...</a></td>
+                <td>entity-based content planning</td>
+                <td>6438</td>
+                <td>Discover proven entity-based content planning stra...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2724&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2727" target="_blank" class="post-link">Modern Topic Cluster Planning: Moving the Needle i...</a></td>
+                <td>topic cluster planning</td>
+                <td>8829</td>
+                <td>Discover proven topic cluster planning strategies ...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2727&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2730" target="_blank" class="post-link">Modern Editorial Workflow Automation: Moving the N...</a></td>
+                <td>editorial workflow automation</td>
+                <td>8208</td>
+                <td>Discover proven editorial workflow automation stra...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2730&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2733" target="_blank" class="post-link">Sales Handoff Automation — a Practitioner's No-flu...</a></td>
+                <td>sales handoff automation</td>
+                <td>8501</td>
+                <td>Discover proven sales handoff automation strategie...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2733&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2736" target="_blank" class="post-link">Why Your Lifecycle Email Automation Strategy Needs...</a></td>
+                <td>lifecycle email automation</td>
+                <td>8617</td>
+                <td>Discover proven lifecycle email automation strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2736&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2745" target="_blank" class="post-link">Ai Personalization: a Practitioner's Approach to M...</a></td>
+                <td>AI personalization</td>
+                <td>8579</td>
+                <td>Discover proven AI personalization strategies used...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2745&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2748" target="_blank" class="post-link">The Personalized Customer Journeys Blueprint: Data...</a></td>
+                <td>personalized customer journeys</td>
+                <td>8371</td>
+                <td>Discover proven personalized customer journeys str...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2748&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2751" target="_blank" class="post-link">Chatbot Qualification Decoded: What Top Performers...</a></td>
+                <td>chatbot qualification</td>
+                <td>7900</td>
+                <td>Discover proven chatbot qualification strategies u...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2751&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2756" target="_blank" class="post-link">Dynamic Content Personalization — a Practitioner's...</a></td>
+                <td>dynamic content personalizatio</td>
+                <td>8516</td>
+                <td>Discover proven dynamic content personalization st...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2756&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2759" target="_blank" class="post-link">Modern Recommendation Engines for Marketing: Movin...</a></td>
+                <td>recommendation engines for mar</td>
+                <td>8884</td>
+                <td>Discover proven recommendation engines for marketi...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2759&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2762" target="_blank" class="post-link">Modern Ai Customer Experience: Moving the Needle i...</a></td>
+                <td>AI customer experience</td>
+                <td>8201</td>
+                <td>Discover proven AI customer experience strategies ...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2762&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2765" target="_blank" class="post-link">Why Your Website Personalization Ai Strategy Needs...</a></td>
+                <td>website personalization AI</td>
+                <td>8373</td>
+                <td>Discover proven website personalization AI strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2765&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2785" target="_blank" class="post-link">The Marketing Analytics with Ai Playbook: High-imp...</a></td>
+                <td>marketing analytics with AI</td>
+                <td>8740</td>
+                <td>Discover proven marketing analytics with AI strate...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2785&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2788" target="_blank" class="post-link">The Ai Dashboards for Marketing Playbook: High-imp...</a></td>
+                <td>AI dashboards for marketing</td>
+                <td>8537</td>
+                <td>Discover proven AI dashboards for marketing strate...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2788&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2791" target="_blank" class="post-link">Modern Incrementality Testing: Moving the Needle i...</a></td>
+                <td>incrementality testing</td>
+                <td>9245</td>
+                <td>Discover proven incrementality testing strategies ...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2791&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2795" target="_blank" class="post-link">The Attribution Modeling Playbook: High-impact Tac...</a></td>
+                <td>attribution modeling</td>
+                <td>8430</td>
+                <td>Discover proven attribution modeling strategies us...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2795&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2798" target="_blank" class="post-link">Cac and Ltv Optimization — a Practitioner's No-flu...</a></td>
+                <td>CAC and LTV optimization</td>
+                <td>8875</td>
+                <td>Discover proven CAC and LTV optimization strategie...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2798&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2801" target="_blank" class="post-link">Why Your Forecasting with Ai Agents Strategy Needs...</a></td>
+                <td>forecasting with AI agents</td>
+                <td>7619</td>
+                <td>Discover proven forecasting with AI agents strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2801&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2815" target="_blank" class="post-link">Why Your Marketing Stack Automation Strategy Needs...</a></td>
+                <td>marketing stack automation</td>
+                <td>8384</td>
+                <td>Discover proven marketing stack automation strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2815&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2818" target="_blank" class="post-link">The Api Integrations for Marketing Blueprint: Data...</a></td>
+                <td>API integrations for marketing</td>
+                <td>8451</td>
+                <td>Discover proven API integrations for marketing str...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2818&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2821" target="_blank" class="post-link">Why Your Zapier Marketing Workflows Strategy Needs...</a></td>
+                <td>Zapier marketing workflows</td>
+                <td>8539</td>
+                <td>Discover proven Zapier marketing workflows strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2821&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2824" target="_blank" class="post-link">The Crm and Cdp Integration Blueprint: Data-backed...</a></td>
+                <td>CRM and CDP integration</td>
+                <td>8762</td>
+                <td>Discover proven CRM and CDP integration strategies...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2824&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2827" target="_blank" class="post-link">The Data Pipeline for Marketing Playbook: High-imp...</a></td>
+                <td>data pipeline for marketing</td>
+                <td>9696</td>
+                <td>Discover proven data pipeline for marketing strate...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2827&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2830" target="_blank" class="post-link">The Brand Safety for Ai Content Playbook: High-imp...</a></td>
+                <td>brand safety for AI content</td>
+                <td>8319</td>
+                <td>Discover proven brand safety for AI content strate...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2830&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2833" target="_blank" class="post-link">Why Your Ai Governance in Marketing Strategy Needs...</a></td>
+                <td>AI governance in marketing</td>
+                <td>8259</td>
+                <td>Discover proven AI governance in marketing strateg...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2833&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2836" target="_blank" class="post-link">Human Oversight in Ai Marketing — a Practitioner's...</a></td>
+                <td>human oversight in AI marketin</td>
+                <td>7607</td>
+                <td>Discover proven human oversight in AI marketing st...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2836&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2839" target="_blank" class="post-link">Modern Data Privacy in Marketing Automation: Movin...</a></td>
+                <td>data privacy in marketing auto</td>
+                <td>8197</td>
+                <td>Discover proven data privacy in marketing automati...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2839&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2842" target="_blank" class="post-link">The Corporate Ai Content Policy Playbook: High-imp...</a></td>
+                <td>corporate AI content policy</td>
+                <td>7413</td>
+                <td>Discover proven corporate AI content policy strate...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2842&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2845" target="_blank" class="post-link">Ethics of Ai Agents in Marketing: a Practitioner's...</a></td>
+                <td>ethics of AI agents in marketi</td>
+                <td>8172</td>
+                <td>Discover proven ethics of AI agents in marketing s...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2845&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2848" target="_blank" class="post-link">The Agentic Marketing for B2b Saas Blueprint: Data...</a></td>
+                <td>agentic marketing for B2B SaaS</td>
+                <td>8474</td>
+                <td>Discover proven agentic marketing for B2B SaaS str...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2848&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2851" target="_blank" class="post-link">Agentic Marketing for Ecommerce — a Practitioner's...</a></td>
+                <td>agentic marketing for ecommerc</td>
+                <td>8193</td>
+                <td>Discover proven agentic marketing for ecommerce st...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2851&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2854" target="_blank" class="post-link">The Agentic Marketing for Agencies Blueprint: Data...</a></td>
+                <td>agentic marketing for agencies</td>
+                <td>8484</td>
+                <td>Discover proven agentic marketing for agencies str...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2854&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2857" target="_blank" class="post-link">Agentic Marketing for Enterprise: a Practitioner's...</a></td>
+                <td>agentic marketing for enterpri</td>
+                <td>8593</td>
+                <td>Discover proven agentic marketing for enterprise s...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2857&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2873" target="_blank" class="post-link">The Agentic Marketing for Startups Blueprint: Data...</a></td>
+                <td>agentic marketing for startups</td>
+                <td>8773</td>
+                <td>Discover proven agentic marketing for startups str...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2873&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2876" target="_blank" class="post-link">Modern Agentic Marketing for Local Business: Movin...</a></td>
+                <td>agentic marketing for local bu</td>
+                <td>8399</td>
+                <td>Discover proven agentic marketing for local busine...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2876&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2905" target="_blank" class="post-link">Modern How to Build an N8n Ai Agent with Langchain...</a></td>
+                <td>how to build an n8n ai agent w</td>
+                <td>9249</td>
+                <td>Discover proven how to build an n8n ai agent with ...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2905&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2908" target="_blank" class="post-link">Why Does My N8n Workflow Keep Failing with Openai ...</a></td>
+                <td>why does my n8n workflow keep </td>
+                <td>8319</td>
+                <td>Discover proven why does my n8n workflow keep fail...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2908&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2911" target="_blank" class="post-link">Why Your Best Way to Connect N8n to Custom Postgre...</a></td>
+                <td>Connect N8n,Custom Postgres,Da</td>
+                <td>7549</td>
+                <td>Discover proven best way to connect n8n to custom ...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2911&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2914" target="_blank" class="post-link">How Much Does It Cost to Self Host N8n for Marketi...</a></td>
+                <td>how much does it cost to self </td>
+                <td>8223</td>
+                <td>Discover proven how much does it cost to self host...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2914&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2924" target="_blank" class="post-link">The What Are N8n Code Node Best Practices for Ai A...</a></td>
+                <td>what are n8n code node best pr</td>
+                <td>9241</td>
+                <td>Discover proven what are n8n code node best practi...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2924&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2936" target="_blank" class="post-link">Why Your How to Scale N8n Workflows for 100k Execu...</a></td>
+                <td>how to scale n8n workflows for</td>
+                <td>8732</td>
+                <td>Discover proven how to scale n8n workflows for 100...</td>
+                <td><span class="tag good">✅ Good</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2936&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2587" target="_blank" class="post-link">Agentic Marketing Examples: the Complete Guide (20...</a></td>
+                <td>agentic marketing examples</td>
+                <td>6286</td>
+                <td>Learn everything about agentic marketing examples....</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2587&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2590" target="_blank" class="post-link">Agentic Marketing Vs Marketing Automation: Your Co...</a></td>
+                <td>agentic marketing vs marketing</td>
+                <td>7595</td>
+                <td>Learn everything about agentic marketing vs market...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2590&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2593" target="_blank" class="post-link">Ai Business Automation: the Complete Guide (2026)...</a></td>
+                <td>AI business automation</td>
+                <td>6796</td>
+                <td>Learn everything about AI business automation. Exp...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2593&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2595" target="_blank" class="post-link">Business Automation With Ai: the Complete Guide (2...</a></td>
+                <td>business automation with AI</td>
+                <td>6572</td>
+                <td>Learn everything about business automation with AI...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2595&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2598" target="_blank" class="post-link">Ai Automation in Marketing: the Complete Guide (20...</a></td>
+                <td>AI automation in marketing</td>
+                <td>7212</td>
+                <td>Learn everything about AI automation in marketing....</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2598&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2603" target="_blank" class="post-link">Autonomous Marketing Campaigns: the Complete Guide...</a></td>
+                <td>autonomous marketing campaigns</td>
+                <td>6347</td>
+                <td>Learn everything about autonomous marketing campai...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2603&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2605" target="_blank" class="post-link">Ai Workflow Automation: the Complete Guide (2026)...</a></td>
+                <td>AI workflow automation</td>
+                <td>7051</td>
+                <td>Learn everything about AI workflow automation. Exp...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2605&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2607" target="_blank" class="post-link">Intelligent Automation: the Complete Guide (2026)...</a></td>
+                <td>intelligent automation</td>
+                <td>7323</td>
+                <td>Learn everything about intelligent automation. Exp...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2607&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2609" target="_blank" class="post-link">Ai Orchestration for Marketing: the Complete Guide...</a></td>
+                <td>AI orchestration for marketing</td>
+                <td>7512</td>
+                <td>Learn everything about AI orchestration for market...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2609&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2611" target="_blank" class="post-link">How to Design Ai Agent Workflows: the Complete Gui...</a></td>
+                <td>how to design AI agent workflo</td>
+                <td>7651</td>
+                <td>Learn everything about how to design AI agent work...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2611&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2613" target="_blank" class="post-link">Multi-agent Marketing System: the Complete Guide (...</a></td>
+                <td>multi-agent marketing system</td>
+                <td>6947</td>
+                <td>Learn everything about multi-agent marketing syste...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2613&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2627" target="_blank" class="post-link">Human in the Loop Ai Marketing: the Complete Guide...</a></td>
+                <td>human in the loop AI marketing</td>
+                <td>7950</td>
+                <td>Learn everything about human in the loop AI market...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2627&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2630" target="_blank" class="post-link">Ai Agent Orchestration: the Complete Guide (2026)...</a></td>
+                <td>AI agent orchestration</td>
+                <td>7340</td>
+                <td>Learn everything about AI agent orchestration. Exp...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2630&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2633" target="_blank" class="post-link">Content Repurposing Automation: the Complete Guide...</a></td>
+                <td>content repurposing automation</td>
+                <td>6451</td>
+                <td>Learn everything about content repurposing automat...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2633&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2636" target="_blank" class="post-link">Email Automation With Ai: the Complete Guide (2026...</a></td>
+                <td>email automation with AI</td>
+                <td>6658</td>
+                <td>Learn everything about email automation with AI. E...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2636&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2639" target="_blank" class="post-link">Lead Qualification Automation: the Complete Guide ...</a></td>
+                <td>lead qualification automation</td>
+                <td>6908</td>
+                <td>Learn everything about lead qualification automati...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2639&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2641" target="_blank" class="post-link">Workflow Automation for Marketing: the Complete Gu...</a></td>
+                <td>workflow automation for market</td>
+                <td>7222</td>
+                <td>Learn everything about workflow automation for mar...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2641&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2650" target="_blank" class="post-link">Marketing Automation With Ai Agents — What Actuall...</a></td>
+                <td>marketing automation with AI a</td>
+                <td>6958</td>
+                <td>Learn everything about marketing automation with A...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2650&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://agenticmarketingpro.com/?p=2661" target="_blank" class="post-link">Agentic Seo — What Actually Works in 2026...</a></td>
+                <td>agentic SEO</td>
+                <td>7369</td>
+                <td>Learn everything about agentic SEO. Expert insight...</td>
+                <td><span class="tag crit">⚠️ Fix</span></td>
+                <td><a href="https://agenticmarketingpro.com/wp-admin/post.php?post=2661&action=edit" target="_blank" class="edit-link">Edit</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+function filterTable() {
+    const input = document.getElementById('search');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('posts-table');
+    const tr = table.getElementsByTagName('tr');
+    
+    for (let i = 1; i < tr.length; i++) {
+        const td = tr[i].getElementsByTagName('td')[0];
+        if (td) {
+            const txt = td.textContent || td.innerText;
+            tr[i].style.display = txt.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+        }
+    }
+}
+</script>
+
+<div style="text-align:center;padding:40px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:40px;">
+    <p><strong>Report Generated:</strong> July 17, 2026 at 03:10</p>
+    <p>Data Sources: WordPress Posts (RankMath), Google Search Console API</p>
+</div>
+
+</div>
+</body>
+</html>
