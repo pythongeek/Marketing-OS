@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO Audit Report - AgenticMarketingPro</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.6; color: #333; background: #f5f7fa; margin: 0; padding: 20px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { color: #1a3a5c; text-align: center; margin-bottom: 30px; }
+    h2 { color: #2c5282; border-bottom: 3px solid #4299e1; padding-bottom: 10px; margin-top: 40px; }
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0; }
+    .stat-box { background: white; padding: 25px; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .stat-box.critical { border-top: 4px solid #e53e3e; }
+    .stat-box.warning { border-top: 4px solid #ed8936; }
+    .stat-box.good { border-top: 4px solid #38a169; }
+    .stat-box .number { font-size: 3em; font-weight: bold; }
+    .stat-box.critical .number { color: #e53e3e; }
+    .stat-box.warning .number { color: #ed8936; }
+    .stat-box.good .number { color: #38a169; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    th { background: #2c5282; color: white; padding: 15px; text-align: left; }
+    td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; }
+    tr:hover { background: #f7fafc; }
+    .priority-critical { color: #e53e3e; font-weight: bold; }
+    .priority-high { color: #ed8936; font-weight: bold; }
+    .priority-medium { color: #38a169; font-weight: bold; }
+    .action-item { background: #ebf8ff; border-left: 4px solid #4299e1; padding: 15px; margin: 10px 0; border-radius: 0 8px 8px 0; }
+    .code-block { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; font-family: monospace; margin: 10px 0; }
+    .header { background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 100%); color: white; padding: 40px; border-radius: 10px; margin-bottom: 30px; }
+    .tip-box { background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 8px; margin: 15px 0; }
+    .success-box { background: #d1fae5; border: 1px solid #10b981; padding: 15px; border-radius: 8px; margin: 15px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+    <h1>🔍 SEO Audit Report - AgenticMarketingPro</h1>
+    <p style="text-align: center; font-size: 1.2em;">214 Posts Analyzed | Generated: July 2026</p>
+</div>
+
+<h2>📊 Executive Summary</h2>
+<div class="summary">
+    <div class="stat-box critical">
+        <div class="number">214</div>
+        <div>Posts Missing Focus Keyword</div>
+    </div>
+    <div class="stat-box critical">
+        <div class="number">214</div>
+        <div>Posts Missing Meta Description</div>
+    </div>
+    <div class="stat-box warning">
+        <div class="number">0%</div>
+        <div>Currently Optimized</div>
+    </div>
+    <div class="stat-box good">
+        <div class="number">214</div>
+        <div>Posts Have Content</div>
+    </div>
+</div>
+
+<h2>🚨 Critical Issues Found</h2>
+<div class="action-item">
+    <h3>Issue #1: 100% Posts Missing Focus Keywords</h3>
+    <p><strong>Impact:</strong> Search engines cannot understand the primary topic of each page. This severely limits ranking potential.</p>
+    <p><strong>Solution:</strong> Add a focus keyword to each post using Yoast SEO or RankMath plugin.</p>
+</div>
+
+<div class="action-item">
+    <h3>Issue #2: 100% Posts Missing Meta Descriptions</h3>
+    <p><strong>Impact:</strong> Google will auto-generate descriptions, often poorly. Low click-through rate from SERPs.</p>
+    <p><strong>Solution:</strong> Write unique, compelling meta descriptions (150-160 characters) for each post.</p>
+</div>
+
+<h2>📝 Posts Requiring Immediate Attention</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Post Title</th>
+            <th>Priority</th>
+            <th>Recommended Focus Keyword</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>3610</td>
+            <td>How Smart Teams Approach Reverse Engineer Llm Source Attribu...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>How Smart Teams Approach Reverse Enginee</td>
+        </tr>
+        <tr>
+            <td>3607</td>
+            <td>Modern Citation Monitoring Dashboard: Moving the Needle in 2...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Modern Citation Monitoring Dashboard  Mo</td>
+        </tr>
+        <tr>
+            <td>3593</td>
+            <td>Aeo Technical Implementation Decoded: What Top Performers Do</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Aeo Technical Implementation Decoded  Wh</td>
+        </tr>
+        <tr>
+            <td>3588</td>
+            <td>How to Optimize Content: Cutting Through the Noise to What A...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>How to Optimize Content  Cutting Through</td>
+        </tr>
+        <tr>
+            <td>3585</td>
+            <td>How Smart Teams Approach Ai Discovery Optimization — and Why...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>How Smart Teams Approach Ai Discovery Op</td>
+        </tr>
+        <tr>
+            <td>3582</td>
+            <td>Llm Citation Tracking: Cutting Through the Noise to What Act...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Llm Citation Tracking  Cutting Through t</td>
+        </tr>
+        <tr>
+            <td>3579</td>
+            <td>Geo Performance Metrics: What Top Performers Actually Do Dif...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Geo Performance Metrics  What Top Perfor</td>
+        </tr>
+        <tr>
+            <td>3575</td>
+            <td>The Geo Performance Metrics Blueprint: Data-backed Results</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>The Geo Performance Metrics Blueprint  D</td>
+        </tr>
+        <tr>
+            <td>3572</td>
+            <td>Aeo Schema Implementation: a Practitioner&#8217;s Approach t...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Aeo Schema Implementation  a Practitione</td>
+        </tr>
+        <tr>
+            <td>3532</td>
+            <td>Odoo Amazon Integration — a Practitioner&#8217;s Honest Brea...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Amazon Integration — a Practitioner</td>
+        </tr>
+        <tr>
+            <td>3529</td>
+            <td>Odoo Marketplace Integration — a Practitioner&#8217;s Honest...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Marketplace Integration — a Practit</td>
+        </tr>
+        <tr>
+            <td>3526</td>
+            <td>Odoo Ecommerce Integration: What Top Performers Actually Do</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Ecommerce Integration  What Top Per</td>
+        </tr>
+        <tr>
+            <td>3523</td>
+            <td>Odoo Pos Integration: Tactics That Move Metrics Without the ...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Pos Integration  Tactics That Move </td>
+        </tr>
+        <tr>
+            <td>3520</td>
+            <td>Odoo Iot Integration: Tactics That Move Metrics Without the ...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Iot Integration  Tactics That Move </td>
+        </tr>
+        <tr>
+            <td>3517</td>
+            <td>Odoo Kubernetes Deployment: What Top Performers Actually Do</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Kubernetes Deployment  What Top Per</td>
+        </tr>
+        <tr>
+            <td>3514</td>
+            <td>Odoo Docker Integration — a Practitioner&#8217;s Honest Brea...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Docker Integration — a Practitioner</td>
+        </tr>
+        <tr>
+            <td>3511</td>
+            <td>Odoo Microservices — a Practitioner&#8217;s Honest Breakdown</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Microservices — a Practitioner&#821</td>
+        </tr>
+        <tr>
+            <td>3508</td>
+            <td>Odoo Headless Integration: Tactics That Move Metrics Without...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Headless Integration  Tactics That </td>
+        </tr>
+        <tr>
+            <td>3504</td>
+            <td>Odoo Graphql Api: What Top Performers Actually Do Differentl...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Graphql Api  What Top Performers Ac</td>
+        </tr>
+        <tr>
+            <td>3501</td>
+            <td>Odoo N8n Integration: Tactics That Move Metrics Without the ...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo N8n Integration  Tactics That Move </td>
+        </tr>
+        <tr>
+            <td>3498</td>
+            <td>Odoo Zapier Integration — a Practitioner&#8217;s Honest Brea...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Zapier Integration — a Practitioner</td>
+        </tr>
+        <tr>
+            <td>3495</td>
+            <td>Odoo Power Bi Integration: Tactics That Move Metrics Without...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Power Bi Integration  Tactics That </td>
+        </tr>
+        <tr>
+            <td>3492</td>
+            <td>Why Your Odoo Bi Integration Approach May Be Holding You Bac...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Why Your Odoo Bi Integration Approach Ma</td>
+        </tr>
+        <tr>
+            <td>3489</td>
+            <td>Odoo Shipping Integration: Tactics That Move Metrics Without...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Shipping Integration  Tactics That </td>
+        </tr>
+        <tr>
+            <td>3486</td>
+            <td>The Odoo Payment Gateway Integration Methods That Consistent...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>The Odoo Payment Gateway Integration Met</td>
+        </tr>
+        <tr>
+            <td>3483</td>
+            <td>Odoo Inventory Integration: What Top Performers Actually Do</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Inventory Integration  What Top Per</td>
+        </tr>
+        <tr>
+            <td>3480</td>
+            <td>Odoo Custom Module Development: Tactics That Move Metrics Wi...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Custom Module Development  Tactics </td>
+        </tr>
+        <tr>
+            <td>3477</td>
+            <td>The Odoo Cloud Integration Methods That Consistently Outperf...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>The Odoo Cloud Integration Methods That </td>
+        </tr>
+        <tr>
+            <td>3474</td>
+            <td>Odoo Migration Integration: What Top Performers Actually Do</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Migration Integration  What Top Per</td>
+        </tr>
+        <tr>
+            <td>3471</td>
+            <td>Why Your Odoo Ai Integration Approach May Be Holding You Bac...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Why Your Odoo Ai Integration Approach Ma</td>
+        </tr>
+        <tr>
+            <td>3468</td>
+            <td>Why Your Odoo Automation Workflow Approach May Be Holding Yo...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Why Your Odoo Automation Workflow Approa</td>
+        </tr>
+        <tr>
+            <td>3465</td>
+            <td>Odoo Middleware: Tactics That Move Metrics Without the Fluff</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Middleware  Tactics That Move Metri</td>
+        </tr>
+        <tr>
+            <td>3462</td>
+            <td>Why Your Odoo Connector Approach May Be Holding You Back</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Why Your Odoo Connector Approach May Be </td>
+        </tr>
+        <tr>
+            <td>3459</td>
+            <td>Why Your Odoo Integration Partner Approach May Be Holding Yo...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Why Your Odoo Integration Partner Approa</td>
+        </tr>
+        <tr>
+            <td>3456</td>
+            <td>Odoo Integration Services: Tactics That Move Metrics Without...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Integration Services  Tactics That </td>
+        </tr>
+        <tr>
+            <td>3453</td>
+            <td>Why Your Odoo Real Time Sync Approach May Be Holding You Bac...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Why Your Odoo Real Time Sync Approach Ma</td>
+        </tr>
+        <tr>
+            <td>3450</td>
+            <td>Odoo Json Rpc — a Practitioner&#8217;s Honest Breakdown</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Json Rpc — a Practitioner&#8217;s H</td>
+        </tr>
+        <tr>
+            <td>3447</td>
+            <td>How to Build Autonomous Citation Workflows — Key Development...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>How to Build Autonomous Citation Workflo</td>
+        </tr>
+        <tr>
+            <td>3444</td>
+            <td>How to Get Cited Update: What This Means for Practitioners</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>How to Get Cited Update  What This Means</td>
+        </tr>
+        <tr>
+            <td>3441</td>
+            <td>Geo Aeo Integration: Cutting Through the Noise to What Actua...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Geo Aeo Integration  Cutting Through the</td>
+        </tr>
+        <tr>
+            <td>3438</td>
+            <td>Ai Search Analytics: Cutting Through the Noise to What Actua...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Ai Search Analytics  Cutting Through the</td>
+        </tr>
+        <tr>
+            <td>3435</td>
+            <td>The Odoo Xml Rpc Methods That Consistently Outperform</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>The Odoo Xml Rpc Methods That Consistent</td>
+        </tr>
+        <tr>
+            <td>3432</td>
+            <td>Why Your Odoo Webhook Integration Approach May Be Holding Yo...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Why Your Odoo Webhook Integration Approa</td>
+        </tr>
+        <tr>
+            <td>3429</td>
+            <td>Aeo Roi Measurement — a Practitioner&#8217;s Honest Breakdow...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Aeo Roi Measurement — a Practitioner&#82</td>
+        </tr>
+        <tr>
+            <td>3426</td>
+            <td>The Ai Citation Rate Methods That Consistently Outperform</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>The Ai Citation Rate Methods That Consis</td>
+        </tr>
+        <tr>
+            <td>3423</td>
+            <td>Odoo Rest Api — a Practitioner&#8217;s Honest Breakdown</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Odoo Rest Api — a Practitioner&#8217;s H</td>
+        </tr>
+        <tr>
+            <td>3420</td>
+            <td>Why Your Odoo Hubspot Integration Approach May Be Holding Yo...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Why Your Odoo Hubspot Integration Approa</td>
+        </tr>
+        <tr>
+            <td>3417</td>
+            <td>The Odoo Salesforce Integration Methods That Consistently Ou...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>The Odoo Salesforce Integration Methods </td>
+        </tr>
+        <tr>
+            <td>3414</td>
+            <td>The Odoo Quickbooks Integration Methods That Consistently Ou...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>The Odoo Quickbooks Integration Methods </td>
+        </tr>
+        <tr>
+            <td>3411</td>
+            <td>Rising Ai Costs Vs Productivity Gains: the Real Story Behind...</td>
+            <td class="priority-critical">CRITICAL</td>
+            <td>Rising Ai Costs Vs Productivity Gains  t</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>✅ Recommended Fixes</h2>
+<div class="success-box">
+    <h3>How to Fix This Fast</h3>
+    <ol>
+        <li><strong>Use Bulk Editing:</strong> In WordPress Admin, go to Posts > All Posts > Select All > Edit > Apply bulk meta updates</li>
+        <li><strong>Focus Keyword Formula:</strong> Use "[Main Topic]" - e.g., "AI Marketing Automation"</li>
+        <li><strong>Meta Description Template:</strong> "[Title] - [Number] proven strategies for [Benefit]. Learn how to [Action] in 2026."</li>
+        <li><strong>Example:</strong> Title: "AI Workflow Automation Guide" | FK: "AI workflow automation" | Desc: "Master AI workflow automation with 15 proven strategies. Save 10+ hours weekly. Get started now."</li>
+    </ol>
+</div>
+
+<h2>🎯 Focus Keyword Recommendations by Category</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Post Type</th>
+            <th>Pattern</th>
+            <th>Keyword Formula</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>How-to Posts</td>
+            <td>"How to..."</td>
+            <td>how to [action] - e.g., "how to automate marketing"</td>
+        </tr>
+        <tr>
+            <td>Complete Guides</td>
+            <td>"...Complete Guide"</td>
+            <td>[topic] complete guide - e.g., "AI marketing complete guide"</td>
+        </tr>
+        <tr>
+            <td>Comparisons</td>
+            <td>"...vs..."</td>
+            <td>[X] vs [Y] - e.g., "AI vs human marketing"</td>
+        </tr>
+        <tr>
+            <td>Best Lists</td>
+            <td>"Best..."</td>
+            <td>best [niche] tools - e.g., "best AI marketing tools"</td>
+        </tr>
+        <tr>
+            <td>Technical</td>
+            <td>"Implementation", "Setup"</td>
+            <td>[topic] implementation - e.g., "AI implementation guide"</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>📋 Batch Processing Instructions</h2>
+<div class="code-block">
+# WordPress REST API Example for Bulk Update
+# This requires WP REST API and application password
+
+import requests
+
+WORDPRESS_URL = "https://agenticmarketingpro.com/wp-json/wp/v2"
+AUTH = ("your-username", "your-app-password")
+
+posts_to_update = [
+    {"id": 3610, "meta": {"_yoast_wpseo_focuskw": "reverse engineer LLM", "_yoast_wpseo_metadesc": "Learn how top teams reverse engineer LLM source attribution..."}},
+    {"id": 3607, "meta": {"_yoast_wpseo_focuskw": "citation monitoring dashboard", "_yoast_wpseo_metadesc": "Build a modern citation monitoring dashboard in 2026..."}},
+]
+
+for post in posts_to_update:
+    response = requests.post(
+        f"{WORDPRESS_URL}/posts/{post['id']}",
+        json=post,
+        auth=AUTH
+    )
+    print(f"Updated {post['id']}: {response.status_code}")
+</div>
+
+<div class="tip-box">
+    <strong>💡 Pro Tip:</strong> Set up a spreadsheet with columns: Post ID, Title, Focus Keyword, Meta Description. 
+    Fill it in bulk, then use a plugin like "WP All Import" or the REST API to update all posts at once.
+</div>
+
+<div style="text-align: center; padding: 40px; color: #718096; margin-top: 40px;">
+    <p><strong>Report Generated:</strong> July 2026</p>
+    <p>For: AgenticMarketingPro | Data Source: wordpress_posts_seo_report.csv</p>
+</div>
+</div>
+</body>
+</html>
